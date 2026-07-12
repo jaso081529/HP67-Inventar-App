@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=24">
+  <link rel="stylesheet" href="app.css?v=25">
 </head>
 <body>
   <header class="topbar">
@@ -171,7 +171,7 @@
       <label>Artikelname<input required name="name" placeholder="z. B. Hoodie Basic"></label>
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
-      <div class="form-grid"><label>Farbe<input name="color" placeholder="Schwarz"></label><label>Größe<input name="size" placeholder="M / gemischt"></label></div>
+      <div class="form-grid"><label>Farbe auswählen oder schreiben<input name="color" list="colorOptions" placeholder="Schwarz"><datalist id="colorOptions"><option value="Schwarz"></option><option value="Weiß"></option><option value="Navy"></option><option value="Grau"></option><option value="Rot"></option><option value="Blau"></option><option value="Grün"></option><option value="Beige"></option><option value="Gelb"></option><option value="Rosa"></option><option value="Lila"></option><option value="Orange"></option></datalist></label><label>Größe auswählen oder schreiben<input name="size" list="sizeOptions" placeholder="M / gemischt"><datalist id="sizeOptions"><option value="XXS"></option><option value="XS"></option><option value="S"></option><option value="M"></option><option value="L"></option><option value="XL"></option><option value="XXL"></option><option value="3XL"></option><option value="4XL"></option><option value="5XL"></option><option value="Einheitsgröße"></option></datalist></label></div>
       <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Kommagetrennt eingeben. Jede Farbe wird mit jeder Größe als eigene Variante samt SKU und Barcode erstellt.</p><div class="form-grid"><label>Farben<input id="variantColors" placeholder="Schwarz, Weiß, Navy"></label><label>Größen<input id="variantSizes" placeholder="S, M, L, XL"></label></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
       <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz<input name="location" placeholder="Regal A3"></label></div>
       <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
@@ -184,7 +184,7 @@
       <div class="photo-field"><img id="itemPhotoPreview" alt="Artikelbild"><label class="secondary-btn file-btn">Foto aufnehmen<input id="itemPhoto" type="file" accept="image/*" capture="environment"></label><button id="removeItemPhoto" type="button" class="photo-remove" hidden>Foto entfernen</button></div>
       <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
       <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
-      <details class="optional-fields"><summary>Verkaufsdaten (optional)</summary><label>Verkaufspreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label></details>
+      <details class="optional-fields"><summary>Verkaufsdaten und Verkaufsoptionen</summary><label>Verkaufspreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label><span class="field-title">Verkaufsoptionen · mehrere möglich</span><div class="sales-option-grid"><label><input type="checkbox" name="salesOption" value="Einzelverkauf"> Einzelverkauf</label><label><input type="checkbox" name="salesOption" value="Onlineshop"> Onlineshop</label><label><input type="checkbox" name="salesOption" value="Markt / Veranstaltung"> Markt / Veranstaltung</label><label><input type="checkbox" name="salesOption" value="Großhandel / B2B"> Großhandel / B2B</label><label><input type="checkbox" name="salesOption" value="Abholung"> Abholung</label><label><input type="checkbox" name="salesOption" value="Versand"> Versand</label><label><input type="checkbox" name="salesOption" value="Personalisiert"> Personalisiert</label><label><input type="checkbox" name="salesOption" value="Nicht zum Verkauf"> Nicht zum Verkauf</label></div><label>Eigene Verkaufsoptionen<input name="salesOptionsCustom" placeholder="z. B. Vereinsverkauf, Vorbestellung"></label></details>
       <button class="primary-btn" value="default" type="submit">Artikel speichern</button>
       <button class="secondary-btn" id="archiveItem" type="button" hidden>Artikel archivieren</button>
       <button class="danger-btn" id="deleteItem" type="button" hidden>Artikel löschen</button>
@@ -326,6 +326,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>
