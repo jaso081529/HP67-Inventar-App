@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=22">
+  <link rel="stylesheet" href="app.css?v=23">
 </head>
 <body>
   <header class="topbar">
@@ -172,6 +172,7 @@
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
       <div class="form-grid"><label>Farbe<input name="color" placeholder="Schwarz"></label><label>Größe<input name="size" placeholder="M / gemischt"></label></div>
+      <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Kommagetrennt eingeben. Jede Farbe wird mit jeder Größe als eigene Variante samt SKU und Barcode erstellt.</p><div class="form-grid"><label>Farben<input id="variantColors" placeholder="Schwarz, Weiß, Navy"></label><label>Größen<input id="variantSizes" placeholder="S, M, L, XL"></label></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
       <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz<input name="location" placeholder="Regal A3"></label></div>
       <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
       <div class="form-grid"><label>Saison / Kollektion<input name="season" placeholder="z. B. Sommer 2026"></label><label>Einheit<input name="unit" placeholder="Stück"></label></div>
@@ -280,8 +281,9 @@
   <dialog id="labelDialog">
     <form method="dialog" id="labelForm">
       <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button value="cancel" class="close-btn">×</button></div>
-      <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
+      <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="variants">Mehrere Varianten auswählen</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
       <label id="labelItemWrap">Artikel<select name="itemId" id="labelItem"></select></label>
+      <div id="labelVariantWrap" class="variant-checklist" hidden></div>
       <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="50x25">Thermo · 50 × 25 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
       <div class="form-grid custom-size" id="customLabelSize" hidden><label>Breite mm<input name="width" type="number" min="20" max="200" value="62"></label><label>Höhe mm<input name="height" type="number" min="15" max="150" value="29"></label></div>
       <div class="form-grid"><label>Anzahl je Artikel<input name="copies" type="number" min="1" max="100" value="1"></label><label>Leere Startfelder<input name="startAt" type="number" min="0" max="100" value="0"></label></div>
@@ -324,6 +326,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=22"></script>
+  <script src="app.js?v=23"></script>
 </body>
 </html>
