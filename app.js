@@ -34,7 +34,11 @@ function loadState(){
   }catch(e){ console.warn(e); }
   return {items:[],transactions:[],orders:[],snapshots:[],categories:DEFAULT_CATEGORIES.map(c=>({...c})),brands:DEFAULT_BRANDS.slice(),materials:DEFAULT_MATERIALS.slice(),settings:{}};
 }
-function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(err){alert('Der lokale Speicher ist voll. Bitte eine Sicherung erstellen und nicht benötigte Artikelfotos entfernen.');throw err;} renderAll(); }
+function persistState(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true;}
+  catch(err){console.error('Inventar konnte nicht lokal gespeichert werden:',err);alert('Der lokale Speicher ist voll. Bitte zuerst unter Mehr eine Sicherung exportieren und nicht benötigte Artikelfotos entfernen. Deine letzte Eingabe wurde nicht gespeichert.');return false;}
+}
+function save(){if(!persistState())return false;renderAll();return true;}
 function statusOf(item){ return item.stock<=0?'out':item.stock<=item.minStock?'low':'ok'; }
 function statusLabel(status){ return {ok:'Bestand gut',low:'Nachkaufen',out:'Ausverkauft'}[status]; }
 function initials(name){ return name.split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'TX'; }
@@ -177,14 +181,19 @@ function textileSkuFromForm(){const f=$('#itemForm'),values={name:f.elements.nam
 $('#generateSku').onclick=()=>{const f=$('#itemForm'),input=f.elements.sku;if(!f.elements.name.value.trim()&&!f.elements.category.value.trim()){toast('Bitte zuerst Artikelname oder Kategorie eintragen');f.elements.name.focus();return;}if(input.value.trim()&&!confirm('Vorhandene Artikelnummer ersetzen?'))return;input.value=textileSkuFromForm();toast('Eindeutige Artikelnummer erzeugt');};
 
 $('#itemForm').addEventListener('submit',e=>{
-  e.preventDefault(); const f=e.currentTarget;if(!f.elements.sku.value.trim())f.elements.sku.value=textileSkuFromForm();const fd=new FormData(f),id=fd.get('id')||uid(); const existing=state.items.find(i=>i.id===id);
+  e.preventDefault();const f=e.currentTarget,submit=f.querySelector('[type="submit"]');if(submit.disabled)return;submit.disabled=true;if(!f.elements.sku.value.trim())f.elements.sku.value=textileSkuFromForm();const fd=new FormData(f),id=fd.get('id')||uid(); const existing=state.items.find(i=>i.id===id);
   const item={id,name:fd.get('name').trim(),sku:fd.get('sku').trim(),category:fd.get('category').trim(),color:fd.get('color').trim(),size:fd.get('size').trim(),supplier:fd.get('supplier').trim(),location:fd.get('location').trim(),brand:fd.get('brand').trim(),material:fd.get('material').trim(),season:fd.get('season').trim(),unit:fd.get('unit').trim()||'Stück',tags:fd.get('tags').trim(),description:fd.get('description').trim(),barcode:fd.get('barcode').trim(),photo:pendingItemPhoto,archived:existing?.archived||false,stock:+fd.get('stock'),minStock:+fd.get('minStock'),cost:+fd.get('cost'),salePrice:+fd.get('salePrice')};
+  const duplicateBarcode=item.barcode&&state.items.find(i=>i.id!==id&&i.barcode===item.barcode),duplicateSku=item.sku&&state.items.find(i=>i.id!==id&&String(i.sku||'').toLowerCase()===item.sku.toLowerCase());if(duplicateBarcode){submit.disabled=false;alert(`Dieser Barcode ist bereits „${duplicateBarcode.name}“ zugeordnet.`);return;}if(duplicateSku){submit.disabled=false;alert(`Diese SKU wird bereits für „${duplicateSku.name}“ verwendet.`);return;}
+  const oldItem=existing?{...existing}:null,oldCategories=state.categories.slice(),oldBrands=state.brands.slice(),oldMaterials=state.materials.slice();
   ensureCategory(item.category);
   ensureBrand(item.brand);
   ensureMaterial(item.material);
-  const duplicateBarcode=item.barcode&&state.items.find(i=>i.id!==id&&i.barcode===item.barcode),duplicateSku=item.sku&&state.items.find(i=>i.id!==id&&String(i.sku||'').toLowerCase()===item.sku.toLowerCase());if(duplicateBarcode){alert(`Dieser Barcode ist bereits „${duplicateBarcode.name}“ zugeordnet.`);return;}if(duplicateSku){alert(`Diese SKU wird bereits für „${duplicateSku.name}“ verwendet.`);return;}
   if(existing) Object.assign(existing,item); else state.items.push(item);
-  save(); $('#itemDialog').close(); toast(existing?'Artikel aktualisiert':'Artikel angelegt');
+  if(!persistState()){
+    if(existing)Object.assign(existing,oldItem);else state.items=state.items.filter(i=>i.id!==id);
+    state.categories=oldCategories;state.brands=oldBrands;state.materials=oldMaterials;submit.disabled=false;return;
+  }
+  $('#itemDialog').close();submit.disabled=false;toast(existing?'Artikel aktualisiert':'Artikel angelegt');requestAnimationFrame(renderAll);
 });
 $('#itemPhoto').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{pendingItemPhoto=await compressImage(file);$('#itemPhotoPreview').src=pendingItemPhoto;$('#removeItemPhoto').hidden=false;}catch{alert('Das Foto konnte nicht verarbeitet werden.');}};
 $('#removeItemPhoto').onclick=()=>{pendingItemPhoto='';$('#itemPhotoPreview').src='icon.svg';$('#removeItemPhoto').hidden=true;};
