@@ -1,0 +1,16 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+HP67-Sicherung-*.json
+HP67-Inventar-*.csv
+HP67-Inventar-*.tsv
+HP67-Komplett-*.xlsx
+HP67-Inventarbericht-*.pdf
+*.env
+.env.*
+!.env.example
+*.pem
+*.key
+private/
+backups/

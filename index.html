@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HP67 Inventar">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>HP67 Inventar</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="app.css?v=18">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">HP67 TEXTILIEN</p>
+      <h1 id="pageTitle">Übersicht</h1>
+    </div>
+    <div class="top-actions"><button class="scan-top-btn" id="barcodeScan" aria-label="Barcode scannen">▣</button><button class="voice-btn" id="voiceAdd" aria-label="Per Sprache erfassen">●</button><button class="icon-btn" id="quickAdd" aria-label="Neue Buchung">＋</button></div>
+  </header>
+
+  <main>
+    <section class="page active" data-page="dashboard">
+      <div class="hero">
+        <div>
+          <span>Warenwert im Lager</span>
+          <strong id="stockValue">0,00 €</strong>
+        </div>
+        <div class="hero-mark">↗</div>
+      </div>
+      <div class="stats-grid">
+        <button class="stat" data-filter-link="low"><span class="dot orange"></span><b id="lowCount">0</b><small>Nachkaufen</small></button>
+        <button class="stat" data-filter-link="out"><span class="dot red"></span><b id="outCount">0</b><small>Ausverkauft</small></button>
+        <div class="stat"><span class="dot green"></span><b id="totalUnits">0</b><small>Teile lagernd</small></div>
+        <div class="stat"><span class="dot blue"></span><b id="monthSales">0,00 €</b><small>Verkäufe Monat</small></div>
+        <div class="stat"><span class="dot purple"></span><b id="monthProfit">0,00 €</b><small>Rohertrag Monat</small></div>
+        <div class="stat"><span class="dot slate"></span><b id="skuCount">0</b><small>Artikelvarianten</small></div>
+      </div>
+      <div class="quick-actions">
+        <button id="quickPurchase"><i>＋</i><span>Wareneingang</span></button>
+        <button id="quickSale"><i>−</i><span>Verkauf</span></button>
+        <button id="openReorder"><i>↻</i><span>Nachbestellen</span></button>
+        <button id="openStocktake"><i>✓</i><span>Inventur</span></button>
+      </div>
+      <div class="section-head"><h2>Umsatz · 6 Monate</h2><span class="section-note">Verkauf / Rohertrag</span></div>
+      <div id="salesChart" class="chart-card"></div>
+      <div class="section-head"><h2>Bestandsalarm</h2><button class="text-btn" data-goto="inventory">Alle zeigen</button></div>
+      <div id="alerts" class="card-list"></div>
+      <div class="section-head"><h2>Offene Bestellungen</h2><button class="text-btn" id="showAllOrders">Alle Bestellungen</button></div>
+      <div id="openOrders" class="card-list"></div>
+      <div class="section-head"><h2>Letzte Bewegungen</h2><button class="text-btn" data-goto="activity">Verlauf</button></div>
+      <div id="recentTransactions" class="card-list"></div>
+    </section>
+
+    <section class="page" data-page="inventory">
+      <div class="search-row">
+        <input id="search" type="search" placeholder="Artikel, SKU, EAN, Farbe …">
+        <button class="filter-btn" id="filterToggle">Filter</button>
+      </div>
+      <div class="chips" id="filters">
+        <button class="chip active" data-filter="all">Alle</button>
+        <button class="chip" data-filter="ok">Gut</button>
+        <button class="chip" data-filter="low">Nachkaufen</button>
+        <button class="chip" data-filter="out">Ausverkauft</button>
+        <button class="chip" data-filter="archived">Archiviert</button>
+      </div>
+      <div class="inventory-tools">
+        <select id="inventorySort" aria-label="Inventar sortieren"><option value="name">Name A–Z</option><option value="stock-asc">Bestand aufsteigend</option><option value="stock-desc">Bestand absteigend</option><option value="value-desc">Warenwert absteigend</option></select>
+        <button id="inventoryScanner">Scanner</button>
+        <button id="inventoryLabels">Etiketten</button>
+        <button id="inventoryReorder">Nachbestellung</button>
+        <button id="inventoryStocktake">Inventur</button>
+      </div>
+      <div class="inventory-summary"><span id="itemCount">0 Artikel</span><span id="inventoryUnits">0 Teile</span></div>
+      <div id="inventoryList" class="card-list"></div>
+      <button class="secondary-btn load-more" id="loadMoreInventory" hidden>Weitere Artikel laden</button>
+      <button class="fab" id="addItem">＋ Artikel</button>
+    </section>
+
+    <section class="page" data-page="scan">
+      <div class="scan-hero">
+        <div class="camera-icon">⌁</div>
+        <h2>Rechnung oder Liste erfassen</h2>
+        <p>Fotografiere den Beleg. Die App erkennt Positionen, Mengen und Preise und lässt dich alles vor dem Buchen prüfen.</p>
+        <label class="primary-btn file-btn">Foto aufnehmen<input id="cameraInput" type="file" accept="image/*" capture="environment"></label>
+        <label class="secondary-btn file-btn">Bild auswählen<input id="galleryInput" type="file" accept="image/*"></label>
+      </div>
+      <div class="privacy-note"><b>Datenschutz</b><span>Das Foto wird nur zur Texterkennung verwendet und nicht dauerhaft gespeichert.</span></div>
+      <div class="manual-import">
+        <h3>Alternativ: Liste einfügen</h3>
+        <p>Eine Position pro Zeile, z. B. <code>T-Shirt Schwarz; 12; 8,50</code></p>
+        <textarea id="pasteList" placeholder="Artikel; Menge; Einkaufspreis"></textarea>
+        <button class="secondary-btn" id="parsePaste">Liste übernehmen</button>
+      </div>
+    </section>
+
+    <section class="page" data-page="activity">
+      <div class="activity-summary" id="activitySummary"></div>
+      <button class="undo-btn" id="undoLatest" hidden>↶ Letzte Buchung rückgängig machen</button>
+      <div class="chips">
+        <button class="chip active" data-activity="all">Alle</button>
+        <button class="chip" data-activity="purchase">Einkauf</button>
+        <button class="chip" data-activity="sale">Verkauf</button>
+        <button class="chip" data-activity="return">Retoure</button>
+        <button class="chip" data-activity="damage">Schaden</button>
+        <button class="chip" data-activity="adjustment">Korrektur</button>
+      </div>
+      <div id="activityList" class="card-list"></div>
+      <div class="section-head"><h2>ABC-Analyse · 90 Tage</h2><span class="section-note">nach Umsatz</span></div>
+      <div id="abcAnalysis" class="abc-card"></div>
+    </section>
+
+    <section class="page" data-page="settings">
+      <div class="settings-card">
+        <h2>Daten & Sicherung</h2>
+        <button id="exportJson">Sicherung herunterladen <span>›</span></button>
+        <label>Inventar importieren <input id="importJson" type="file" accept="application/json"></label>
+        <button id="exportCsv">Inventar als CSV <span>›</span></button>
+        <button id="exportTsv">Inventar als TSV <span>›</span></button>
+        <button id="exportXml">Inventar als XML <span>›</span></button>
+        <button id="exportXlsx">Komplette Excel-Arbeitsmappe <span>›</span></button>
+        <button id="exportPdf">Inventarbericht als PDF <span>›</span></button>
+        <button id="exportTransactions">Buchungsverlauf als CSV <span>›</span></button>
+        <label>CSV, TSV, XML oder Excel importieren <input id="importCsv" type="file" accept="text/csv,text/tab-separated-values,text/xml,.csv,.tsv,.xml,.xlsx,.xls"></label>
+      </div>
+      <div class="settings-card">
+        <h2>Barcodes & Etiketten</h2>
+        <button id="settingsScanner">Barcode scannen <span>›</span></button>
+        <button id="settingsLabels">Etiketten erstellen <span>›</span></button>
+        <button id="generateMissingBarcodes">Fehlende Barcodes erzeugen <span>›</span></button>
+      </div>
+      <div class="settings-card">
+        <h2>Kategorien</h2>
+        <p>Textilarten, Kürzel und Farben zentral verwalten.</p>
+        <button id="manageCategories">Kategorien verwalten <span>›</span></button>
+      </div>
+      <div class="settings-card">
+        <h2>Inventarhistorie</h2>
+        <button id="createSnapshot">Momentaufnahme speichern <span>›</span></button>
+        <p id="snapshotInfo">Noch keine Momentaufnahme gespeichert.</p>
+      </div>
+      <div class="settings-card">
+        <h2>App installieren</h2>
+        <p>In Safari unten auf <b>Teilen</b> tippen und dann <b>Zum Home-Bildschirm</b> wählen.</p>
+        <button id="installApp" hidden>App installieren <span>›</span></button>
+      </div>
+      <div class="settings-card danger-zone">
+        <h2>Zurücksetzen</h2>
+        <button id="resetData">Alle Daten löschen <span>›</span></button>
+      </div>
+      <p class="version">HP67 Inventar · Version 2.0</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Hauptnavigation">
+    <button class="active" data-nav="dashboard"><i>⌂</i><span>Übersicht</span></button>
+    <button data-nav="inventory"><i>▦</i><span>Inventar</span></button>
+    <button class="scan-nav" data-nav="scan"><i>⌁</i><span>Scannen</span></button>
+    <button data-nav="activity"><i>↕</i><span>Verlauf</span></button>
+    <button data-nav="settings"><i>⚙</i><span>Mehr</span></button>
+  </nav>
+
+  <dialog id="itemDialog">
+    <form method="dialog" id="itemForm">
+      <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <input type="hidden" name="id">
+      <label>Artikelname<input required name="name" placeholder="z. B. Hoodie Basic"></label>
+      <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
+      <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
+      <div class="form-grid"><label>Farbe<input name="color" placeholder="Schwarz"></label><label>Größe<input name="size" placeholder="M / gemischt"></label></div>
+      <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz<input name="location" placeholder="Regal A3"></label></div>
+      <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
+      <div class="form-grid"><label>Saison / Kollektion<input name="season" placeholder="z. B. Sommer 2026"></label><label>Einheit<input name="unit" placeholder="Stück"></label></div>
+      <label>Tags<input name="tags" placeholder="z. B. Basic, Unisex, Bestseller"></label>
+      <label>Beschreibung / Hinweise<textarea name="description" rows="3" placeholder="Pflege, Qualität, Besonderheiten …"></textarea></label>
+      <label>Barcode / EAN<input name="barcode" inputmode="numeric" placeholder="z. B. 4012345678901"></label>
+      <div class="barcode-tools"><button id="generateBarcode" type="button">EAN erzeugen</button><button id="scanIntoItem" type="button">Code scannen</button><button id="labelCurrentItem" type="button">Etikett</button></div>
+      <div class="item-barcode-preview" id="itemBarcodePreview" hidden><svg id="itemBarcodeSvg" aria-label="Barcode-Vorschau"></svg><small id="itemBarcodeStatus"></small></div>
+      <div class="photo-field"><img id="itemPhotoPreview" alt="Artikelbild"><label class="secondary-btn file-btn">Foto aufnehmen<input id="itemPhoto" type="file" accept="image/*" capture="environment"></label><button id="removeItemPhoto" type="button" class="photo-remove" hidden>Foto entfernen</button></div>
+      <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
+      <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
+      <details class="optional-fields"><summary>Verkaufsdaten (optional)</summary><label>Verkaufspreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label></details>
+      <button class="primary-btn" value="default" type="submit">Artikel speichern</button>
+      <button class="secondary-btn" id="archiveItem" type="button" hidden>Artikel archivieren</button>
+      <button class="danger-btn" id="deleteItem" type="button" hidden>Artikel löschen</button>
+    </form>
+  </dialog>
+
+  <dialog id="transactionDialog">
+    <form method="dialog" id="transactionForm">
+      <div class="dialog-head"><div><p class="eyebrow">BUCHUNG</p><h2>Bestand ändern</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <label>Art<select required name="type"><option value="purchase">Einkauf / Zugang</option><option value="sale">Verkauf / Abgang</option><option value="return">Kundenretoure / Zugang</option><option value="damage">Beschädigt / Entnahme</option><option value="adjustment">Korrektur auf neuen Bestand</option></select></label>
+      <label>Artikel<select required name="itemId" id="transactionItem"></select></label>
+      <div class="form-grid"><label>Menge<input required name="quantity" type="number" min="1" step="1" value="1"></label><label>Preis pro Teil €<input name="unitPrice" type="number" min="0" step="0.01" value="0"></label></div>
+      <label>Notiz<input name="note" placeholder="Kunde, Lieferant, Belegnummer …"></label>
+      <label>Buchungsdatum<input name="date" type="datetime-local"></label>
+      <button class="primary-btn" type="submit" value="default">Buchung speichern</button>
+    </form>
+  </dialog>
+
+  <dialog id="reorderDialog">
+    <form method="dialog" id="reorderForm">
+      <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf.</p>
+      <div id="reorderRows" class="planning-list"></div>
+      <button id="exportReorder" type="button" class="secondary-btn">Liste als CSV herunterladen</button>
+      <button class="primary-btn" type="submit" value="default">Lieferantenbestellung anlegen</button>
+    </form>
+  </dialog>
+
+  <dialog id="ordersDialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">EINKAUF</p><h2>Bestellungen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div id="ordersList" class="planning-list"></div>
+    </form>
+  </dialog>
+
+  <dialog id="receiveDialog">
+    <form method="dialog" id="receiveForm">
+      <div class="dialog-head"><div><p class="eyebrow">WARENEINGANG</p><h2 id="receiveTitle">Bestellung erhalten</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <input type="hidden" name="orderId">
+      <p id="receiveMeta" class="dialog-copy"></p>
+      <div id="receiveRows" class="planning-list"></div>
+      <button class="primary-btn" type="submit" value="default">Eingang verbuchen</button>
+      <button class="danger-btn" type="button" id="cancelOrder">Bestellung stornieren</button>
+    </form>
+  </dialog>
+
+  <dialog id="stocktakeDialog">
+    <form method="dialog" id="stocktakeForm">
+      <div class="dialog-head"><div><p class="eyebrow">BESTANDSKONTROLLE</p><h2>Inventur</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <p class="dialog-copy">Trage die tatsächlich gezählte Menge ein. Abweichungen werden als Korrektur protokolliert.</p>
+      <div class="stocktake-search"><input id="stocktakeSearch" type="search" placeholder="Artikel filtern …"></div>
+      <div id="stocktakeRows" class="planning-list"></div>
+      <button class="primary-btn" type="submit" value="default">Inventur abschließen</button>
+    </form>
+  </dialog>
+
+  <dialog id="scanDialog">
+    <form method="dialog" id="scanForm">
+      <div class="dialog-head"><div><p class="eyebrow">BELEGIMPORT</p><h2>Erkannte Positionen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div id="ocrStatus" class="ocr-status"></div>
+      <img id="receiptPreview" alt="Vorschau des Belegs">
+      <div id="scanRows"></div>
+      <button id="addScanRow" type="button" class="secondary-btn">＋ Position ergänzen</button>
+      <button class="primary-btn" type="submit" value="default">Als Einkauf buchen</button>
+    </form>
+  </dialog>
+
+  <dialog id="voiceDialog">
+    <form method="dialog" id="voiceForm">
+      <div class="dialog-head"><div><p class="eyebrow">SPRACHEINGABE</p><h2>Artikel diktieren</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <label>Vorgang<select id="voiceMode" name="mode"><option value="purchase">Einkauf / Bestand hinzufügen</option><option value="sale">Verkauf / Bestand abziehen</option><option value="return">Kundenretoure</option><option value="damage">Beschädigt / Entnahme</option></select></label>
+      <button type="button" id="voiceMic" class="mic-control"><span class="mic-symbol">●</span><b id="voiceMicLabel">Aufnahme starten</b><small id="voiceStatus">Tippen und anschließend sprechen</small></button>
+      <p class="voice-example">Beispiel: „12 schwarze T-Shirts für 8,50 Euro und 6 Hoodies für 15 Euro“</p>
+      <label>Erkannter Text<textarea id="voiceTranscript" rows="4" placeholder="Du kannst den Text auch eintippen oder korrigieren."></textarea></label>
+      <button type="button" id="parseVoice" class="secondary-btn">Text auswerten</button>
+      <div id="voiceRows" class="voice-rows"></div>
+      <button class="primary-btn" type="submit" value="default">Positionen verbuchen</button>
+      <p class="voice-privacy">Die App speichert keine Audioaufnahme. Die Spracherkennung wird vom Browser beziehungsweise vom Betriebssystem bereitgestellt und kann eine Internetverbindung benötigen.</p>
+    </form>
+  </dialog>
+
+  <dialog id="scannerDialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">KAMERA-SCANNER</p><h2>Barcode scannen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div id="barcodeReader"></div>
+      <div id="scannerStatus" class="scanner-status">Kamera wird vorbereitet …</div>
+      <div class="manual-code"><input id="manualBarcode" inputmode="numeric" placeholder="Barcode manuell eingeben"><button id="useManualBarcode" type="button">Übernehmen</button></div>
+      <label class="secondary-btn file-btn">Barcode-Foto auswählen<input id="barcodeImage" type="file" accept="image/*" capture="environment"></label>
+      <div id="scannerResult" class="scanner-result" hidden></div>
+      <div class="scanner-actions" id="scannerActions" hidden><button id="scanPurchase" type="button">＋ 1 Eingang</button><button id="scanSale" type="button">− 1 Verkauf</button><button id="scanEdit" type="button">Artikel öffnen</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="labelDialog">
+    <form method="dialog" id="labelForm">
+      <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
+      <label id="labelItemWrap">Artikel<select name="itemId" id="labelItem"></select></label>
+      <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="50x25">Thermo · 50 × 25 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
+      <div class="form-grid custom-size" id="customLabelSize" hidden><label>Breite mm<input name="width" type="number" min="20" max="200" value="62"></label><label>Höhe mm<input name="height" type="number" min="15" max="150" value="29"></label></div>
+      <div class="form-grid"><label>Anzahl je Artikel<input name="copies" type="number" min="1" max="100" value="1"></label><label>Leere Startfelder<input name="startAt" type="number" min="0" max="100" value="0"></label></div>
+      <div class="form-grid"><label>PNG-Auflösung<select name="dpi"><option value="300">300 DPI</option><option value="600">600 DPI</option></select></label><label>Schriftgröße<select name="fontScale"><option value="0.85">Kompakt</option><option value="1" selected>Normal</option><option value="1.2">Groß</option></select></label></div>
+      <div class="form-grid"><label>Hintergrund<input name="background" type="color" value="#ffffff"></label><label>Textfarbe<input name="textColor" type="color" value="#101827"></label></div>
+      <div class="logo-import"><img id="labelLogoPreview" alt="Logo"><label class="secondary-btn file-btn">SVG-/PNG-Logo<input id="labelLogoInput" type="file" accept="image/svg+xml,image/png,image/jpeg"></label><button id="removeLabelLogo" class="photo-remove" type="button" hidden>Logo entfernen</button></div>
+      <div class="check-grid"><label><input name="showName" type="checkbox" checked> Artikelname</label><label><input name="showPrice" type="checkbox" checked> Verkaufspreis</label><label><input name="showSku" type="checkbox" checked> SKU</label><label><input name="showVariant" type="checkbox" checked> Farbe/Größe</label></div>
+      <div class="label-preview" id="labelPreview"></div>
+      <div id="labelStatus" class="label-status"></div>
+      <div class="export-grid"><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="printLabels" type="button" class="primary-btn">Drucken / PDF</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="categoryDialog">
+    <form method="dialog" id="categoryForm">
+      <div class="dialog-head"><div><p class="eyebrow">TEXTILARTEN</p><h2>Kategorien verwalten</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <input type="hidden" name="id">
+      <div class="form-grid"><label>Kategoriename<input name="name" required placeholder="z. B. Westen"></label><label>SKU-Kürzel<input name="prefix" required maxlength="5" placeholder="WE"></label></div>
+      <label>Kategoriefarbe<input name="color" type="color" value="#2563eb"></label>
+      <button class="primary-btn" type="submit" value="default" id="saveCategory">Kategorie hinzufügen</button>
+      <button class="secondary-btn" type="button" id="cancelCategoryEdit" hidden>Bearbeitung abbrechen</button>
+      <div class="category-list" id="categoryList"></div>
+    </form>
+  </dialog>
+
+  <dialog id="importDialog">
+    <form method="dialog" id="importForm">
+      <div class="dialog-head"><div><p class="eyebrow">DATENIMPORT</p><h2>Import prüfen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <p id="importSummary" class="dialog-copy"></p>
+      <div class="import-preview"><table><thead><tr><th>Artikel</th><th>SKU</th><th>Bestand</th><th>EK</th></tr></thead><tbody id="importPreviewRows"></tbody></table></div>
+      <label>Importmodus<select name="strategy"><option value="merge">Zusammenführen und vorhandene Treffer aktualisieren</option><option value="append">Nur neue Artikel hinzufügen</option><option value="replace">Aktuelles Inventar vollständig ersetzen</option></select></label>
+      <button class="primary-btn" type="submit" value="default">Import durchführen</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="vendor/html5-qrcode.min.js"></script>
+  <script src="vendor/jsbarcode.min.js"></script>
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="app.js?v=18"></script>
+</body>
+</html>
