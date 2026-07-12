@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=21">
+  <link rel="stylesheet" href="app.css?v=22">
 </head>
 <body>
   <header class="topbar">
@@ -179,7 +179,7 @@
       <label>Beschreibung / Hinweise<textarea name="description" rows="3" placeholder="Pflege, Qualität, Besonderheiten …"></textarea></label>
       <label>Barcode / EAN<input name="barcode" inputmode="numeric" placeholder="z. B. 4012345678901"></label>
       <div class="barcode-tools"><button id="generateBarcode" type="button">EAN erzeugen</button><button id="scanIntoItem" type="button">Code scannen</button><button id="labelCurrentItem" type="button">Etikett</button></div>
-      <div class="item-barcode-preview" id="itemBarcodePreview" hidden><svg id="itemBarcodeSvg" aria-label="Barcode-Vorschau"></svg><small id="itemBarcodeStatus"></small><div class="barcode-export-actions"><button id="downloadBarcodeSvg" type="button">SVG laden</button><button id="downloadBarcodePng" type="button">PNG laden</button><button id="printItemBarcode" type="button">Direkt drucken</button></div></div>
+      <div class="item-barcode-preview" id="itemBarcodePreview" hidden><svg id="itemBarcodeSvg" aria-label="Barcode-Vorschau"></svg><small id="itemBarcodeStatus"></small><label class="nelko-format">Nelko-Etikett<select id="nelkoLabelSize"><option value="40x15">40 × 15 mm · Mini</option><option value="50x25">50 × 25 mm</option><option value="50x30">50 × 30 mm · PM220</option><option value="70x40">70 × 40 mm</option></select></label><div class="barcode-export-actions"><button id="downloadBarcodeSvg" type="button">SVG laden</button><button id="downloadBarcodePng" type="button">PNG laden</button><button id="shareNelkoBarcode" type="button">Nelko / Teilen</button><button id="printItemBarcode" type="button">Drucken</button></div></div>
       <div class="photo-field"><img id="itemPhotoPreview" alt="Artikelbild"><label class="secondary-btn file-btn">Foto aufnehmen<input id="itemPhoto" type="file" accept="image/*" capture="environment"></label><button id="removeItemPhoto" type="button" class="photo-remove" hidden>Foto entfernen</button></div>
       <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
       <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
@@ -324,6 +324,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=21"></script>
+  <script src="app.js?v=22"></script>
 </body>
 </html>
