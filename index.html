@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=26">
+  <link rel="stylesheet" href="app.css?v=27">
 </head>
 <body>
   <header class="topbar">
@@ -172,7 +172,7 @@
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
       <div class="form-grid"><label>Farbe auswählen oder schreiben<input name="color" list="colorOptions" placeholder="Schwarz"><datalist id="colorOptions"><option value="Schwarz"></option><option value="Weiß"></option><option value="Navy"></option><option value="Grau"></option><option value="Rot"></option><option value="Blau"></option><option value="Grün"></option><option value="Beige"></option><option value="Gelb"></option><option value="Rosa"></option><option value="Lila"></option><option value="Orange"></option></datalist></label><label>Größe auswählen oder schreiben<input name="size" list="sizeOptions" placeholder="M / gemischt"><datalist id="sizeOptions"><option value="XXS"></option><option value="XS"></option><option value="S"></option><option value="M"></option><option value="L"></option><option value="XL"></option><option value="XXL"></option><option value="3XL"></option><option value="4XL"></option><option value="5XL"></option><option value="Einheitsgröße"></option></datalist></label></div>
-      <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Kommagetrennt eingeben. Jede Farbe wird mit jeder Größe als eigene Variante samt SKU und Barcode erstellt.</p><div class="form-grid"><label>Farben<input id="variantColors" placeholder="Schwarz, Weiß, Navy"></label><label>Größen<input id="variantSizes" placeholder="S, M, L, XL"></label></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
+      <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Die App erstellt jede Kombination als eigenen Lagerartikel mit eindeutiger SKU und eigenem Barcode. Bestand, Mindestbestand und Preise gelten jeweils pro Variante.</p><div class="form-grid"><label>Farben · auswählen oder schreiben<input id="variantColors" list="colorOptions" placeholder="Schwarz, Weiß, Navy"></label><label>Größen · automatisch oder selbst schreiben<input id="variantSizes" placeholder="S, M, L, XL"></label></div><div class="size-range"><label>Von<select id="sizeRangeFrom"><option>XXS</option><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option>5XL</option></select></label><span>bis</span><label>Bis<select id="sizeRangeTo"><option>XXS</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option selected>5XL</option></select></label><button type="button" id="applySizeRange">Größen übernehmen</button></div><div class="size-presets"><button type="button" data-size-preset="S,M,L,XL,XXL,3XL,4XL,5XL">S–5XL</button><button type="button" data-size-preset="XS,S,M,L,XL,XXL,3XL">XS–3XL</button><button type="button" data-size-preset="S,M,L,XL,XXL">S–XXL</button><button type="button" data-size-preset="Einheitsgröße">Einheitsgröße</button></div><div class="variant-help"><b>Beispiel</b><span>3 Farben × 8 Größen = 24 Varianten. Höchstens 60 Varianten pro Vorgang halten die App schnell und sicher.</span></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
       <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz<input name="location" placeholder="Regal A3"></label></div>
       <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
       <div class="form-grid"><label>Saison / Kollektion<input name="season" placeholder="z. B. Sommer 2026"></label><label>Einheit<input name="unit" placeholder="Stück"></label></div>
@@ -326,6 +326,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=26"></script>
+  <script src="app.js?v=27"></script>
 </body>
 </html>

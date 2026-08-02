@@ -24,6 +24,11 @@ const referenced=[...app.matchAll(/\$\('#([^']+)'\)/g)].map(match=>match[1]);
 const missing=[...new Set(referenced.filter(id=>!idSet.has(id)))];
 if(missing.length)fail(`Von app.js referenzierte HTML-IDs fehlen: ${missing.join(', ')}`);
 
+for(const feature of ['sizeRangeFrom','sizeRangeTo','applySizeRange','variantSizes'])if(!idSet.has(feature))fail(`Größenautomatik fehlt: ${feature}`);
+if(!app.includes("const SIZE_SCALE=['XXS','XS','S','M','L','XL','XXL','3XL','4XL','5XL']"))fail('Größenfolge XXS bis 5XL fehlt.');
+if(!app.includes('SIZE_SCALE.slice(start,end+1)'))fail('Automatische Größenbereich-Auswahl fehlt.');
+if(!app.includes("{code:'TS',label:'T-Shirts',match:/\\b(t[ -]?shirt|tee|shirt)\\b/i}"))fail('Shirts werden nicht als T-Shirts erkannt.');
+
 const sw=read('sw.js');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file))){
   const expected=`./${asset}`;

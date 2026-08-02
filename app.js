@@ -168,6 +168,10 @@ $('#itemForm').elements.stock.addEventListener('input',updateItemCostValue);$('#
 function variantValues(value){return [...new Set(String(value||'').split(/[,;\n]+/).map(v=>v.trim()).filter(Boolean))];}
 function updateVariantCount(){const colors=variantValues($('#variantColors').value),sizes=variantValues($('#variantSizes').value),count=(colors.length||1)*(sizes.length||1);$('#variantCount').textContent=colors.length||sizes.length?`${count} Variante(n) werden angelegt. Bestand und Preise gelten jeweils pro Variante.`:'Keine Variantenliste eingegeben.';}
 $('#variantColors').addEventListener('input',updateVariantCount);$('#variantSizes').addEventListener('input',updateVariantCount);
+const SIZE_SCALE=['XXS','XS','S','M','L','XL','XXL','3XL','4XL','5XL'];
+function setVariantSizes(values){$('#variantSizes').value=variantValues(values).join(', ');updateVariantCount();}
+$('#applySizeRange').onclick=()=>{const from=SIZE_SCALE.indexOf($('#sizeRangeFrom').value),to=SIZE_SCALE.indexOf($('#sizeRangeTo').value);if(from<0||to<0)return;const start=Math.min(from,to),end=Math.max(from,to);setVariantSizes(SIZE_SCALE.slice(start,end+1));toast(`${end-start+1} Größen übernommen`);};
+$$('[data-size-preset]').forEach(button=>button.onclick=()=>{setVariantSizes(button.dataset.sizePreset);toast('Größenvorlage übernommen');});
 
 function skuPart(value,length=3){return String(value||'').trim().toUpperCase().replace(/\u00c4/g,'AE').replace(/\u00d6/g,'OE').replace(/\u00dc/g,'UE').replace(/\u00df/g,'SS').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9]+/g,'').slice(0,length);}
 const TEXTILE_TYPES=[
