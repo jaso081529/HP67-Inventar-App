@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=27">
+  <link rel="stylesheet" href="app.css?v=28">
 </head>
 <body>
   <header class="topbar">
@@ -208,7 +208,7 @@
       <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf.</p>
       <div id="reorderRows" class="planning-list"></div>
-      <button id="exportReorder" type="button" class="secondary-btn">Liste als CSV herunterladen</button>
+      <div class="reorder-export-grid"><button id="exportReorder" type="button">CSV</button><button id="exportReorderPdf" type="button">PDF speichern</button><button id="printReorder" type="button" class="primary-btn">PDF öffnen / drucken</button></div>
       <button class="primary-btn" type="submit" value="default">Lieferantenbestellung anlegen</button>
     </form>
   </dialog>
@@ -293,7 +293,7 @@
       <div class="check-grid"><label><input name="showName" type="checkbox" checked> Artikelname</label><label><input name="showPrice" type="checkbox" checked> Verkaufspreis</label><label><input name="showSku" type="checkbox" checked> SKU</label><label><input name="showVariant" type="checkbox" checked> Farbe/Größe</label></div>
       <div class="label-preview" id="labelPreview"></div>
       <div id="labelStatus" class="label-status"></div>
-      <div class="export-grid"><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="printLabels" type="button" class="primary-btn">Drucken / PDF</button></div>
+      <div class="export-grid"><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button" class="primary-btn">Direkt drucken</button></div>
     </form>
   </dialog>
 
@@ -326,6 +326,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=27"></script>
+  <script src="app.js?v=28"></script>
 </body>
 </html>

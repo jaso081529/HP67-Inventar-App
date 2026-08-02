@@ -28,6 +28,9 @@ for(const feature of ['sizeRangeFrom','sizeRangeTo','applySizeRange','variantSiz
 if(!app.includes("const SIZE_SCALE=['XXS','XS','S','M','L','XL','XXL','3XL','4XL','5XL']"))fail('Größenfolge XXS bis 5XL fehlt.');
 if(!app.includes('SIZE_SCALE.slice(start,end+1)'))fail('Automatische Größenbereich-Auswahl fehlt.');
 if(!app.includes("{code:'TS',label:'T-Shirts',match:/\\b(t[ -]?shirt|tee|shirt)\\b/i}"))fail('Shirts werden nicht als T-Shirts erkannt.');
+for(const feature of ['exportReorderPdf','printReorder','exportLabelsPdf'])if(!idSet.has(feature))fail(`PDF-/Druckfunktion fehlt: ${feature}`);
+for(const handler of ["$('#exportReorderPdf').onclick","$('#printReorder').onclick","$('#exportLabelsPdf').onclick"])if(!app.includes(handler))fail(`PDF-Klickfunktion fehlt: ${handler}`);
+for(const column of ['Artikelbezeichnung','Farbe / Größe','Bestellen','Summe'])if(!app.includes(column))fail(`Genaue Nachbestellspalte fehlt: ${column}`);
 
 const sw=read('sw.js');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file))){
