@@ -20,6 +20,9 @@ const duplicates=[...new Set(ids.filter((id,index)=>ids.indexOf(id)!==index))];
 if(duplicates.length)fail(`Doppelte HTML-IDs: ${duplicates.join(', ')}`);
 
 const idSet=new Set(ids);
+const closeButtons=[...html.matchAll(/<button\b[^>]*class="close-btn"[^>]*>/g)].map(match=>match[0]);
+if(!closeButtons.length||closeButtons.some(button=>! /\btype="button"/.test(button)))fail('Dialog-Schließen darf niemals ein Formular absenden.');
+if(!app.includes("$$('.close-btn').forEach"))fail('Sicherer Dialog-Schließen-Handler fehlt.');
 const referenced=[...app.matchAll(/\$\('#([^']+)'\)/g)].map(match=>match[1]);
 const missing=[...new Set(referenced.filter(id=>!idSet.has(id)))];
 if(missing.length)fail(`Von app.js referenzierte HTML-IDs fehlen: ${missing.join(', ')}`);

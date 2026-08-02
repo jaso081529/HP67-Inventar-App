@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=29">
+  <link rel="stylesheet" href="app.css?v=30">
 </head>
 <body>
   <header class="topbar">
@@ -166,7 +166,7 @@
 
   <dialog id="itemDialog">
     <form method="dialog" id="itemForm">
-      <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
       <label>Artikelname<input required name="name" placeholder="z. B. Hoodie Basic"></label>
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
@@ -193,7 +193,7 @@
 
   <dialog id="transactionDialog">
     <form method="dialog" id="transactionForm">
-      <div class="dialog-head"><div><p class="eyebrow">BUCHUNG</p><h2>Bestand ändern</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">BUCHUNG</p><h2>Bestand ändern</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Art<select required name="type"><option value="purchase">Einkauf / Zugang</option><option value="sale">Verkauf / Abgang</option><option value="return">Kundenretoure / Zugang</option><option value="damage">Beschädigt / Entnahme</option><option value="adjustment">Korrektur auf neuen Bestand</option></select></label>
       <label>Artikel<select required name="itemId" id="transactionItem"></select></label>
       <label id="transactionPriceTypeWrap">Preisart<select name="priceType" id="transactionPriceType"><option value="standard">Standard-/Ladenpreis</option><option value="online">Onlineshoppreis</option><option value="market">Markt-/Eventpreis</option><option value="wholesale">Großhandel/B2B</option><option value="special">Sonderpreis</option></select><small id="transactionPriceHelp">Der passende Artikelpreis wird automatisch übernommen und kann danach geändert werden.</small></label>
@@ -206,7 +206,7 @@
 
   <dialog id="reorderDialog">
     <form method="dialog" id="reorderForm">
-      <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf.</p>
       <div id="reorderRows" class="planning-list"></div>
       <div class="reorder-export-grid"><button id="exportReorder" type="button">CSV</button><button id="exportReorderPdf" type="button">PDF speichern</button><button id="printReorder" type="button" class="primary-btn">PDF öffnen / drucken</button></div>
@@ -216,14 +216,14 @@
 
   <dialog id="ordersDialog">
     <form method="dialog">
-      <div class="dialog-head"><div><p class="eyebrow">EINKAUF</p><h2>Bestellungen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">EINKAUF</p><h2>Bestellungen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="ordersList" class="planning-list"></div>
     </form>
   </dialog>
 
   <dialog id="receiveDialog">
     <form method="dialog" id="receiveForm">
-      <div class="dialog-head"><div><p class="eyebrow">WARENEINGANG</p><h2 id="receiveTitle">Bestellung erhalten</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">WARENEINGANG</p><h2 id="receiveTitle">Bestellung erhalten</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="orderId">
       <p id="receiveMeta" class="dialog-copy"></p>
       <div id="receiveRows" class="planning-list"></div>
@@ -234,7 +234,7 @@
 
   <dialog id="stocktakeDialog">
     <form method="dialog" id="stocktakeForm">
-      <div class="dialog-head"><div><p class="eyebrow">BESTANDSKONTROLLE</p><h2>Inventur</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">BESTANDSKONTROLLE</p><h2>Inventur</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Trage die tatsächlich gezählte Menge ein. Abweichungen werden als Korrektur protokolliert.</p>
       <div class="stocktake-search"><input id="stocktakeSearch" type="search" placeholder="Artikel filtern …"></div>
       <div id="stocktakeRows" class="planning-list"></div>
@@ -244,7 +244,7 @@
 
   <dialog id="scanDialog">
     <form method="dialog" id="scanForm">
-      <div class="dialog-head"><div><p class="eyebrow">BELEGIMPORT</p><h2>Erkannte Positionen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">BELEGIMPORT</p><h2>Erkannte Positionen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="ocrStatus" class="ocr-status"></div>
       <img id="receiptPreview" alt="Vorschau des Belegs">
       <div id="scanRows"></div>
@@ -255,7 +255,7 @@
 
   <dialog id="voiceDialog">
     <form method="dialog" id="voiceForm">
-      <div class="dialog-head"><div><p class="eyebrow">SPRACHEINGABE</p><h2>Artikel diktieren</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">SPRACHEINGABE</p><h2>Artikel diktieren</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Vorgang<select id="voiceMode" name="mode"><option value="purchase">Einkauf / Bestand hinzufügen</option><option value="sale">Verkauf / Bestand abziehen</option><option value="return">Kundenretoure</option><option value="damage">Beschädigt / Entnahme</option></select></label>
       <button type="button" id="voiceMic" class="mic-control"><span class="mic-symbol">●</span><b id="voiceMicLabel">Aufnahme starten</b><small id="voiceStatus">Tippen und anschließend sprechen</small></button>
       <p class="voice-example">Beispiel: „12 schwarze T-Shirts für 8,50 Euro und 6 Hoodies für 15 Euro“</p>
@@ -269,7 +269,7 @@
 
   <dialog id="scannerDialog">
     <form method="dialog">
-      <div class="dialog-head"><div><p class="eyebrow">KAMERA-SCANNER</p><h2>Barcode scannen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">KAMERA-SCANNER</p><h2>Barcode scannen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="barcodeReader"></div>
       <div id="scannerStatus" class="scanner-status">Kamera wird vorbereitet …</div>
       <div class="manual-code"><input id="manualBarcode" inputmode="numeric" placeholder="Barcode manuell eingeben"><button id="useManualBarcode" type="button">Übernehmen</button></div>
@@ -281,7 +281,7 @@
 
   <dialog id="labelDialog">
     <form method="dialog" id="labelForm">
-      <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="variants">Mehrere Varianten auswählen</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
       <label id="labelItemWrap">Artikel<select name="itemId" id="labelItem"></select></label>
       <div id="labelVariantWrap" class="variant-checklist" hidden></div>
@@ -301,7 +301,7 @@
 
   <dialog id="categoryDialog">
     <form method="dialog" id="categoryForm">
-      <div class="dialog-head"><div><p class="eyebrow">TEXTILARTEN</p><h2>Kategorien verwalten</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">TEXTILARTEN</p><h2>Kategorien verwalten</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
       <div class="form-grid"><label>Kategoriename<input name="name" required placeholder="z. B. Westen"></label><label>SKU-Kürzel<input name="prefix" required maxlength="5" placeholder="WE"></label></div>
       <label>Kategoriefarbe<input name="color" type="color" value="#2563eb"></label>
@@ -313,7 +313,7 @@
 
   <dialog id="importDialog">
     <form method="dialog" id="importForm">
-      <div class="dialog-head"><div><p class="eyebrow">DATENIMPORT</p><h2>Import prüfen</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <div class="dialog-head"><div><p class="eyebrow">DATENIMPORT</p><h2>Import prüfen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p id="importSummary" class="dialog-copy"></p>
       <div class="import-preview"><table><thead><tr><th>Artikel</th><th>SKU</th><th>Bestand</th><th>EK</th></tr></thead><tbody id="importPreviewRows"></tbody></table></div>
       <label>Importmodus<select name="strategy"><option value="merge">Zusammenführen und vorhandene Treffer aktualisieren</option><option value="append">Nur neue Artikel hinzufügen</option><option value="replace">Aktuelles Inventar vollständig ersetzen</option></select></label>
@@ -328,6 +328,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=29"></script>
+  <script src="app.js?v=30"></script>
 </body>
 </html>

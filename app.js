@@ -45,6 +45,7 @@ function statusLabel(status){ return {ok:'Bestand gut',low:'Nachkaufen',out:'Aus
 function initials(name){ return name.split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'TX'; }
 function empty(message){ return `<div class="empty">${esc(message)}</div>`; }
 function toast(message){ const el=$('#toast'); el.textContent=message; el.classList.add('show'); clearTimeout(el.timer); el.timer=setTimeout(()=>el.classList.remove('show'),2500); }
+$$('.close-btn').forEach(button=>button.addEventListener('click',()=>button.closest('dialog')?.close('cancel')));
 
 function renderAll(){
   renderDashboard(); renderInventory(); renderTransactions(); fillItemSelect(); renderSnapshotInfo();renderCategoryOptions();renderBrandOptions();renderMaterialOptions();
