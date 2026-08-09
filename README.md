@@ -27,6 +27,10 @@ Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Minde
 - Inventurmodus mit protokollierten Bestandskorrekturen
 - Umsatz- und Rohertragsauswertung für die letzten sechs Monate
 - OCR-Import für Rechnungsfotos und manuell eingefügte Listen
+- Smart-Kamera für Artikel und Lagerplätze: Barcode/SKU/Lagercode zuerst, anschließend lokaler Fotovergleich
+- Privates Foto-Lernsystem mit bis zu 6 Ansichten je Artikel und 4 Ansichten je Lagerplatz
+- Bestehende Artikelfotos werden beim ersten Smart-Scan automatisch in speichersparende Bildmerkmale umgewandelt
+- Foto-Treffer zeigen Ähnlichkeit und müssen vor einer Bestandsbuchung ausdrücklich bestätigt werden
 - CSV-Import/-Export und vollständige JSON-Sicherung
 - CSV-, TSV- und Excel-Import mit Vorschau und Duplikaterkennung
 - XML-Import und -Export für strukturierte Datenaustauschprozesse
@@ -77,6 +81,12 @@ Für eine private iPhone-Web-App empfiehlt sich anschließend eine HTTPS-Bereits
 Alle Inventardaten liegen lokal im Browser des Geräts. Unter **Mehr → Sicherung herunterladen** sollte regelmäßig eine JSON-Sicherung erstellt werden. Beim Löschen der Browserdaten gehen ungesicherte Daten verloren.
 
 Die OCR-Texterkennung lädt beim ersten Scan die Erkennungssoftware und das deutsche Sprachmodell aus dem Internet. Die eigentliche Erkennung läuft im Browser. Jeder Belegimport wird vor der Buchung zur Kontrolle angezeigt.
+
+## Smart-Kamera richtig anlernen
+
+Öffne einen Artikel, tippe bei „Lokale Fotoerkennung“ auf „Ansicht anlernen“ und fotografiere das Textil 3–6 Mal: Vorderseite, Rückseite, Etikett und bei Bedarf ein Detail. Ein ruhiger, möglichst gleicher Hintergrund verbessert die Treffer. Lagerplätze können unter „Mehr → Lagerplätze & Aufkleber“ mit 2–4 Blickwinkeln angelernt werden.
+
+Die Smart-Kamera arbeitet in Stufen: Ein Barcode, eine SKU oder ein Lagercode ist eindeutig. OCR versucht sichtbare Etiketten zu lesen. Der Fotovergleich erkennt bereits angelernte Motive und übernimmt deren Artikelart – beispielsweise „T-Shirts“ – zeigt dabei aber immer eine Ähnlichkeit und verlangt vor dem Buchen eine Bestätigung. Ein unbekanntes Textil ohne lesbaren Code muss einmal zugeordnet werden; danach lernt die App seine Ansichten lokal. Fotos und Bildmerkmale werden nicht zu GitHub hochgeladen.
 
 ## Barcodes und Drucken
 

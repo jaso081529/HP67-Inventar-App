@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <rect width="640" height="640" fill="#f7f7f5"/>
+  <path d="M238 118c19 27 45 41 82 41s63-14 82-41l112 59-59 113-62-31v270H247V259l-62 31-59-113z" fill="#1d4ed8" stroke="#10285d" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M265 120c6 34 25 51 55 51s49-17 55-51" fill="none" stroke="#f7f7f5" stroke-width="25"/>
+  <text x="320" y="370" text-anchor="middle" font-family="Arial" font-size="70" font-weight="700" fill="#fff">HP67</text>
+</svg>

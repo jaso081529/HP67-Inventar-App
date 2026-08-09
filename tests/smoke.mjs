@@ -6,15 +6,16 @@ import {execFileSync} from 'node:child_process';
 const root=path.resolve(import.meta.dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const fail=message=>{throw new Error(message);};
-const required=['index.html','app.css','app.js','sw.js','manifest.webmanifest','icon.svg','serve.mjs','vendor/html5-qrcode.min.js','vendor/jsbarcode.min.js','vendor/xlsx.full.min.js','vendor/jspdf.umd.min.js','vendor/jspdf.plugin.autotable.min.js','vendor/jszip.min.js'];
+const required=['index.html','app.css','app.js','smart-camera.js','sw.js','manifest.webmanifest','icon.svg','serve.mjs','vendor/html5-qrcode.min.js','vendor/jsbarcode.min.js','vendor/xlsx.full.min.js','vendor/jspdf.umd.min.js','vendor/jspdf.plugin.autotable.min.js','vendor/jszip.min.js'];
 
 for(const file of required)if(!fs.existsSync(path.join(root,file)))fail(`Pflichtdatei fehlt: ${file}`);
 
-for(const file of ['app.js','sw.js'])new vm.Script(read(file),{filename:file});
+for(const file of ['app.js','smart-camera.js','sw.js'])new vm.Script(read(file),{filename:file});
 execFileSync(process.execPath,['--check',path.join(root,'serve.mjs')],{stdio:'pipe'});
 
 const html=read('index.html');
 const app=read('app.js');
+const smart=read('smart-camera.js');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
 const duplicates=[...new Set(ids.filter((id,index)=>ids.indexOf(id)!==index))];
 if(duplicates.length)fail(`Doppelte HTML-IDs: ${duplicates.join(', ')}`);
@@ -43,6 +44,19 @@ for(const field of ['showLocation','showBrand','showMaterial'])if(!html.includes
 for(const logic of ['function ensureLocation','function buildLocationLabelSvg','selectedLocationsForLabels','scannedLocation','Lagerplätze'])if(!app.includes(logic))fail(`Lagerplatz-Automatik fehlt: ${logic}`);
 if(!app.includes("XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(locations),'Lagerplätze')"))fail('Lagerplätze fehlen im Excel-Export.');
 if(!html.includes('id="manualBarcode" inputmode="text"'))fail('Der Scanner muss alphanumerische Lagercodes manuell annehmen.');
+for(const feature of ['smartCameraInput','smartGalleryInput','smartCameraDialog','smartCameraPreview','smartCameraResults','trainItemVisual','trainLocationVisual'])if(!idSet.has(feature))fail(`Smart-Kamera-Funktion fehlt: ${feature}`);
+for(const logic of ['function createVisualFingerprint','function visualSimilarity','function bestVisualCandidates','function findKnownCode','function analyzeSmartPhoto','Keine automatische Buchung'])if(!smart.includes(logic)&&!html.includes(logic))fail(`Lokale Bilderkennung fehlt: ${logic}`);
+if(!smart.includes("confirm(`Foto-Treffer"))fail('Foto-Treffer dürfen nicht ohne Bestätigung buchen.');
+if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
+if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
+
+const smartElementStub=()=>({addEventListener(){},classList:{add(){},remove(){},toggle(){}},style:{},dataset:{}});
+const smartContext={console,window:{},setTimeout,clearTimeout,Blob:class{},URL:{},Image:class{},document:{},state:{items:[],locations:[]},$:smartElementStub,$$:()=>[],toast(){},confirm:()=>false};
+vm.runInNewContext(`${smart}\nglobalThis.__visualSimilarity=visualSimilarity;`,smartContext,{filename:'smart-camera-runtime-test.js'});
+const visualSample=(bit,tone,color,histIndex)=>({version:1,hash:bit.repeat(64),tones:Array(64).fill(tone),colors:Array(48).fill(color),hist:Array.from({length:20},(_,index)=>index===histIndex?1:0)});
+const shirtSample=visualSample('0',10,8,2),sameShirt=visualSample('0',10,8,2),differentShelf=visualSample('1',55,28,15);
+if(smartContext.__visualSimilarity(shirtSample,sameShirt)<.99)fail('Gleiches angelerntes Motiv wird nicht sicher wiedererkannt.');
+if(smartContext.__visualSimilarity(shirtSample,differentShelf)>=.72)fail('Deutlich anderes Motiv würde fälschlich als Foto-Treffer erscheinen.');
 
 const sw=read('sw.js');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file))){
@@ -53,7 +67,7 @@ for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file)))
 const manifest=JSON.parse(read('manifest.webmanifest'));
 if(manifest.display!=='standalone'||!manifest.start_url)fail('Manifest ist nicht als installierbare Web-App konfiguriert.');
 
-const sourceFiles=['index.html','app.js','app.css','sw.js','manifest.webmanifest','serve.mjs'];
+const sourceFiles=['index.html','app.js','smart-camera.js','app.css','sw.js','manifest.webmanifest','serve.mjs'];
 const secretPatterns=[
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /(?:api[_-]?key|secret|password|access[_-]?token)\s*[:=]\s*['"][^'"]{8,}['"]/i,

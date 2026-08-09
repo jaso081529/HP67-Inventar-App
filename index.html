@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=31">
+  <link rel="stylesheet" href="app.css?v=32">
 </head>
 <body>
   <header class="topbar">
@@ -82,6 +82,15 @@
     </section>
 
     <section class="page" data-page="scan">
+      <div class="smart-camera-card">
+        <div class="smart-camera-head"><span>◎</span><div><p class="eyebrow">LOKALE ERKENNUNG</p><h2>Artikel & Lagerplatz erkennen</h2></div></div>
+        <p>Ein Foto wird nacheinander auf Barcode, SKU/Lagercode und angelernte Bildmerkmale geprüft. Erst nach deiner Bestätigung kann gebucht werden.</p>
+        <div class="smart-camera-actions">
+          <label class="primary-btn file-btn">Smart-Kamera öffnen<input id="smartCameraInput" type="file" accept="image/*" capture="environment"></label>
+          <label class="secondary-btn file-btn">Vorhandenes Foto prüfen<input id="smartGalleryInput" type="file" accept="image/*"></label>
+        </div>
+        <div class="smart-camera-facts"><span>✓ Barcode/SKU exakt</span><span>✓ Bilder bleiben lokal</span><span>✓ Keine automatische Buchung</span></div>
+      </div>
       <div class="scan-hero">
         <div class="camera-icon">⌁</div>
         <h2>Rechnung oder Liste erfassen</h2>
@@ -157,7 +166,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 2.0</p>
+      <p class="version">HP67 Inventar · Version 3.2</p>
     </section>
   </main>
 
@@ -187,6 +196,7 @@
       <div class="barcode-tools"><button id="generateBarcode" type="button">EAN erzeugen</button><button id="scanIntoItem" type="button">Code scannen</button><button id="labelCurrentItem" type="button">Etikett</button></div>
       <div class="item-barcode-preview" id="itemBarcodePreview" hidden><svg id="itemBarcodeSvg" aria-label="Barcode-Vorschau"></svg><small id="itemBarcodeStatus"></small><label class="nelko-format">Nelko-Etikett<select id="nelkoLabelSize"><option value="40x15">40 × 15 mm · Mini</option><option value="50x25">50 × 25 mm</option><option value="50x30">50 × 30 mm · PM220</option><option value="70x40">70 × 40 mm</option></select></label><div class="barcode-export-actions"><button id="downloadBarcodeSvg" type="button">SVG laden</button><button id="downloadBarcodePng" type="button">PNG laden</button><button id="shareNelkoBarcode" type="button">Nelko / Teilen</button><button id="printItemBarcode" type="button">Drucken</button></div></div>
       <div class="photo-field"><img id="itemPhotoPreview" alt="Artikelbild"><label class="secondary-btn file-btn">Foto aufnehmen<input id="itemPhoto" type="file" accept="image/*" capture="environment"></label><button id="removeItemPhoto" type="button" class="photo-remove" hidden>Foto entfernen</button></div>
+      <div class="visual-training"><div><b>Lokale Fotoerkennung</b><small id="itemVisualStatus">Noch nicht angelernt. Für gute Treffer 3–6 Ansichten bei ruhigem Hintergrund aufnehmen.</small></div><label class="secondary-btn file-btn">Ansicht anlernen<input id="trainItemVisual" type="file" accept="image/*" capture="environment" multiple></label><button id="clearItemVisual" type="button" hidden>Training löschen</button></div>
       <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
       <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
       <details class="optional-fields"><summary>Verkaufspreise und Verkaufsoptionen</summary><div class="price-help"><b>Automatisch verbunden</b><span>Beim Verkauf und auf dem Etikett kannst du später genau diese Preisart auswählen. Leere Zusatzpreise fallen automatisch auf den Standardpreis zurück.</span></div><div class="form-grid"><label>Standard-/Ladenpreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label><label>Onlineshoppreis €<input name="onlinePrice" type="number" min="0" step="0.01" value="0"></label><label>Markt-/Eventpreis €<input name="marketPrice" type="number" min="0" step="0.01" value="0"></label><label>Großhandel/B2B €<input name="wholesalePrice" type="number" min="0" step="0.01" value="0"></label></div><div class="form-grid"><label>Name des Sonderpreises<input name="specialPriceName" placeholder="z. B. Vereinsmitglieder"></label><label>Sonderpreis €<input name="specialPrice" type="number" min="0" step="0.01" value="0"></label></div><span class="field-title">Verkaufsoptionen · mehrere möglich</span><div class="sales-option-grid"><label><input type="checkbox" name="salesOption" value="Einzelverkauf"> Einzelverkauf</label><label><input type="checkbox" name="salesOption" value="Onlineshop"> Onlineshop</label><label><input type="checkbox" name="salesOption" value="Markt / Veranstaltung"> Markt / Veranstaltung</label><label><input type="checkbox" name="salesOption" value="Großhandel / B2B"> Großhandel / B2B</label><label><input type="checkbox" name="salesOption" value="Abholung"> Abholung</label><label><input type="checkbox" name="salesOption" value="Versand"> Versand</label><label><input type="checkbox" name="salesOption" value="Personalisiert"> Personalisiert</label><label><input type="checkbox" name="salesOption" value="Nicht zum Verkauf"> Nicht zum Verkauf</label></div><label>Eigene Verkaufsoptionen<input name="salesOptionsCustom" placeholder="z. B. Vereinsverkauf, Vorbestellung"></label></details>
@@ -284,6 +294,24 @@
     </form>
   </dialog>
 
+  <dialog id="smartCameraDialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">SMART-KAMERA</p><h2>Lokale Fotoanalyse</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
+      <div class="smart-preview-wrap"><img id="smartCameraPreview" alt="Zu prüfendes Foto"><div id="smartBarcodeReader" aria-hidden="true"></div></div>
+      <div class="smart-progress"><div id="smartProgressBar"></div></div>
+      <p id="smartCameraStatus" class="ocr-status" role="status">Foto wird vorbereitet …</p>
+      <div id="smartCameraResults" class="smart-results"></div>
+      <div id="smartCameraActions" class="smart-result-actions" hidden>
+        <button id="smartOpenResult" type="button" class="primary-btn">Treffer öffnen</button>
+        <button id="smartPurchaseResult" type="button">＋ 1 Eingang</button>
+        <button id="smartSaleResult" type="button">− 1 Verkauf</button>
+        <button id="smartShowLocation" type="button">Lagerplatz anzeigen</button>
+        <button id="smartCreateItem" type="button">Neuen Artikel anlegen</button>
+      </div>
+      <p class="smart-safety">Sicherheit: Nur Barcode, SKU oder Lagercode gelten als eindeutig. Ein Fotovergleich ist eine kontrollierbare Empfehlung und bucht nie von selbst.</p>
+    </form>
+  </dialog>
+
   <dialog id="labelDialog">
     <form method="dialog" id="labelForm">
       <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
@@ -323,6 +351,7 @@
       <input type="hidden" name="id">
       <div class="form-grid"><label>Bezeichnung<input name="name" required placeholder="z. B. Regal A · Fach 3"></label><label>Barcode / Lagercode<input name="code" required placeholder="z. B. LOC-A-03"></label></div>
       <div class="form-grid"><label>Kennfarbe<input name="color" type="color" value="#2563eb"></label><label>Kurzer Hinweis<input name="note" maxlength="60" placeholder="z. B. Hoodies dunkel"></label></div>
+      <div class="visual-training compact"><div><b>Lagerplatz per Foto erkennen</b><small id="locationVisualStatus">Noch nicht angelernt. Fotografiere Regal oder Box aus 2–4 typischen Blickwinkeln.</small></div><label class="secondary-btn file-btn">Ansicht anlernen<input id="trainLocationVisual" type="file" accept="image/*" capture="environment" multiple></label><button id="clearLocationVisual" type="button" hidden>Training löschen</button></div>
       <div class="location-form-actions"><button id="generateLocationCode" type="button">Code automatisch</button><button class="primary-btn" id="saveLocation" type="submit" value="default">Lagerplatz hinzufügen</button><button id="cancelLocationEdit" type="button" hidden>Bearbeiten abbrechen</button></div>
       <div id="locationList" class="location-list"></div>
       <div class="location-label-tools"><label>Aufkleberformat<select id="locationLabelPreset"><option value="70x37">A4 · 70 × 37 mm</option><option value="50x25">Thermo · 50 × 25 mm</option><option value="62x29">Thermo · 62 × 29 mm</option></select></label><div class="export-grid"><button id="exportLocationLabelsSvg" type="button">SVG-ZIP</button><button id="exportLocationLabelsPdf" type="button">PDF speichern</button><button id="printLocationLabels" type="button" class="primary-btn">Direkt drucken</button></div></div>
@@ -346,6 +375,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=31"></script>
+  <script src="app.js?v=32"></script>
+  <script src="smart-camera.js?v=32"></script>
 </body>
 </html>

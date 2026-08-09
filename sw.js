@@ -1,5 +1,5 @@
-const CACHE='hp67-v31';
-const ASSETS=['./','./index.html','./app.css','./app.js','./manifest.webmanifest','./icon.svg','./vendor/html5-qrcode.min.js','./vendor/jsbarcode.min.js','./vendor/xlsx.full.min.js','./vendor/jspdf.umd.min.js','./vendor/jspdf.plugin.autotable.min.js','./vendor/jszip.min.js'];
+const CACHE='hp67-v32';
+const ASSETS=['./','./index.html','./app.css','./app.js','./smart-camera.js','./manifest.webmanifest','./icon.svg','./vendor/html5-qrcode.min.js','./vendor/jsbarcode.min.js','./vendor/xlsx.full.min.js','./vendor/jspdf.umd.min.js','./vendor/jspdf.plugin.autotable.min.js','./vendor/jszip.min.js'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
