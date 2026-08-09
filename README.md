@@ -88,6 +88,8 @@ Die OCR-Texterkennung lädt beim ersten Scan die Erkennungssoftware und das deut
 
 Die Smart-Kamera arbeitet in Stufen: Ein Barcode, eine SKU oder ein Lagercode ist eindeutig. OCR versucht sichtbare Etiketten zu lesen. Der Fotovergleich erkennt bereits angelernte Motive und übernimmt deren Artikelart – beispielsweise „T-Shirts“ – zeigt dabei aber immer eine Ähnlichkeit und verlangt vor dem Buchen eine Bestätigung. Ein unbekanntes Textil ohne lesbaren Code muss einmal zugeordnet werden; danach lernt die App seine Ansichten lokal. Fotos und Bildmerkmale werden nicht zu GitHub hochgeladen.
 
+Falls eine lange installierte Home-Bildschirm-App noch eine alte Oberfläche zeigt, öffne **Mehr → App-Update jetzt laden**. Dabei werden nur alte Programmdateien ersetzt; das lokale Inventar und die angelernten Fotoansichten bleiben erhalten.
+
 ## Barcodes und Drucken
 
 Der Kamera-Scanner benötigt auf iPhone und iPad eine HTTPS-Adresse und eine einmalige Kamerafreigabe. Alternativ können ein Barcode-Foto sowie Artikel- oder Lagercodes manuell eingegeben werden. Das Etikettenstudio unterstützt A4-Bögen, 50/62-mm-Thermoetiketten und freie Abmessungen. Über den Druckdialog kann direkt gedruckt oder als PDF gespeichert werden.

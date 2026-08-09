@@ -49,6 +49,7 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("confirm(`Foto-Treffer"))fail('Foto-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=33',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-')"))fail('Zuverlässige PWA-Update-Funktion fehlt.');
 
 const smartElementStub=()=>({addEventListener(){},classList:{add(){},remove(){},toggle(){}},style:{},dataset:{}});
 const smartContext={console,window:{},setTimeout,clearTimeout,Blob:class{},URL:{},Image:class{},document:{},state:{items:[],locations:[]},$:smartElementStub,$$:()=>[],toast(){},confirm:()=>false};
