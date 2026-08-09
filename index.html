@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=30">
+  <link rel="stylesheet" href="app.css?v=31">
 </head>
 <body>
   <header class="topbar">
@@ -134,6 +134,11 @@
         <button id="generateMissingBarcodes">Fehlende Barcodes erzeugen <span>›</span></button>
       </div>
       <div class="settings-card">
+        <h2>Lagerorganisation</h2>
+        <p>Regale, Fächer und Boxen selbst anlegen. Die Angaben bleiben wie dein Inventar ausschließlich lokal auf diesem Gerät.</p>
+        <button id="manageLocations">Lagerplätze & Aufkleber <span>›</span></button>
+      </div>
+      <div class="settings-card">
         <h2>Kategorien</h2>
         <p>Textilarten, Kürzel und Farben zentral verwalten.</p>
         <button id="manageCategories">Kategorien verwalten <span>›</span></button>
@@ -173,7 +178,7 @@
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
       <div class="form-grid"><label>Farbe auswählen oder schreiben<input name="color" list="colorOptions" placeholder="Schwarz"><datalist id="colorOptions"><option value="Schwarz"></option><option value="Weiß"></option><option value="Navy"></option><option value="Grau"></option><option value="Rot"></option><option value="Blau"></option><option value="Grün"></option><option value="Beige"></option><option value="Gelb"></option><option value="Rosa"></option><option value="Lila"></option><option value="Orange"></option></datalist></label><label>Größe auswählen oder schreiben<input name="size" list="sizeOptions" placeholder="M / gemischt"><datalist id="sizeOptions"><option value="XXS"></option><option value="XS"></option><option value="S"></option><option value="M"></option><option value="L"></option><option value="XL"></option><option value="XXL"></option><option value="3XL"></option><option value="4XL"></option><option value="5XL"></option><option value="Einheitsgröße"></option></datalist></label></div>
       <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Die App erstellt jede Kombination als eigenen Lagerartikel mit eindeutiger SKU und eigenem Barcode. Bestand, Mindestbestand und Preise gelten jeweils pro Variante.</p><div class="form-grid"><label>Farben · auswählen oder schreiben<input id="variantColors" list="colorOptions" placeholder="Schwarz, Weiß, Navy"></label><label>Größen · automatisch oder selbst schreiben<input id="variantSizes" placeholder="S, M, L, XL"></label></div><div class="size-range"><label>Von<select id="sizeRangeFrom"><option>XXS</option><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option>5XL</option></select></label><span>bis</span><label>Bis<select id="sizeRangeTo"><option>XXS</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option selected>5XL</option></select></label><button type="button" id="applySizeRange">Größen übernehmen</button></div><div class="size-presets"><button type="button" data-size-preset="S,M,L,XL,XXL,3XL,4XL,5XL">S–5XL</button><button type="button" data-size-preset="XS,S,M,L,XL,XXL,3XL">XS–3XL</button><button type="button" data-size-preset="S,M,L,XL,XXL">S–XXL</button><button type="button" data-size-preset="Einheitsgröße">Einheitsgröße</button></div><div class="variant-help"><b>Beispiel</b><span>3 Farben × 8 Größen = 24 Varianten. Höchstens 60 Varianten pro Vorgang halten die App schnell und sicher.</span></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
-      <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz<input name="location" placeholder="Regal A3"></label></div>
+      <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz auswählen oder schreiben<input name="location" list="locationOptions" placeholder="z. B. Regal A3"><datalist id="locationOptions"></datalist></label></div>
       <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
       <div class="form-grid"><label>Saison / Kollektion<input name="season" placeholder="z. B. Sommer 2026"></label><label>Einheit<input name="unit" placeholder="Stück"></label></div>
       <label>Tags<input name="tags" placeholder="z. B. Basic, Unisex, Bestseller"></label>
@@ -272,7 +277,7 @@
       <div class="dialog-head"><div><p class="eyebrow">KAMERA-SCANNER</p><h2>Barcode scannen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="barcodeReader"></div>
       <div id="scannerStatus" class="scanner-status">Kamera wird vorbereitet …</div>
-      <div class="manual-code"><input id="manualBarcode" inputmode="numeric" placeholder="Barcode manuell eingeben"><button id="useManualBarcode" type="button">Übernehmen</button></div>
+      <div class="manual-code"><input id="manualBarcode" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="Artikel- oder Lagercode eingeben"><button id="useManualBarcode" type="button">Übernehmen</button></div>
       <label class="secondary-btn file-btn">Barcode-Foto auswählen<input id="barcodeImage" type="file" accept="image/*" capture="environment"></label>
       <div id="scannerResult" class="scanner-result" hidden></div>
       <div class="scanner-actions" id="scannerActions" hidden><button id="scanPurchase" type="button">＋ 1 Eingang</button><button id="scanSale" type="button">− 1 Verkauf</button><button id="scanEdit" type="button">Artikel öffnen</button></div>
@@ -291,7 +296,7 @@
       <div class="form-grid"><label>PNG-Auflösung<select name="dpi"><option value="300">300 DPI</option><option value="600">600 DPI</option></select></label><label>Schriftgröße<select name="fontScale"><option value="0.85">Kompakt</option><option value="1" selected>Normal</option><option value="1.2">Groß</option></select></label></div>
       <div class="form-grid"><label>Hintergrund<input name="background" type="color" value="#ffffff"></label><label>Textfarbe<input name="textColor" type="color" value="#101827"></label></div>
       <div class="logo-import"><img id="labelLogoPreview" alt="Logo"><label class="secondary-btn file-btn">SVG-/PNG-Logo<input id="labelLogoInput" type="file" accept="image/svg+xml,image/png,image/jpeg"></label><button id="removeLabelLogo" class="photo-remove" type="button" hidden>Logo entfernen</button></div>
-      <div class="check-grid"><label><input name="showName" type="checkbox" checked> Artikelname</label><label><input name="showPrice" type="checkbox" checked> Verkaufspreis</label><label><input name="showSku" type="checkbox" checked> SKU</label><label><input name="showVariant" type="checkbox" checked> Farbe/Größe</label></div>
+      <div class="check-grid"><label><input name="showName" type="checkbox" checked> Artikelname</label><label><input name="showPrice" type="checkbox" checked> Verkaufspreis</label><label><input name="showSku" type="checkbox" checked> SKU</label><label><input name="showVariant" type="checkbox" checked> Farbe/Größe</label><label><input name="showLocation" type="checkbox" checked> Lagerplatz</label><label><input name="showBrand" type="checkbox"> Marke</label><label><input name="showMaterial" type="checkbox"> Material</label></div>
       <label id="labelPriceTypeWrap">Preis auf dem Etikett<select name="labelPriceType" id="labelPriceType"><option value="standard">Standard-/Ladenpreis</option><option value="online">Onlineshoppreis</option><option value="market">Markt-/Eventpreis</option><option value="wholesale">Großhandel/B2B</option><option value="special">Sonderpreis</option></select></label>
       <div class="label-preview" id="labelPreview"></div>
       <div id="labelStatus" class="label-status"></div>
@@ -308,6 +313,19 @@
       <button class="primary-btn" type="submit" value="default" id="saveCategory">Kategorie hinzufügen</button>
       <button class="secondary-btn" type="button" id="cancelCategoryEdit" hidden>Bearbeitung abbrechen</button>
       <div class="category-list" id="categoryList"></div>
+    </form>
+  </dialog>
+
+  <dialog id="locationDialog">
+    <form method="dialog" id="locationForm">
+      <div class="dialog-head"><div><p class="eyebrow">LAGERORGANISATION</p><h2>Lagerplätze & Aufkleber</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
+      <p class="dialog-copy">Lege nur neutrale Bezeichnungen wie Regal, Fach oder Box an. Persönliche Angaben sind nicht nötig.</p>
+      <input type="hidden" name="id">
+      <div class="form-grid"><label>Bezeichnung<input name="name" required placeholder="z. B. Regal A · Fach 3"></label><label>Barcode / Lagercode<input name="code" required placeholder="z. B. LOC-A-03"></label></div>
+      <div class="form-grid"><label>Kennfarbe<input name="color" type="color" value="#2563eb"></label><label>Kurzer Hinweis<input name="note" maxlength="60" placeholder="z. B. Hoodies dunkel"></label></div>
+      <div class="location-form-actions"><button id="generateLocationCode" type="button">Code automatisch</button><button class="primary-btn" id="saveLocation" type="submit" value="default">Lagerplatz hinzufügen</button><button id="cancelLocationEdit" type="button" hidden>Bearbeiten abbrechen</button></div>
+      <div id="locationList" class="location-list"></div>
+      <div class="location-label-tools"><label>Aufkleberformat<select id="locationLabelPreset"><option value="70x37">A4 · 70 × 37 mm</option><option value="50x25">Thermo · 50 × 25 mm</option><option value="62x29">Thermo · 62 × 29 mm</option></select></label><div class="export-grid"><button id="exportLocationLabelsSvg" type="button">SVG-ZIP</button><button id="exportLocationLabelsPdf" type="button">PDF speichern</button><button id="printLocationLabels" type="button" class="primary-btn">Direkt drucken</button></div></div>
     </form>
   </dialog>
 
@@ -328,6 +346,6 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=30"></script>
+  <script src="app.js?v=31"></script>
 </body>
 </html>

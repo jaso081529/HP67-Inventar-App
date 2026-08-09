@@ -10,7 +10,11 @@ Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Minde
 - Kamera-Scanner für EAN-13, EAN-8, UPC, Code 128, Code 39 und QR-Codes
 - Automatische interne EAN-13-Erzeugung mit korrekter Prüfziffer
 - Direkte Ein- und Ausbuchung nach einem erfolgreichen Scan
+- Frei konfigurierbare Regale, Fächer und Boxen mit eigenem Lagercode und Kennfarbe
+- Scannbare Lagerplatz-Aufkleber als SVG-ZIP, PDF oder direkter Ausdruck
+- Lagerplatz-Scan öffnet automatisch alle dort zugeordneten Textilien
 - Etikettendesigner für A4-Bögen und 50/62-mm-Thermodrucker
+- Optionale Etikettenangaben für Lagerplatz, Marke und Material
 - Einzel- und Stapeldruck sowie Barcode-Export als SVG und PNG
 - Vollständige Vektoretiketten als SVG und Stapel-Export als ZIP
 - Hochauflösende PNG-Etiketten mit 300 oder 600 DPI
@@ -19,14 +23,14 @@ Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Minde
 - Kundenretouren sowie beschädigte oder entnommene Ware
 - Mindestbestandsampel und automatische Nachbestellvorschläge
 - Lieferantenbestellungen mit Status, Teilmengen und getrenntem Wareneingang
-- Nachbestelllisten als CSV
+- Nachbestelllisten als CSV, PDF oder direkter Ausdruck
 - Inventurmodus mit protokollierten Bestandskorrekturen
 - Umsatz- und Rohertragsauswertung für die letzten sechs Monate
 - OCR-Import für Rechnungsfotos und manuell eingefügte Listen
 - CSV-Import/-Export und vollständige JSON-Sicherung
 - CSV-, TSV- und Excel-Import mit Vorschau und Duplikaterkennung
 - XML-Import und -Export für strukturierte Datenaustauschprozesse
-- Excel-Arbeitsmappe mit Inventar, Buchungen und Bestellungen
+- Excel-Arbeitsmappe mit Inventar, Lagerplätzen, Buchungen und Bestellungen
 - PDF-Inventarbericht sowie separater CSV-Buchungsverlauf
 - Rückgängig-Funktion für die letzte Buchung
 - Erweiterte Textilstammdaten, Tags, Beschreibung und Artikelarchiv
@@ -76,6 +80,6 @@ Die OCR-Texterkennung lädt beim ersten Scan die Erkennungssoftware und das deut
 
 ## Barcodes und Drucken
 
-Der Kamera-Scanner benötigt auf iPhone und iPad eine HTTPS-Adresse und eine einmalige Kamerafreigabe. Alternativ können ein Barcode-Foto oder eine manuelle Nummer verwendet werden. Das Etikettenstudio unterstützt A4-Bögen, 50/62-mm-Thermoetiketten und freie Abmessungen. Über den Druckdialog kann direkt gedruckt oder als PDF gespeichert werden.
+Der Kamera-Scanner benötigt auf iPhone und iPad eine HTTPS-Adresse und eine einmalige Kamerafreigabe. Alternativ können ein Barcode-Foto sowie Artikel- oder Lagercodes manuell eingegeben werden. Das Etikettenstudio unterstützt A4-Bögen, 50/62-mm-Thermoetiketten und freie Abmessungen. Über den Druckdialog kann direkt gedruckt oder als PDF gespeichert werden.
 
 Automatisch erzeugte EAN-13-Codes beginnen mit `29` und sind ausschließlich für die interne Lagerkennzeichnung gedacht. Für Codes, die im öffentlichen Einzelhandel, bei Amazon oder anderen Marktplätzen verwendet werden, müssen offiziell zugeteilte GS1-Nummern genutzt werden.
