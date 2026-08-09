@@ -81,5 +81,7 @@ for(const file of sourceFiles){
 
 const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("name.startsWith('hp67-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
+const pagesWorkflow=read('.github/workflows/pages.yml');
+for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);

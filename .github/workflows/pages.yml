@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           mkdir public
-          cp index.html app.css app.js icon.svg manifest.webmanifest sw.js public/
+          cp index.html update.html app.css app.js smart-camera.js icon.svg manifest.webmanifest sw.js public/
           cp -R vendor public/vendor
       - name: App hochladen
         uses: actions/upload-pages-artifact@v3
