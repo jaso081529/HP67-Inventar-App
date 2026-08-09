@@ -6,7 +6,7 @@ import {execFileSync} from 'node:child_process';
 const root=path.resolve(import.meta.dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const fail=message=>{throw new Error(message);};
-const required=['index.html','app.css','app.js','smart-camera.js','sw.js','manifest.webmanifest','icon.svg','serve.mjs','vendor/html5-qrcode.min.js','vendor/jsbarcode.min.js','vendor/xlsx.full.min.js','vendor/jspdf.umd.min.js','vendor/jspdf.plugin.autotable.min.js','vendor/jszip.min.js'];
+const required=['index.html','update.html','app.css','app.js','smart-camera.js','sw.js','manifest.webmanifest','icon.svg','serve.mjs','vendor/html5-qrcode.min.js','vendor/jsbarcode.min.js','vendor/xlsx.full.min.js','vendor/jspdf.umd.min.js','vendor/jspdf.plugin.autotable.min.js','vendor/jszip.min.js'];
 
 for(const file of required)if(!fs.existsSync(path.join(root,file)))fail(`Pflichtdatei fehlt: ${file}`);
 
@@ -60,7 +60,7 @@ if(smartContext.__visualSimilarity(shirtSample,sameShirt)<.99)fail('Gleiches ang
 if(smartContext.__visualSimilarity(shirtSample,differentShelf)>=.72)fail('Deutlich anderes Motiv würde fälschlich als Foto-Treffer erscheinen.');
 
 const sw=read('sw.js');
-for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file))){
+for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
   if(!sw.includes(`'${expected}'`)&&!['icon.svg'].includes(asset))fail(`Offline-Datei fehlt im Service Worker: ${expected}`);
 }
@@ -68,7 +68,7 @@ for(const asset of required.filter(file=>!['serve.mjs','sw.js'].includes(file)))
 const manifest=JSON.parse(read('manifest.webmanifest'));
 if(manifest.display!=='standalone'||!manifest.start_url)fail('Manifest ist nicht als installierbare Web-App konfiguriert.');
 
-const sourceFiles=['index.html','app.js','smart-camera.js','app.css','sw.js','manifest.webmanifest','serve.mjs'];
+const sourceFiles=['index.html','update.html','app.js','smart-camera.js','app.css','sw.js','manifest.webmanifest','serve.mjs'];
 const secretPatterns=[
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /(?:api[_-]?key|secret|password|access[_-]?token)\s*[:=]\s*['"][^'"]{8,}['"]/i,
@@ -78,5 +78,8 @@ for(const file of sourceFiles){
   const content=read(file);
   for(const pattern of secretPatterns)if(pattern.test(content))fail(`Mögliches Geheimnis in ${file} gefunden.`);
 }
+
+const updatePage=read('update.html');
+if(!updatePage.includes("registration.unregister()")||!updatePage.includes("name.startsWith('hp67-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);

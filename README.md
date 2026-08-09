@@ -90,6 +90,8 @@ Die Smart-Kamera arbeitet in Stufen: Ein Barcode, eine SKU oder ein Lagercode is
 
 Falls eine lange installierte Home-Bildschirm-App noch eine alte Oberfläche zeigt, öffne **Mehr → App-Update jetzt laden**. Dabei werden nur alte Programmdateien ersetzt; das lokale Inventar und die angelernten Fotoansichten bleiben erhalten.
 
+Falls selbst dieser Knopf in einer sehr alten Version noch fehlt, öffne einmal `https://jaso081529.github.io/HP67-Inventar-App/update.html`. Die Rettungsseite entfernt ebenfalls nur den Programm-Cache und öffnet danach automatisch die aktuelle App.
+
 ## Barcodes und Drucken
 
 Der Kamera-Scanner benötigt auf iPhone und iPad eine HTTPS-Adresse und eine einmalige Kamerafreigabe. Alternativ können ein Barcode-Foto sowie Artikel- oder Lagercodes manuell eingegeben werden. Das Etikettenstudio unterstützt A4-Bögen, 50/62-mm-Thermoetiketten und freie Abmessungen. Über den Druckdialog kann direkt gedruckt oder als PDF gespeichert werden.

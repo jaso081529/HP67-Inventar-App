@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#111827">
+  <title>HP67 Inventar aktualisieren</title>
+  <style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box;background:#f6f7f9;color:#111827;font:16px system-ui,-apple-system,sans-serif}.card{width:min(420px,100%);padding:28px;box-sizing:border-box;border:1px solid #e2e5ea;border-radius:24px;background:#fff;box-shadow:0 18px 50px #10182718;text-align:center}.mark{display:grid;place-items:center;width:60px;height:60px;margin:auto;border-radius:18px;background:#e9f1ff;color:#2563eb;font-size:30px}h1{font-size:23px;margin:17px 0 8px}p{margin:0;color:#667085;line-height:1.5}.error{color:#b42318}button{width:100%;margin-top:18px;padding:13px;border:0;border-radius:13px;background:#111827;color:#fff;font:inherit;font-weight:750}</style>
+</head>
+<body>
+  <main class="card"><div class="mark">↻</div><h1>App wird aktualisiert</h1><p id="status">Alte Programmdateien werden entfernt. Dein lokales Inventar bleibt erhalten.</p><button id="retry" hidden>Erneut versuchen</button></main>
+  <script>
+    async function update(){const status=document.getElementById('status'),retry=document.getElementById('retry');retry.hidden=true;try{if('serviceWorker'in navigator){const registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.map(registration=>registration.unregister()));}if('caches'in window){const names=await caches.keys();await Promise.all(names.filter(name=>name.startsWith('hp67-')).map(name=>caches.delete(name)));}status.textContent='Fertig. Version 3.3 wird geöffnet …';location.replace(`./?updated=33&t=${Date.now()}`);}catch(error){console.error(error);status.textContent='Das Update konnte nicht abgeschlossen werden. Bitte Safari vollständig schließen und erneut versuchen.';status.className='error';retry.hidden=false;}}
+    document.getElementById('retry').onclick=update;update();
+  </script>
+</body>
+</html>
