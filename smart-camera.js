@@ -4,8 +4,10 @@ let smartCandidates=[];
 let smartSelected=-1;
 let smartUnknownCode='';
 let smartNewSuggestion={};
+let smartAnalysisRun=0;
+let smartBarcodeReaderInstance=null;
 
-function withTimeout(promise,milliseconds,message){return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(message)),milliseconds))]);}
+function withTimeout(promise,milliseconds,message){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(message)),milliseconds);})]).finally(()=>clearTimeout(timer));}
 
 function imageFromSource(source){
   return new Promise((resolve,reject)=>{
@@ -15,6 +17,13 @@ function imageFromSource(source){
     image.onerror=()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);reject(new Error('Bild konnte nicht gelesen werden.'));};
     if(source instanceof Blob){objectUrl=URL.createObjectURL(source);image.src=objectUrl;}else image.src=String(source||'');
   });
+}
+
+async function prepareOcrImage(source,maxEdge=1900){
+  const image=await imageFromSource(source),width=image.naturalWidth||image.width,height=image.naturalHeight||image.height,scale=Math.min(1,maxEdge/Math.max(width,height));
+  if(scale===1&&source instanceof Blob&&source.size<=4_000_000)return source;
+  const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));const context=canvas.getContext('2d');context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';context.drawImage(image,0,0,canvas.width,canvas.height);
+  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Foto konnte nicht für die Erkennung vorbereitet werden.')),'image/jpeg',.88));
 }
 
 function hsvOf(r,g,b){
@@ -80,16 +89,16 @@ async function ensureLegacyVisualSamples(progress){
 
 function bestVisualCandidates(sample){
   const candidates=[];
-  for(const item of state.items.filter(entry=>!entry.archived))for(const learned of item.visualSamples||[])candidates.push({kind:'item',entity:item,confidence:visualSimilarity(sample,learned),source:'photo'});
-  for(const location of state.locations||[])for(const learned of location.visualSamples||[])candidates.push({kind:'location',entity:location,confidence:visualSimilarity(sample,learned),source:'photo'});
-  const bestByEntity=new Map();for(const candidate of candidates){const key=`${candidate.kind}:${candidate.entity.id}`,known=bestByEntity.get(key);if(!known||candidate.confidence>known.confidence)bestByEntity.set(key,candidate);}
-  return[...bestByEntity.values()].sort((a,b)=>b.confidence-a.confidence).slice(0,3);
+  for(const item of state.items.filter(entry=>!entry.archived)){const samples=item.visualSamples||[];if(samples.length<3)continue;const scores=samples.map(learned=>visualSimilarity(sample,learned)).sort((a,b)=>b-a),confidence=.65*scores[0]+.35*(scores.slice(0,3).reduce((sum,value)=>sum+value,0)/Math.min(3,scores.length));candidates.push({kind:'item',entity:item,confidence,source:'photo',sampleCount:samples.length});}
+  for(const location of state.locations||[]){const samples=location.visualSamples||[];if(samples.length<2)continue;const scores=samples.map(learned=>visualSimilarity(sample,learned)).sort((a,b)=>b-a),confidence=.7*scores[0]+.3*(scores.slice(0,2).reduce((sum,value)=>sum+value,0)/Math.min(2,scores.length));candidates.push({kind:'location',entity:location,confidence,source:'photo',sampleCount:samples.length});}
+  return candidates.sort((a,b)=>b.confidence-a.confidence).slice(0,3);
 }
 
 function compactCode(value){return normalizedText(value).replace(/[^a-z0-9]/g,'');}
 function findKnownCode(text,exactOnly=false){
-  const compact=compactCode(text),entries=[...state.items.flatMap(item=>[{kind:'item',entity:item,code:item.barcode},{kind:'item',entity:item,code:item.sku}]),...(state.locations||[]).map(entity=>({kind:'location',entity,code:entity.code}))].filter(entry=>String(entry.code||'').length>=3).sort((a,b)=>String(b.code).length-String(a.code).length);
-  return entries.find(entry=>exactOnly?compact===compactCode(entry.code):compact.includes(compactCode(entry.code)))||null;
+  const raw=String(text||''),compact=compactCode(raw),tokens=raw.split(/[\s,;:()[\]{}<>|]+/).map(compactCode).filter(Boolean),entries=[...state.items.flatMap(item=>[{kind:'item',entity:item,code:item.barcode},{kind:'item',entity:item,code:item.sku}]),...(state.locations||[]).map(entity=>({kind:'location',entity,code:entity.code}))].filter(entry=>compactCode(entry.code).length>=4).sort((a,b)=>String(b.code).length-String(a.code).length);
+  const matches=entries.filter(entry=>{const code=compactCode(entry.code),numeric=/^\d+$/.test(code);if(numeric&&(code.length===8||code.length===13)&&typeof validEan==='function'&&!validEan(code))return false;if(exactOnly)return compact===code;if(tokens.includes(code))return true;return code.length>=8&&compact.includes(code);});
+  const unique=[...new Map(matches.map(entry=>[`${entry.kind}:${entry.entity.id}`,entry])).values()];return unique.length===1?unique[0]:null;
 }
 
 function suggestionFromText(text){
@@ -97,9 +106,10 @@ function suggestionFromText(text){
   return{category:type?.label||'',brand:brand||'',material:material||'',location:location?.name||''};
 }
 
-async function scanBarcodeFromFile(file){
+async function stopSmartBarcodeReader(){const reader=smartBarcodeReaderInstance;smartBarcodeReaderInstance=null;if(reader)try{await withTimeout(reader.clear(),2000,'Scanner wurde freigegeben');}catch{}}
+async function scanBarcodeFromFile(file,run){
   if(typeof Html5Qrcode==='undefined')return'';let reader;
-  try{reader=new Html5Qrcode('smartBarcodeReader',{verbose:false});return String(await withTimeout(reader.scanFile(file,true),7000,'Barcode-Suche beendet')||'').trim();}catch{return'';}finally{try{await withTimeout(reader?.clear()||Promise.resolve(),2000,'Scanner wurde freigegeben');}catch{}}
+  try{await stopSmartBarcodeReader();if(run!==smartAnalysisRun)return'';reader=new Html5Qrcode('smartBarcodeReader',{verbose:false});smartBarcodeReaderInstance=reader;return String(await withTimeout(reader.scanFile(file,true),7000,'Barcode-Suche beendet')||'').trim();}catch{return'';}finally{if(smartBarcodeReaderInstance===reader)smartBarcodeReaderInstance=null;try{await withTimeout(reader?.clear()||Promise.resolve(),2000,'Scanner wurde freigegeben');}catch{}}
 }
 
 function loadTesseractLocal(){
@@ -107,50 +117,51 @@ function loadTesseractLocal(){
   window.__hp67TesseractPromise=withTimeout(new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=()=>resolve(window.Tesseract);script.onerror=()=>reject(new Error('Texterkennung konnte nicht geladen werden.'));document.head.append(script);}),15000,'Texterkennung reagiert nicht').catch(error=>{window.__hp67TesseractPromise=null;throw error;});return window.__hp67TesseractPromise;
 }
 
-function setSmartProgress(value,label){$('#smartProgressBar').style.width=`${Math.max(0,Math.min(100,value))}%`;if(label)$('#smartCameraStatus').textContent=label;}
+function smartRunActive(run){return run===smartAnalysisRun&&$('#smartCameraDialog').open;}
+function setSmartProgress(value,label,run=smartAnalysisRun){if(!smartRunActive(run))return;$('#smartProgressBar').style.width=`${Math.max(0,Math.min(100,value))}%`;if(label)$('#smartCameraStatus').textContent=label;}
 function candidateTitle(candidate){return candidate.kind==='item'?candidate.entity.name:`Lagerplatz ${candidate.entity.name}`;}
 function candidateDetails(candidate){if(candidate.kind==='item'){const item=candidate.entity;return[ item.category,item.sku,item.color,item.size,item.location,`Bestand ${number(item.stock)}`].filter(Boolean).join(' · ');}const location=candidate.entity,items=state.items.filter(item=>!item.archived&&normalizedText(item.location)===normalizedText(location.name));return`${location.code} · ${items.length} Variante(n) · ${number(items.reduce((sum,item)=>sum+(+item.stock||0),0))} Teile`;}
 
 function selectSmartCandidate(index){
   smartSelected=Number(index);$$('[data-smart-candidate]').forEach((element,i)=>element.classList.toggle('selected',i===smartSelected));const candidate=smartCandidates[smartSelected],actions=$('#smartCameraActions');actions.hidden=false;
-  $('#smartOpenResult').hidden=!candidate;$('#smartPurchaseResult').hidden=candidate?.kind!=='item';$('#smartSaleResult').hidden=candidate?.kind!=='item';$('#smartShowLocation').hidden=true;$('#smartCreateItem').hidden=!!candidate;
+  const canBook=candidate?.kind==='item'&&!candidate.blocked&&!candidate.ambiguous;$('#smartOpenResult').hidden=!candidate;$('#smartPurchaseResult').hidden=!canBook;$('#smartSaleResult').hidden=!canBook;$('#smartShowLocation').hidden=true;$('#smartCreateItem').hidden=!!candidate&&!smartUnknownCode;
   if(candidate)$('#smartOpenResult').textContent=candidate.kind==='item'?'Artikel öffnen':'Lagerplatz anzeigen';
 }
 
 function renderSmartResults(notes=[]){
-  const root=$('#smartCameraResults'),cards=smartCandidates.map((candidate,index)=>{const exact=candidate.source==='barcode'||candidate.source==='ocr',percent=Math.round(candidate.confidence*100),source=candidate.source==='barcode'?'Barcode exakt':candidate.source==='ocr'?'SKU/Lagercode aus Text':`Lokaler Fotovergleich · ${percent} %`;return`<button type="button" class="smart-result ${exact?'exact':candidate.confidence>=.86?'suggestion':'warning'}" data-smart-candidate="${index}"><b>${esc(candidateTitle(candidate))}</b><small>${esc(candidateDetails(candidate))}</small><small class="confidence">${esc(source)}${exact?' · eindeutig':' · bitte bestätigen'}</small></button>`;}).join('');
+  const root=$('#smartCameraResults'),cards=smartCandidates.map((candidate,index)=>{const exact=candidate.source==='barcode'&&!candidate.blocked,percent=Math.round(candidate.confidence*100),source=candidate.source==='barcode'?'Barcode exakt':candidate.source==='ocr'?'Code aus Etikettentext':`Lokaler Fotovergleich · ${percent} %`,suffix=candidate.blocked?' · Buchung gesperrt':candidate.ambiguous?' · mehrere ähnliche Treffer':exact?' · eindeutig':' · bitte bestätigen';return`<button type="button" class="smart-result ${exact?'exact':candidate.confidence>=.86&&!candidate.blocked?'suggestion':'warning'}" data-smart-candidate="${index}"><b>${esc(candidateTitle(candidate))}</b><small>${esc(candidateDetails(candidate))}</small><small class="confidence">${esc(source+suffix)}</small></button>`;}).join('');
   const info=notes.map(note=>`<div class="smart-result ${note.type||''}"><b>${esc(note.title)}</b><small>${esc(note.text)}</small></div>`).join('');root.innerHTML=cards+info;$$('[data-smart-candidate]',root).forEach(button=>button.onclick=()=>selectSmartCandidate(button.dataset.smartCandidate));selectSmartCandidate(smartCandidates.length?0:-1);
 }
 
 async function analyzeSmartPhoto(file){
-  if(!file)return;smartCandidates=[];smartSelected=-1;smartUnknownCode='';smartNewSuggestion={};if(smartPreviewUrl)URL.revokeObjectURL(smartPreviewUrl);smartPreviewUrl=URL.createObjectURL(file);$('#smartCameraPreview').src=smartPreviewUrl;$('#smartCameraResults').innerHTML='';$('#smartCameraActions').hidden=true;$('#smartCameraDialog').showModal();setSmartProgress(8,'Foto wird ausschließlich auf diesem Gerät vorbereitet …');
-  const notes=[];let fingerprint,barcode='',ocrText='';
+  if(!file)return;const run=++smartAnalysisRun;await stopSmartBarcodeReader();if(run!==smartAnalysisRun)return;smartCandidates=[];smartSelected=-1;smartUnknownCode='';smartNewSuggestion={};if(smartPreviewUrl)URL.revokeObjectURL(smartPreviewUrl);smartPreviewUrl=URL.createObjectURL(file);$('#smartCameraPreview').src=smartPreviewUrl;$('#smartCameraResults').innerHTML='';$('#smartCameraActions').hidden=true;if(!$('#smartCameraDialog').open)$('#smartCameraDialog').showModal();setSmartProgress(8,'Foto wird ausschließlich auf diesem Gerät vorbereitet …',run);
+  const notes=[];let fingerprint,barcode='',ocrText='',analysisFile=file;
   try{
-    fingerprint=await createVisualFingerprint(file);setSmartProgress(23,'Bildmerkmale erstellt. Suche nach Barcode …');
-    barcode=await scanBarcodeFromFile(file);if(barcode){const exact=findKnownCode(barcode,true);if(exact)smartCandidates.push({...exact,source:'barcode',confidence:1});else{smartUnknownCode=barcode;notes.push({type:'warning',title:'Neuer Barcode erkannt',text:`${barcode} ist noch nicht zugeordnet und kann für einen neuen Artikel übernommen werden.`});}}
-    setSmartProgress(40,'Bekannte Artikelfotos und Lagerplätze werden lokal verglichen …');await ensureLegacyVisualSamples((done,total)=>setSmartProgress(40+Math.round(done/total*18),`Vorhandene Artikelfotos werden einmalig angelernt: ${done}/${total}`));
-    const visual=bestVisualCandidates(fingerprint).filter(candidate=>candidate.confidence>=.72);for(const candidate of visual)if(!smartCandidates.some(existing=>existing.kind===candidate.kind&&existing.entity.id===candidate.entity.id))smartCandidates.push(candidate);
-    const strongLocal=smartCandidates.some(candidate=>candidate.source==='barcode'||(candidate.source==='photo'&&candidate.confidence>=.94));
-    if(strongLocal){smartNewSuggestion={barcode:smartUnknownCode};setSmartProgress(88,'Sehr sicherer lokaler Treffer – langsame Texterkennung ist nicht nötig.');}
-    else{setSmartProgress(63,'Etikettentext und Artikelcodes werden gelesen …');
-      try{const tesseract=await loadTesseractLocal(),result=await withTimeout(tesseract.recognize(file,'deu+eng',{logger:message=>{if(message.status==='recognizing text')setSmartProgress(63+Math.round((message.progress||0)*25),`Text wird lokal erkannt … ${Math.round((message.progress||0)*100)} %`);}}),45000,'Texterkennung nach 45 Sekunden beendet');ocrText=String(result?.data?.text||'');const exact=findKnownCode(ocrText);if(exact&&!smartCandidates.some(candidate=>candidate.kind===exact.kind&&candidate.entity.id===exact.entity.id))smartCandidates.unshift({...exact,source:'ocr',confidence:1});smartNewSuggestion={...suggestionFromText(ocrText),barcode:smartUnknownCode};}
+    analysisFile=await prepareOcrImage(file,1900);if(!smartRunActive(run))return;fingerprint=await createVisualFingerprint(analysisFile);if(!smartRunActive(run))return;setSmartProgress(23,'Bildmerkmale erstellt. Suche nach Barcode …',run);
+    barcode=await scanBarcodeFromFile(file,run);if(!smartRunActive(run))return;if(barcode){const exact=findKnownCode(barcode,true);if(exact)smartCandidates.push({...exact,source:'barcode',confidence:1});else{smartUnknownCode=barcode;notes.push({type:'warning',title:'Neuer Barcode erkannt',text:`${barcode} ist noch nicht zugeordnet. Fotoähnlichkeiten werden nur als Hinweis gezeigt und können nicht gebucht werden.`});}}
+    setSmartProgress(40,'Bekannte Artikelfotos und Lagerplätze werden lokal verglichen …',run);await ensureLegacyVisualSamples((done,total)=>setSmartProgress(40+Math.round(done/total*18),`Vorhandene Artikelfotos werden einmalig vorbereitet: ${done}/${total}`,run));if(!smartRunActive(run))return;
+    const visual=bestVisualCandidates(fingerprint).filter(candidate=>candidate.confidence>=.72),visualAmbiguous=visual.length>1&&visual[0].confidence-visual[1].confidence<.07;for(const candidate of visual)if(!smartCandidates.some(existing=>existing.kind===candidate.kind&&existing.entity.id===candidate.entity.id))smartCandidates.push({...candidate,ambiguous:visualAmbiguous,blocked:!!smartUnknownCode});
+    const exactBarcode=smartCandidates.some(candidate=>candidate.source==='barcode'&&!candidate.blocked);
+    if(exactBarcode){smartNewSuggestion={barcode:smartUnknownCode};setSmartProgress(88,'Bekannter Barcode eindeutig zugeordnet.',run);}
+    else{setSmartProgress(63,'Etikettentext und Artikelcodes werden gelesen …',run);
+      try{const tesseract=await loadTesseractLocal();if(!smartRunActive(run))return;const result=await withTimeout(tesseract.recognize(analysisFile,'deu+eng',{logger:message=>{if(message.status==='recognizing text')setSmartProgress(63+Math.round((message.progress||0)*25),`Text wird lokal erkannt … ${Math.round((message.progress||0)*100)} %`,run);}}),45000,'Texterkennung nach 45 Sekunden beendet');if(!smartRunActive(run))return;ocrText=String(result?.data?.text||'');const exact=findKnownCode(ocrText);if(exact&&!smartCandidates.some(candidate=>candidate.kind===exact.kind&&candidate.entity.id===exact.entity.id))smartCandidates.unshift({...exact,source:'ocr',confidence:.96,blocked:!!smartUnknownCode});smartNewSuggestion={...suggestionFromText(ocrText),barcode:smartUnknownCode};}
       catch(error){console.warn(error);smartNewSuggestion={barcode:smartUnknownCode};notes.push({title:'Texterkennung offline nicht verfügbar',text:'Barcode- und Fotovergleich funktionieren trotzdem. Für OCR wird beim ersten Mal kurz Internet benötigt.'});}
     }
-    smartCandidates.sort((a,b)=>(b.confidence+(b.source==='barcode'||b.source==='ocr'?1:0))-(a.confidence+(a.source==='barcode'||a.source==='ocr'?1:0)));
+    if(!smartRunActive(run))return;smartCandidates.sort((a,b)=>(b.confidence+(b.source==='barcode'?2:b.source==='ocr'?0.5:0))-(a.confidence+(a.source==='barcode'?2:a.source==='ocr'?0.5:0)));
     if(!smartCandidates.length){const category=smartNewSuggestion.category;notes.push({type:'warning',title:category?`Textilart vorgeschlagen: ${category}`:'Kein sicherer Treffer',text:category?'Aus lesbarem Etikettentext abgeleitet. Bitte beim Anlegen prüfen und anschließend 3–6 Fotoansichten anlernen.':'Das Motiv ist noch nicht angelernt und besitzt keinen lesbaren Code. Artikel einmal zuordnen und Fotoerkennung anlernen.'});}
-    else if(smartCandidates[0].source==='photo'&&smartCandidates[0].confidence<.86)notes.push({type:'warning',title:'Ähnlichkeit nicht hoch genug',text:'Der Treffer wird nur als mögliche Hilfe gezeigt. Bitte Artikelname, Farbe und Größe kontrollieren.'});
-    const hasExact=smartCandidates.some(candidate=>candidate.source==='barcode'||candidate.source==='ocr');setSmartProgress(100,hasExact?'Eindeutiger Code gefunden. Ergebnis bitte prüfen.':smartCandidates.length?'Analyse fertig. Foto-Treffer bitte vor jeder Buchung bestätigen.':'Kein sicherer Treffer. Bitte einmal zuordnen und anschließend anlernen.');renderSmartResults(notes);
-  }catch(error){console.error(error);setSmartProgress(100,'Dieses Foto konnte nicht analysiert werden. Bitte ein schärferes Bild bei gleichmäßigem Licht aufnehmen.');renderSmartResults([{type:'warning',title:'Analyse fehlgeschlagen',text:'Das Bildformat wird möglicherweise nicht unterstützt oder die Datei ist beschädigt.'}]);}
+    else if(visualAmbiguous)notes.push({type:'warning',title:'Mehrere ähnlich gute Foto-Treffer',text:'Eine Bestandsbuchung ist gesperrt. Bitte den Artikel öffnen und Variante prüfen oder den eindeutigen Barcode scannen.'});else if(smartCandidates[0].source==='photo'&&smartCandidates[0].confidence<.86)notes.push({type:'warning',title:'Ähnlichkeit nicht hoch genug',text:'Der Treffer wird nur als mögliche Hilfe gezeigt. Bitte Artikelname, Farbe und Größe kontrollieren.'});
+    const hasExact=smartCandidates.some(candidate=>candidate.source==='barcode'&&!candidate.blocked);setSmartProgress(100,hasExact?'Eindeutiger Barcode gefunden. Ergebnis bitte prüfen.':smartCandidates.length?'Analyse fertig. Nicht eindeutige Treffer müssen bestätigt werden.':'Kein sicherer Treffer. Bitte einmal zuordnen und anschließend anlernen.',run);renderSmartResults(notes);
+  }catch(error){if(!smartRunActive(run))return;console.error(error);setSmartProgress(100,'Dieses Foto konnte nicht analysiert werden. Bitte ein schärferes Bild bei gleichmäßigem Licht aufnehmen.',run);renderSmartResults([{type:'warning',title:'Analyse fehlgeschlagen',text:'Das Bildformat wird möglicherweise nicht unterstützt oder die Datei ist beschädigt.'}]);}
 }
 
 $('#smartCameraInput').onchange=$('#smartGalleryInput').onchange=async event=>{const file=event.target.files[0];event.target.value='';await analyzeSmartPhoto(file);};
-$('#smartCameraDialog').addEventListener('close',()=>{if(smartPreviewUrl){URL.revokeObjectURL(smartPreviewUrl);smartPreviewUrl='';}});
+$('#smartCameraDialog').addEventListener('close',()=>{smartAnalysisRun++;stopSmartBarcodeReader();if(smartPreviewUrl){URL.revokeObjectURL(smartPreviewUrl);smartPreviewUrl='';}});
 
 function currentSmartCandidate(){return smartCandidates[smartSelected]||null;}
 function closeSmartDialog(){if($('#smartCameraDialog').open)$('#smartCameraDialog').close();}
 function showSmartLocation(location){closeSmartDialog();navigate('inventory');$('#search').value=location.name;inventoryFilter='all';inventoryLimit=100;syncFilterChips();renderInventory();toast(`Lagerplatz ${location.name} geöffnet`);}
 $('#smartOpenResult').onclick=()=>{const candidate=currentSmartCandidate();if(!candidate)return;closeSmartDialog();if(candidate.kind==='item')openItem(candidate.entity.id);else showSmartLocation(candidate.entity);};
 $('#smartShowLocation').onclick=()=>{const candidate=currentSmartCandidate();if(candidate?.kind==='location')showSmartLocation(candidate.entity);};
-function bookSmartCandidate(type){const candidate=currentSmartCandidate();if(candidate?.kind!=='item')return;const item=candidate.entity,visual=candidate.source==='photo';if(visual&&!confirm(`Foto-Treffer „${item.name}“ (${Math.round(candidate.confidence*100)} %) wirklich bestätigen und 1 Stück ${type==='purchase'?'einbuchen':'ausbuchen'}?`))return;if(type==='sale'&&item.stock<=0){toast('Artikel ist bereits ausverkauft');return;}const before=item.stock;item.stock+=type==='purchase'?1:-1;state.transactions.push({id:uid(),itemId:item.id,itemName:item.name,type,quantity:1,unitPrice:type==='sale'?item.salePrice:item.cost,unitCost:item.cost,stockBefore:before,stockAfter:item.stock,note:`Smart-Kamera · ${candidate.source==='photo'?'Foto bestätigt':'Code exakt'}`,date:new Date().toISOString()});save();closeSmartDialog();toast(type==='purchase'?'+1 per Smart-Kamera eingebucht':'−1 per Smart-Kamera ausgebucht');}
+function bookSmartCandidate(type){const candidate=currentSmartCandidate();if(candidate?.kind!=='item'||candidate.blocked||candidate.ambiguous)return;const item=candidate.entity,needsConfirmation=candidate.source!=='barcode';if(needsConfirmation&&!confirm(`${candidate.source==='photo'?'Foto-Treffer':'Code aus Etikettentext'} „${item.name}“${candidate.source==='photo'?` (${Math.round(candidate.confidence*100)} %)`:''} wirklich bestätigen und 1 Stück ${type==='purchase'?'einbuchen':'ausbuchen'}?`))return;if(type==='sale'&&item.stock<=0){toast('Artikel ist bereits ausverkauft');return;}const before=item.stock;item.stock+=type==='purchase'?1:-1;state.transactions.push({id:uid(),itemId:item.id,itemName:item.name,type,quantity:1,unitPrice:type==='sale'?item.salePrice:item.cost,unitCost:item.cost,costBefore:item.cost,stockBefore:before,stockAfter:item.stock,note:`Smart-Kamera · ${candidate.source==='barcode'?'Barcode exakt':candidate.source==='photo'?'Foto bestätigt':'Textcode bestätigt'}`,date:new Date().toISOString()});save();closeSmartDialog();toast(type==='purchase'?'+1 per Smart-Kamera eingebucht':'−1 per Smart-Kamera ausgebucht');}
 $('#smartPurchaseResult').onclick=()=>bookSmartCandidate('purchase');$('#smartSaleResult').onclick=()=>bookSmartCandidate('sale');
 $('#smartCreateItem').onclick=()=>{closeSmartDialog();openItem();const form=$('#itemForm');if(smartUnknownCode){form.elements.barcode.value=smartUnknownCode;updateItemBarcodePreview();}for(const field of ['category','brand','material','location'])if(smartNewSuggestion[field])form.elements[field].value=smartNewSuggestion[field];if(smartNewSuggestion.category&&!form.elements.name.value)form.elements.name.value=smartNewSuggestion.category.replace(/s$/,'');toast('Vorschläge übernommen – bitte kontrollieren und Artikel speichern');};

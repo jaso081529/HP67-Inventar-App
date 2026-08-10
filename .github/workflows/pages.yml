@@ -15,7 +15,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: App vor Veröffentlichung prüfen
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Smoke- und Datenschutztest
+        run: node tests/smoke.mjs
+
   deploy:
+    needs: test
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,6 +45,9 @@ jobs:
           mkdir public
           cp index.html update.html app.css app.js smart-camera.js icon.svg manifest.webmanifest sw.js public/
           cp -R vendor public/vendor
+          mkdir public/v34
+          cp app.css app.js smart-camera.js public/v34/
+          sed -i 's|app.css?v=34|v34/app.css|g; s|app.js?v=34|v34/app.js|g; s|smart-camera.js?v=34|v34/smart-camera.js|g' public/index.html
       - name: App hochladen
         uses: actions/upload-pages-artifact@v3
         with:

@@ -2,6 +2,19 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.4
+
+- iPhone-Formulare mit gut lesbaren Einzelfeldern und dauerhaft erreichbarem Speichern-Knopf
+- zuverlässiges Ausblenden inaktiver Schaltflächen und klare Leermeldung in der Monatsauswertung
+- automatische SKU- und EAN-13-Zuordnung beim Anlegen einzelner Artikel sowie eindeutige Codes für Stapelvarianten
+- sichere CSV-/Excel-Zuordnung per SKU, Barcode oder Name + Farbe + Größe; Verkaufspreise bleiben beim Roundtrip erhalten
+- geprüfter JSON-Import mit Typnormalisierung und Schutz vor doppelten IDs, SKUs und Barcodes
+- Bestandsänderungen im Artikelformular erzeugen automatisch eine Korrekturbuchung; Überverkäufe werden abgelehnt
+- Wareneingang und Rückgängig-Funktion halten Bestellung, Bestand und Einkaufspreis gemeinsam konsistent
+- Kamera- und OCR-Läufe werden beim Schließen entwertet; große iPhone-Fotos werden vor OCR speicherschonend verkleinert
+- Foto-Treffer benötigen mehrere angelernte Ansichten und werden bei ähnlichen Treffern oder unbekanntem Barcode für Schnellbuchungen gesperrt
+- app-spezifischer Offline-Cache und Veröffentlichung erst nach erfolgreichem Testlauf
+
 ## Funktionen
 
 - Artikelvarianten mit SKU, EAN/Barcode, Farbe, Größe, Lieferant und Lagerplatz
@@ -86,7 +99,7 @@ Die OCR-Texterkennung lädt beim ersten Scan die Erkennungssoftware und das deut
 
 Öffne einen Artikel, tippe bei „Lokale Fotoerkennung“ auf „Ansicht anlernen“ und fotografiere das Textil 3–6 Mal: Vorderseite, Rückseite, Etikett und bei Bedarf ein Detail. Ein ruhiger, möglichst gleicher Hintergrund verbessert die Treffer. Lagerplätze können unter „Mehr → Lagerplätze & Aufkleber“ mit 2–4 Blickwinkeln angelernt werden.
 
-Die Smart-Kamera arbeitet in Stufen: Ein Barcode, eine SKU oder ein Lagercode ist eindeutig. OCR versucht sichtbare Etiketten zu lesen. Der Fotovergleich erkennt bereits angelernte Motive und übernimmt deren Artikelart – beispielsweise „T-Shirts“ – zeigt dabei aber immer eine Ähnlichkeit und verlangt vor dem Buchen eine Bestätigung. Ein unbekanntes Textil ohne lesbaren Code muss einmal zugeordnet werden; danach lernt die App seine Ansichten lokal. Fotos und Bildmerkmale werden nicht zu GitHub hochgeladen.
+Die Smart-Kamera arbeitet in Stufen: Ein direkt gescannter, bereits zugeordneter Barcode ist eindeutig. OCR versucht sichtbare Etikettencodes zu lesen und verlangt eine Bestätigung. Der Fotovergleich erkennt nur bereits angelernte Motive; je Artikel sind dafür mindestens drei Ansichten, je Lagerplatz mindestens zwei Ansichten nötig. Bei ähnlich guten Treffern oder einem neuen unbekannten Barcode bleibt die Bestandsbuchung gesperrt. Ein unbekanntes Textil ohne lesbaren Code kann nicht zuverlässig allein als Shirt oder Hoodie bestimmt werden und muss einmal manuell zugeordnet werden. Fotos und Bildmerkmale werden nicht zu GitHub hochgeladen.
 
 Falls eine lange installierte Home-Bildschirm-App noch eine alte Oberfläche zeigt, öffne **Mehr → App-Update jetzt laden**. Dabei werden nur alte Programmdateien ersetzt; das lokale Inventar und die angelernten Fotoansichten bleiben erhalten.
 
@@ -97,3 +110,7 @@ Falls selbst dieser Knopf in einer sehr alten Version noch fehlt, öffne einmal 
 Der Kamera-Scanner benötigt auf iPhone und iPad eine HTTPS-Adresse und eine einmalige Kamerafreigabe. Alternativ können ein Barcode-Foto sowie Artikel- oder Lagercodes manuell eingegeben werden. Das Etikettenstudio unterstützt A4-Bögen, 50/62-mm-Thermoetiketten und freie Abmessungen. Über den Druckdialog kann direkt gedruckt oder als PDF gespeichert werden.
 
 Automatisch erzeugte EAN-13-Codes beginnen mit `29` und sind ausschließlich für die interne Lagerkennzeichnung gedacht. Für Codes, die im öffentlichen Einzelhandel, bei Amazon oder anderen Marktplätzen verwendet werden, müssen offiziell zugeteilte GS1-Nummern genutzt werden.
+
+## Hinweis zur GitHub-Pages-Adresse
+
+Die eingetragenen Inventardaten werden nicht in das GitHub-Repository hochgeladen. Browser-Speicher ist technisch jedoch an die gesamte Adresse `jaso081529.github.io` gebunden, nicht nur an diesen Repository-Pfad. Auf demselben iPhone sollten deshalb keine fremden oder nicht vertrauenswürdigen GitHub-Pages-Projekte unter diesem Konto geöffnet werden. Für eine vollständig getrennte Herkunft eignet sich langfristig eine eigene Subdomain.

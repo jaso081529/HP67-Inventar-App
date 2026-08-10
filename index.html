@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=33">
+  <link rel="stylesheet" href="app.css?v=34">
 </head>
 <body>
   <header class="topbar">
@@ -47,7 +47,7 @@
         <button id="openStocktake"><i>✓</i><span>Inventur</span></button>
       </div>
       <div class="section-head"><h2>Umsatz · 6 Monate</h2><span class="section-note">Verkauf / Rohertrag</span></div>
-      <div id="salesChart" class="chart-card"></div>
+      <div id="salesChart" class="chart-card" role="img" aria-label="Umsatz und Rohertrag der letzten sechs Monate"></div>
       <div class="section-head"><h2>Bestandsalarm</h2><button class="text-btn" data-goto="inventory">Alle zeigen</button></div>
       <div id="alerts" class="card-list"></div>
       <div class="section-head"><h2>Offene Bestellungen</h2><button class="text-btn" id="showAllOrders">Alle Bestellungen</button></div>
@@ -119,6 +119,7 @@
         <button class="chip" data-activity="adjustment">Korrektur</button>
       </div>
       <div id="activityList" class="card-list"></div>
+      <button class="secondary-btn load-more" id="loadMoreActivity" hidden>Weitere Buchungen laden</button>
       <div class="section-head"><h2>ABC-Analyse · 90 Tage</h2><span class="section-note">nach Umsatz</span></div>
       <div id="abcAnalysis" class="abc-card"></div>
     </section>
@@ -167,7 +168,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.3</p>
+      <p class="version">HP67 Inventar · Version 3.4</p>
     </section>
   </main>
 
@@ -183,6 +184,7 @@
     <form method="dialog" id="itemForm">
       <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
+      <div class="item-save-bar"><button class="primary-btn" value="default" type="submit">Artikel speichern</button></div>
       <label>Artikelname<input required name="name" placeholder="z. B. Hoodie Basic"></label>
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
@@ -201,7 +203,6 @@
       <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
       <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
       <details class="optional-fields"><summary>Verkaufspreise und Verkaufsoptionen</summary><div class="price-help"><b>Automatisch verbunden</b><span>Beim Verkauf und auf dem Etikett kannst du später genau diese Preisart auswählen. Leere Zusatzpreise fallen automatisch auf den Standardpreis zurück.</span></div><div class="form-grid"><label>Standard-/Ladenpreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label><label>Onlineshoppreis €<input name="onlinePrice" type="number" min="0" step="0.01" value="0"></label><label>Markt-/Eventpreis €<input name="marketPrice" type="number" min="0" step="0.01" value="0"></label><label>Großhandel/B2B €<input name="wholesalePrice" type="number" min="0" step="0.01" value="0"></label></div><div class="form-grid"><label>Name des Sonderpreises<input name="specialPriceName" placeholder="z. B. Vereinsmitglieder"></label><label>Sonderpreis €<input name="specialPrice" type="number" min="0" step="0.01" value="0"></label></div><span class="field-title">Verkaufsoptionen · mehrere möglich</span><div class="sales-option-grid"><label><input type="checkbox" name="salesOption" value="Einzelverkauf"> Einzelverkauf</label><label><input type="checkbox" name="salesOption" value="Onlineshop"> Onlineshop</label><label><input type="checkbox" name="salesOption" value="Markt / Veranstaltung"> Markt / Veranstaltung</label><label><input type="checkbox" name="salesOption" value="Großhandel / B2B"> Großhandel / B2B</label><label><input type="checkbox" name="salesOption" value="Abholung"> Abholung</label><label><input type="checkbox" name="salesOption" value="Versand"> Versand</label><label><input type="checkbox" name="salesOption" value="Personalisiert"> Personalisiert</label><label><input type="checkbox" name="salesOption" value="Nicht zum Verkauf"> Nicht zum Verkauf</label></div><label>Eigene Verkaufsoptionen<input name="salesOptionsCustom" placeholder="z. B. Vereinsverkauf, Vorbestellung"></label></details>
-      <button class="primary-btn" value="default" type="submit">Artikel speichern</button>
       <button class="secondary-btn" id="archiveItem" type="button" hidden>Artikel archivieren</button>
       <button class="danger-btn" id="deleteItem" type="button" hidden>Artikel löschen</button>
     </form>
@@ -213,7 +214,7 @@
       <label>Art<select required name="type"><option value="purchase">Einkauf / Zugang</option><option value="sale">Verkauf / Abgang</option><option value="return">Kundenretoure / Zugang</option><option value="damage">Beschädigt / Entnahme</option><option value="adjustment">Korrektur auf neuen Bestand</option></select></label>
       <label>Artikel<select required name="itemId" id="transactionItem"></select></label>
       <label id="transactionPriceTypeWrap">Preisart<select name="priceType" id="transactionPriceType"><option value="standard">Standard-/Ladenpreis</option><option value="online">Onlineshoppreis</option><option value="market">Markt-/Eventpreis</option><option value="wholesale">Großhandel/B2B</option><option value="special">Sonderpreis</option></select><small id="transactionPriceHelp">Der passende Artikelpreis wird automatisch übernommen und kann danach geändert werden.</small></label>
-      <div class="form-grid"><label>Menge<input required name="quantity" type="number" min="1" step="1" value="1"></label><label>Preis pro Teil €<input name="unitPrice" type="number" min="0" step="0.01" value="0"></label></div>
+      <div class="form-grid"><label><span id="transactionQuantityLabel">Menge</span><input required name="quantity" type="number" min="1" step="1" value="1"></label><label>Preis pro Teil €<input name="unitPrice" type="number" min="0" step="0.01" value="0"></label></div>
       <label>Notiz<input name="note" placeholder="Kunde, Lieferant, Belegnummer …"></label>
       <label>Buchungsdatum<input name="date" type="datetime-local"></label>
       <button class="primary-btn" type="submit" value="default">Buchung speichern</button>
@@ -376,7 +377,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=33"></script>
-  <script src="smart-camera.js?v=33"></script>
+  <script src="app.js?v=34"></script>
+  <script src="smart-camera.js?v=34"></script>
 </body>
 </html>
