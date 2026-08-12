@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=38">
+  <link rel="stylesheet" href="app.css?v=39">
 </head>
 <body>
   <header class="topbar">
@@ -112,6 +112,7 @@
 
     <section class="page" data-page="activity">
       <div class="activity-summary" id="activitySummary"></div>
+      <div class="price-variant-stats" id="priceVariantStats"></div>
       <div class="context-bar" id="activityContext" hidden><div><b id="activityContextTitle">Gefilterter Verlauf</b><small id="activityContextMeta"></small></div><div class="context-actions"><button id="activityContextOpen" type="button">Öffnen</button><button id="activityContextClear" type="button">Filter lösen</button></div></div>
       <button class="undo-btn" id="undoLatest" hidden>↶ Letzte Buchung rückgängig machen</button>
       <div class="chips">
@@ -173,7 +174,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.8</p>
+      <p class="version">HP67 Inventar · Version 3.9</p>
     </section>
   </main>
 
@@ -211,7 +212,7 @@
       <div class="visual-training"><div><b>Lokale Fotoerkennung</b><small id="itemVisualStatus">Noch nicht angelernt. Für gute Treffer 3–6 Ansichten bei ruhigem Hintergrund aufnehmen.</small></div><label class="secondary-btn file-btn">Ansicht anlernen<input id="trainItemVisual" type="file" accept="image/*" capture="environment" multiple></label><button id="clearItemVisual" type="button" hidden>Training löschen</button></div>
       <div class="form-grid thirds"><label>Bestand<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Mindestbestand<input required name="minStock" type="number" min="0" step="1" value="5"></label><label>Einkaufspreis je Stück €<input required name="cost" type="number" min="0" step="0.01" value="0"></label></div>
       <div class="cost-summary"><span>Aktueller Warenwert</span><b id="itemCostValue">0,00 €</b><small>Bestand × Einkaufspreis</small></div>
-      <details class="optional-fields"><summary>Verkaufspreise und Verkaufsoptionen</summary><div class="price-help"><b>Automatisch verbunden</b><span>Beim Verkauf und auf dem Etikett kannst du später genau diese Preisart auswählen. Leere Zusatzpreise fallen automatisch auf den Standardpreis zurück.</span></div><div class="form-grid"><label>Standard-/Ladenpreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label><label>Onlineshoppreis €<input name="onlinePrice" type="number" min="0" step="0.01" value="0"></label><label>Markt-/Eventpreis €<input name="marketPrice" type="number" min="0" step="0.01" value="0"></label><label>Großhandel/B2B €<input name="wholesalePrice" type="number" min="0" step="0.01" value="0"></label></div><div class="form-grid"><label>Name des Sonderpreises<input name="specialPriceName" placeholder="z. B. Vereinsmitglieder"></label><label>Sonderpreis €<input name="specialPrice" type="number" min="0" step="0.01" value="0"></label></div><span class="field-title">Verkaufsoptionen · mehrere möglich</span><div class="sales-option-grid"><label><input type="checkbox" name="salesOption" value="Einzelverkauf"> Einzelverkauf</label><label><input type="checkbox" name="salesOption" value="Onlineshop"> Onlineshop</label><label><input type="checkbox" name="salesOption" value="Markt / Veranstaltung"> Markt / Veranstaltung</label><label><input type="checkbox" name="salesOption" value="Großhandel / B2B"> Großhandel / B2B</label><label><input type="checkbox" name="salesOption" value="Abholung"> Abholung</label><label><input type="checkbox" name="salesOption" value="Versand"> Versand</label><label><input type="checkbox" name="salesOption" value="Personalisiert"> Personalisiert</label><label><input type="checkbox" name="salesOption" value="Nicht zum Verkauf"> Nicht zum Verkauf</label></div><label>Eigene Verkaufsoptionen<input name="salesOptionsCustom" placeholder="z. B. Vereinsverkauf, Vorbestellung"></label></details>
+      <details class="optional-fields"><summary>Verkaufspreise und Verkaufsoptionen</summary><div class="price-help"><b>Automatisch verbunden</b><span>Beim Verkauf wählst du die tatsächlich verkaufte Ausführung. Name und Preis erscheinen anschließend getrennt in Statistik und Export.</span></div><div class="form-grid"><label>Standard-/Ladenpreis €<input name="salePrice" type="number" min="0" step="0.01" value="0"></label><label>Onlineshoppreis €<input name="onlinePrice" type="number" min="0" step="0.01" value="0"></label><label>Markt-/Eventpreis €<input name="marketPrice" type="number" min="0" step="0.01" value="0"></label><label>Großhandel/B2B €<input name="wholesalePrice" type="number" min="0" step="0.01" value="0"></label></div><div class="form-grid"><label>Name des Sonderpreises<input name="specialPriceName" placeholder="z. B. Vereinsmitglieder"></label><label>Sonderpreis €<input name="specialPrice" type="number" min="0" step="0.01" value="0"></label></div><span class="field-title">Eigene Preisvarianten</span><div id="customPriceRows" class="custom-price-rows"></div><button id="addCustomPrice" type="button" class="secondary-btn">＋ Preisvariante hinzufügen</button><small>Zum Beispiel „Vorne“, „Vorne + hinten“, „Ärmel“, „Personalisierung Gold“.</small><span class="field-title">Verkaufsoptionen · mehrere möglich</span><div class="sales-option-grid"><label><input type="checkbox" name="salesOption" value="Einzelverkauf"> Einzelverkauf</label><label><input type="checkbox" name="salesOption" value="Onlineshop"> Onlineshop</label><label><input type="checkbox" name="salesOption" value="Markt / Veranstaltung"> Markt / Veranstaltung</label><label><input type="checkbox" name="salesOption" value="Großhandel / B2B"> Großhandel / B2B</label><label><input type="checkbox" name="salesOption" value="Abholung"> Abholung</label><label><input type="checkbox" name="salesOption" value="Versand"> Versand</label><label><input type="checkbox" name="salesOption" value="Personalisiert"> Personalisiert</label><label><input type="checkbox" name="salesOption" value="Nicht zum Verkauf"> Nicht zum Verkauf</label></div><label>Eigene Verkaufsoptionen<input name="salesOptionsCustom" placeholder="z. B. Vereinsverkauf, Vorbestellung"></label></details>
       <button class="secondary-btn" id="archiveItem" type="button" hidden>Artikel archivieren</button>
       <button class="danger-btn" id="deleteItem" type="button" hidden>Artikel löschen</button>
     </form>
@@ -403,7 +404,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=38"></script>
-  <script src="smart-camera.js?v=38"></script>
+  <script src="app.js?v=39"></script>
+  <script src="smart-camera.js?v=39"></script>
 </body>
 </html>

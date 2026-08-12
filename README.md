@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.9
+
+- Beliebig viele eigene Preisvarianten pro Artikel, zum Beispiel „Vorne“ und „Vorne + hinten“.
+- Beim Verkauf wird die tatsächlich verkaufte Preisvariante ausgewählt und dauerhaft in der Buchung gespeichert.
+- Verlauf, Statistik, CSV- und Excel-Export werten die Verkaufsvarianten getrennt aus.
+
 ## Neu in Version 3.8
 
 - Die laufende SKU-Endnummer zählt jetzt gemeinsam je Artikel und Farbe über alle Größen weiter: Rot/S 001, Rot/M 002, Rot/L 003.

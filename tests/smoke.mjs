@@ -44,8 +44,11 @@ for(const feature of ['exportReorderPdf','printReorder','exportLabelsPdf'])if(!i
 for(const handler of ["$('#exportReorderPdf').onclick","$('#printReorder').onclick","$('#exportLabelsPdf').onclick"])if(!app.includes(handler))fail(`PDF-Klickfunktion fehlt: ${handler}`);
 for(const column of ['Artikelbezeichnung','Farbe / Größe','Bestellen','Summe'])if(!app.includes(column))fail(`Genaue Nachbestellspalte fehlt: ${column}`);
 for(const feature of ['transactionPriceType','transactionPriceHelp','labelPriceType','labelPriceTypeWrap'])if(!idSet.has(feature))fail(`Verbundene Preisfunktion fehlt: ${feature}`);
+for(const feature of ['customPriceRows','addCustomPrice','priceVariantStats'])if(!idSet.has(feature))fail(`Freie Preisvarianten-Funktion fehlt: ${feature}`);
 for(const field of ['onlinePrice','marketPrice','wholesalePrice','specialPriceName','specialPrice'])if(!html.includes(`name="${field}"`))fail(`Verkaufspreisfeld fehlt: ${field}`);
 for(const logic of ['function priceForItem','function updateTransactionPrice','priceType:f.elements.labelPriceType.value','const labelPrice=priceForItem'])if(!app.includes(logic))fail(`Preisautomatik fehlt: ${logic}`);
+for(const logic of ['function customPriceDraft','function addCustomPriceRow','function priceTypeLabel','Verkäufe nach Preisvariante','priceLabel'])if(!app.includes(logic))fail(`Freie Preisvarianten oder deren Statistik fehlen: ${logic}`);
+if(!app.includes("$('#scanSale').onclick=()=>")||!app.includes("openTransaction(itemId,'sale')")||!smart.includes("closeSmartDialog(()=>openTransaction(item.id,'sale'))"))fail('Scanner-Verkäufe öffnen nicht zuverlässig die Preisvarianten-Auswahl.');
 for(const column of ['VK Standard','VK Online','VK Markt','VK B2B','Sonderpreis Name'])if(!app.includes(column))fail(`Preisexportspalte fehlt: ${column}`);
 for(const feature of ['manageLocations','locationDialog','locationOptions','locationList','locationLabelPreset','exportLocationLabelsSvg','exportLocationLabelsPdf','printLocationLabels'])if(!idSet.has(feature))fail(`Lagerorganisations-Funktion fehlt: ${feature}`);
 for(const field of ['showLocation','showBrand','showMaterial'])if(!html.includes(`name="${field}"`))fail(`Etiketten-Zusatzfeld fehlt: ${field}`);
@@ -57,7 +60,7 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("needsConfirmation=candidate.source!=='barcode'")||!smart.includes('needsConfirmation&&!confirm('))fail('Foto-/OCR-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
-if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=36',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=39',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
 if(!css.includes('[hidden]{display:none!important}'))fail('Versteckte Schaltflächen können durch Komponenten-CSS sichtbar werden.');
 if(!css.includes('.item-save-bar{position:sticky'))fail('Artikelspeichern ist in langen iPhone-Formularen nicht dauerhaft erreichbar.');
 if(!app.includes("typeof root==='string'?document.querySelector(root):root"))fail('Dialoglisten mit einer Container-ID können nicht sicher gelesen werden.');
@@ -155,7 +158,7 @@ class TestFormData{constructor(form){this.values=form.values;}get(name){return t
 const freePriceContext={
   state:{items:[{id:'shirt',name:'Shirt',stock:2,cost:5,salePrice:20}],transactions:[]},
   $:selector=>selector==='#transactionForm'?{addEventListener:(type,handler)=>{if(type==='submit')capturedTransactionSubmit=handler;}}:{},
-  FormData:TestFormData,priceForItem:()=>20,uid:()=> 'tx-free',persistState:()=>true,
+  FormData:TestFormData,priceForItem:()=>20,priceTypeLabel:()=> 'Sonderpreis',uid:()=> 'tx-free',persistState:()=>true,
   markDialogClean:()=>{transactionMarkedClean++;},renderAll(){},requestDialogClose(){},toast(){},
   alert:message=>{transactionAlert=String(message);},Date,Number,String,Math
 };
@@ -346,8 +349,8 @@ if(!capturedPdfExport||pdfTable?.body?.length!==1||pdfTable.body[0]?.[0]!=='Akti
 
 if(!sw.includes("CACHE_PREFIX='hp67-inventar-'")||!sw.includes('k.startsWith(CACHE_PREFIX)'))fail('Service Worker löscht Caches nicht app-spezifisch.');
 if(!sw.includes("isShell?'./index.html':e.request"))fail('Fremde Navigationen können weiterhin den Offline-App-Shell überschreiben.');
-if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v38/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
-for(const releaseAsset of ['./v38/app.css','./v38/app.js','./v38/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
+if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v39/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
+for(const releaseAsset of ['./v39/app.css','./v39/app.js','./v39/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
 if(!sw.includes("cached||caches.match(fallbackAsset)"))fail('Versionsgebundene Offline-Dateien haben keinen sicheren Fallback.');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
@@ -376,7 +379,7 @@ const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("registration.scope===scope")||!updatePage.includes("name.startsWith('hp67-inventar-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 const pagesWorkflow=read('.github/workflows/pages.yml');
 for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
-for(const releaseAsset of ['v38/app.css','v38/app.js','v38/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v38'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
-if(!pagesWorkflow.includes("sed -i 's|app.css?v=38|v38/app.css|g; s|app.js?v=38|v38/app.js|g; s|smart-camera.js?v=38|v38/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v38-Kern-Dateien.');
+for(const releaseAsset of ['v39/app.css','v39/app.js','v39/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v39'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
+if(!pagesWorkflow.includes("sed -i 's|app.css?v=39|v39/app.css|g; s|app.js?v=39|v39/app.js|g; s|smart-camera.js?v=39|v39/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v39-Kern-Dateien.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);
