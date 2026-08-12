@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=314">
+  <link rel="stylesheet" href="app.css?v=315">
 </head>
 <body>
   <header class="topbar">
@@ -147,6 +147,7 @@
         <p>Nelko: Etikett gestalten, „An Nelko senden“ tippen und im iPhone-Teilen-Menü Nelko wählen. Die App erzeugt dafür automatisch ein kontrastreiches 203-DPI-PNG in der gewählten Größe.</p>
         <button id="settingsScanner">Barcode scannen <span>›</span></button>
         <button id="settingsLabels">Etiketten erstellen <span>›</span></button>
+        <button id="manageLabelLibrary">Etikettenbibliothek <span>›</span></button>
         <button id="generateMissingBarcodes">Fehlende Barcodes erzeugen <span>›</span></button>
         <button id="manageBarcodeGroups">Gruppenbarcodes verwalten <span>›</span></button>
       </div>
@@ -175,7 +176,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.14</p>
+      <p class="version">HP67 Inventar · Version 3.15</p>
     </section>
   </main>
 
@@ -231,7 +232,16 @@
       <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="printGroupBarcode" type="button">Barcode drucken</button></div>
       <div id="barcodeGroupPreview" class="item-barcode-preview" hidden><svg id="barcodeGroupSvg" aria-label="Gruppenbarcode"></svg><small id="barcodeGroupStatus"></small></div>
       <button class="primary-btn" type="submit">Gruppe speichern</button>
+      <button id="saveGroupToLibrary" class="secondary-btn" type="button">Gruppenetikett in Bibliothek speichern</button>
       <div id="barcodeGroupList" class="category-list"></div>
+    </form>
+  </dialog>
+
+  <dialog id="labelLibraryDialog" aria-label="Etikettenbibliothek">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">LOKAL GESPEICHERT</p><h2>Etikettenbibliothek</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
+      <p>Gespeicherte Etiketten bleiben ausschließlich auf diesem Gerät. Du kannst sie wieder öffnen, anpassen und erneut drucken.</p>
+      <div id="labelLibraryList" class="label-library-list"></div>
     </form>
   </dialog>
 
@@ -365,6 +375,7 @@
       <div class="label-preview" id="labelPreview"></div>
       <div id="labelStatus" class="label-status"></div>
       <button id="labelOpenItem" type="button" class="secondary-btn">Ausgewählten Artikel öffnen</button>
+      <button id="saveLabelsToLibrary" type="button" class="secondary-btn">Diese Auswahl in Bibliothek speichern</button>
       <div class="nelko-share-help"><b>Nelko auf dem iPhone</b><span>„An Nelko senden“ erstellt das aktuelle Etikett als 203-DPI-Schwarzweiß-PNG. Im Teilen-Menü Nelko wählen. Falls Nelko dort nicht erscheint, wird die Datei gespeichert und kann in Nelko unter „Picture/Bild“ geöffnet werden.</span></div>
       <div class="export-grid"><button id="shareNelkoLabel" type="button" class="primary-btn">An Nelko senden</button><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button">Systemdruck</button></div>
     </form>
@@ -414,7 +425,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=314"></script>
-  <script src="smart-camera.js?v=314"></script>
+  <script src="app.js?v=315"></script>
+  <script src="smart-camera.js?v=315"></script>
 </body>
 </html>

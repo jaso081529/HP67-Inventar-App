@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.15
+
+- Eine lokale Etikettenbibliothek speichert auf Wunsch einzelne Artikel-, Varianten- und Gruppenetiketten als wiederverwendbare Vorlagen.
+- Gespeicherte Auswahlen lassen sich später öffnen, anpassen und erneut drucken; Format, Auflösung, Farben und sichtbare Felder werden bei Artikel-Etiketten wiederhergestellt.
+- Gruppenetiketten verweisen weiterhin auf ihre gespeicherte Barcodegruppe und öffnen diese direkt zur Kontrolle oder zum Nachdruck.
+- Bibliothekseinträge können einzeln gelöscht werden, ohne Artikel oder Barcodegruppen zu löschen. Alle Bibliotheksdaten bleiben lokal und sind in der JSON-Sicherung enthalten.
+
 ## Neu in Version 3.14
 
 - Das Etikettenstudio unterscheidet jetzt eindeutig zwischen mehreren einzelnen Varianten-Etiketten und einem gemeinsamen Gruppenetikett.
