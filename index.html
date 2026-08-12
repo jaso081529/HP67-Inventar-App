@@ -8,11 +8,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="HP67 Inventar">
   <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
   <title>HP67 Inventar</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=35">
+  <link rel="stylesheet" href="app.css?v=36">
 </head>
 <body>
   <header class="topbar">
@@ -171,7 +172,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.5</p>
+      <p class="version">HP67 Inventar · Version 3.6</p>
     </section>
   </main>
 
@@ -183,7 +184,7 @@
     <button data-nav="settings"><i>⚙</i><span>Mehr</span></button>
   </nav>
 
-  <dialog id="itemDialog">
+  <dialog id="itemDialog" aria-labelledby="itemDialogTitle">
     <form method="dialog" id="itemForm">
       <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
@@ -215,7 +216,7 @@
     </form>
   </dialog>
 
-  <dialog id="transactionDialog">
+  <dialog id="transactionDialog" aria-label="Bestand ändern">
     <form method="dialog" id="transactionForm">
       <div class="dialog-head"><div><p class="eyebrow">BUCHUNG</p><h2>Bestand ändern</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Art<select required name="type"><option value="purchase">Einkauf / Zugang</option><option value="sale">Verkauf / Abgang</option><option value="return">Kundenretoure / Zugang</option><option value="damage">Beschädigt / Entnahme</option><option value="adjustment">Korrektur auf neuen Bestand</option></select></label>
@@ -228,7 +229,7 @@
     </form>
   </dialog>
 
-  <dialog id="reorderDialog">
+  <dialog id="reorderDialog" aria-label="Nachbestellung">
     <form method="dialog" id="reorderForm">
       <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf. Bereits offene Bestellmengen werden automatisch abgezogen.</p>
@@ -238,14 +239,14 @@
     </form>
   </dialog>
 
-  <dialog id="ordersDialog">
+  <dialog id="ordersDialog" aria-label="Bestellungen">
     <form method="dialog">
       <div class="dialog-head"><div><p class="eyebrow">EINKAUF</p><h2>Bestellungen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="ordersList" class="planning-list"></div>
     </form>
   </dialog>
 
-  <dialog id="receiveDialog">
+  <dialog id="receiveDialog" aria-labelledby="receiveTitle">
     <form method="dialog" id="receiveForm">
       <div class="dialog-head"><div><p class="eyebrow">WARENEINGANG</p><h2 id="receiveTitle">Bestellung erhalten</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="orderId">
@@ -257,7 +258,7 @@
     </form>
   </dialog>
 
-  <dialog id="stocktakeDialog">
+  <dialog id="stocktakeDialog" aria-label="Inventur">
     <form method="dialog" id="stocktakeForm">
       <div class="dialog-head"><div><p class="eyebrow">BESTANDSKONTROLLE</p><h2>Inventur</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Trage die tatsächlich gezählte Menge ein. Abweichungen werden als Korrektur protokolliert.</p>
@@ -267,10 +268,10 @@
     </form>
   </dialog>
 
-  <dialog id="scanDialog">
+  <dialog id="scanDialog" aria-label="Erkannte Belegpositionen">
     <form method="dialog" id="scanForm">
       <div class="dialog-head"><div><p class="eyebrow">BELEGIMPORT</p><h2>Erkannte Positionen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
-      <div id="ocrStatus" class="ocr-status"></div>
+      <div id="ocrStatus" class="ocr-status" role="status" aria-live="polite"></div>
       <img id="receiptPreview" alt="Vorschau des Belegs">
       <div id="scanRows"></div>
       <button id="addScanRow" type="button" class="secondary-btn">＋ Position ergänzen</button>
@@ -278,11 +279,11 @@
     </form>
   </dialog>
 
-  <dialog id="voiceDialog">
+  <dialog id="voiceDialog" aria-label="Artikel per Sprache erfassen">
     <form method="dialog" id="voiceForm">
       <div class="dialog-head"><div><p class="eyebrow">SPRACHEINGABE</p><h2>Artikel diktieren</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Vorgang<select id="voiceMode" name="mode"><option value="purchase">Einkauf / Bestand hinzufügen</option><option value="sale">Verkauf / Bestand abziehen</option><option value="return">Kundenretoure</option><option value="damage">Beschädigt / Entnahme</option></select></label>
-      <button type="button" id="voiceMic" class="mic-control"><span class="mic-symbol">●</span><b id="voiceMicLabel">Aufnahme starten</b><small id="voiceStatus">Tippen und anschließend sprechen</small></button>
+      <button type="button" id="voiceMic" class="mic-control"><span class="mic-symbol">●</span><b id="voiceMicLabel">Aufnahme starten</b><small id="voiceStatus" role="status" aria-live="polite">Tippen und anschließend sprechen</small></button>
       <p class="voice-example">Beispiel: „12 schwarze T-Shirts für 8,50 Euro und 6 Hoodies für 15 Euro“</p>
       <label>Erkannter Text<textarea id="voiceTranscript" rows="4" placeholder="Du kannst den Text auch eintippen oder korrigieren."></textarea></label>
       <button type="button" id="parseVoice" class="secondary-btn">Text auswerten</button>
@@ -292,11 +293,11 @@
     </form>
   </dialog>
 
-  <dialog id="scannerDialog">
+  <dialog id="scannerDialog" aria-label="Barcode scannen">
     <form method="dialog">
       <div class="dialog-head"><div><p class="eyebrow">KAMERA-SCANNER</p><h2>Barcode scannen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div id="barcodeReader"></div>
-      <div id="scannerStatus" class="scanner-status">Kamera wird vorbereitet …</div>
+      <div id="scannerStatus" class="scanner-status" role="status" aria-live="polite">Kamera wird vorbereitet …</div>
       <div class="manual-code"><input id="manualBarcode" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="Artikel- oder Lagercode eingeben"><button id="useManualBarcode" type="button">Übernehmen</button></div>
       <label class="secondary-btn file-btn">Barcode-Foto auswählen<input id="barcodeImage" type="file" accept="image/*" capture="environment"></label>
       <div id="scannerResult" class="scanner-result" hidden></div>
@@ -304,7 +305,7 @@
     </form>
   </dialog>
 
-  <dialog id="smartCameraDialog">
+  <dialog id="smartCameraDialog" aria-label="Lokale Fotoanalyse">
     <form method="dialog">
       <div class="dialog-head"><div><p class="eyebrow">SMART-KAMERA</p><h2>Lokale Fotoanalyse</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <div class="smart-preview-wrap"><img id="smartCameraPreview" alt="Zu prüfendes Foto"><div id="smartBarcodeReader" aria-hidden="true"></div></div>
@@ -322,7 +323,7 @@
     </form>
   </dialog>
 
-  <dialog id="labelDialog">
+  <dialog id="labelDialog" aria-label="Etiketten erstellen">
     <form method="dialog" id="labelForm">
       <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="variants">Mehrere Varianten auswählen</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
@@ -343,7 +344,7 @@
     </form>
   </dialog>
 
-  <dialog id="categoryDialog">
+  <dialog id="categoryDialog" aria-label="Kategorien verwalten">
     <form method="dialog" id="categoryForm">
       <div class="dialog-head"><div><p class="eyebrow">TEXTILARTEN</p><h2>Kategorien verwalten</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
@@ -355,7 +356,7 @@
     </form>
   </dialog>
 
-  <dialog id="locationDialog">
+  <dialog id="locationDialog" aria-label="Lagerplätze und Aufkleber">
     <form method="dialog" id="locationForm">
       <div class="dialog-head"><div><p class="eyebrow">LAGERORGANISATION</p><h2>Lagerplätze & Aufkleber</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p class="dialog-copy">Lege nur neutrale Bezeichnungen wie Regal, Fach oder Box an. Persönliche Angaben sind nicht nötig.</p>
@@ -369,7 +370,7 @@
     </form>
   </dialog>
 
-  <dialog id="importDialog">
+  <dialog id="importDialog" aria-label="Datenimport prüfen">
     <form method="dialog" id="importForm">
       <div class="dialog-head"><div><p class="eyebrow">DATENIMPORT</p><h2>Import prüfen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p id="importSummary" class="dialog-copy"></p>
@@ -386,7 +387,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=35"></script>
-  <script src="smart-camera.js?v=35"></script>
+  <script src="app.js?v=36"></script>
+  <script src="smart-camera.js?v=36"></script>
 </body>
 </html>

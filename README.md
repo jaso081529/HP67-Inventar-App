@@ -2,6 +2,19 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.6
+
+- sichere Dialog-Navigation: iPhone-Zurück, Escape und Schließen schützen ungespeicherte Artikel-, Buchungs-, Inventur-, Import- und Bestelldaten
+- Scanner und Smart-Kamera erkennen archivierte Artikel, sperren Buchungen und führen direkt zur Reaktivierung
+- Foto- und Lernvorgänge sperren Speichern bis zur vollständigen lokalen Verarbeitung
+- strikter CSV-/TSV-/XML-/Excel-Import mit deutschen Tausenderformaten, leeren Zellen, eindeutigen Varianten und vollständig vorgeplantem Merge
+- Rückgängig folgt der tatsächlichen Buchungsreihenfolge und schützt spätere Bestands- oder EK-Änderungen
+- Inventur überspringt leere Zählfelder und lehnt negative oder gebrochene Stückzahlen ab
+- Gratisverkauf mit 0,00 € bleibt 0,00 €; Tabellenexporte neutralisieren ausführbare Formelpräfixe
+- Druckformat des Einzelbarcodes folgt dem gewählten Nelko-Format; große Etikettenjobs werden klar begrenzt
+- OCR läuft mit fest versionierten Dateien, Sprachdaten und Rechenkern vollständig aus diesem Repository; die CSP sperrt fremde Laufzeitskripte (nur lokale WebAssembly-Kompilierung ist erlaubt)
+- verbesserte Touch-Ziele, Dialognamen, Statusansagen, Tastaturzugriff und reduzierte Bewegung
+
 ## Neu in Version 3.5
 
 - Artikel als Arbeitszentrale: Einkauf, Verkauf, Verlauf, Etikett, Nachbestellung und Lagerplatz direkt miteinander verknüpft
