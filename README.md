@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.14
+
+- Das Etikettenstudio unterscheidet jetzt eindeutig zwischen mehreren einzelnen Varianten-Etiketten und einem gemeinsamen Gruppenetikett.
+- Aus der markierten Variantenauswahl lässt sich direkt ein Gruppenetikett erstellen; alle gewählten Artikel werden automatisch in den Gruppenmanager übernommen.
+- Ein Gruppenetikett kann erst nach dem Speichern gedruckt werden. Damit ist sein Code garantiert der Gruppe zugeordnet und öffnet beim Scan die vollständige Artikelliste.
+- Auf dem Ausdruck stehen sichtbar „GRUPPENETIKETT“ und die Anzahl der enthaltenen Varianten.
+
 ## Neu in Version 3.13
 
 - Ein gescannter Gruppenbarcode öffnet jetzt immer eine vollständige, scrollbare Artikelliste und nicht mehr nur den ersten Artikel.

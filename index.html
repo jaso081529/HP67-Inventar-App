@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=313">
+  <link rel="stylesheet" href="app.css?v=314">
 </head>
 <body>
   <header class="topbar">
@@ -175,7 +175,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.13</p>
+      <p class="version">HP67 Inventar · Version 3.14</p>
     </section>
   </main>
 
@@ -227,6 +227,7 @@
       <label>Gruppenname<input name="name" required placeholder="z. B. Hoodie Rot · alle Größen"></label>
       <label>Gruppencode<input name="code" placeholder="Wird automatisch erzeugt"></label>
       <div class="variant-checklist" id="barcodeGroupItems"></div>
+      <div id="barcodeGroupSelectionStatus" class="group-selection-status">Noch keine Varianten ausgewählt.</div>
       <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="printGroupBarcode" type="button">Barcode drucken</button></div>
       <div id="barcodeGroupPreview" class="item-barcode-preview" hidden><svg id="barcodeGroupSvg" aria-label="Gruppenbarcode"></svg><small id="barcodeGroupStatus"></small></div>
       <button class="primary-btn" type="submit">Gruppe speichern</button>
@@ -349,9 +350,10 @@
   <dialog id="labelDialog" aria-label="Etiketten erstellen">
     <form method="dialog" id="labelForm">
       <div class="dialog-head"><div><p class="eyebrow">BARCODE-STUDIO</p><h2>Etiketten erstellen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
-      <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="variants">Mehrere Varianten auswählen</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
+      <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein einzelnes Artikel-Etikett</option><option value="variants">Mehrere einzelne Varianten-Etiketten</option><option value="all">Alle Artikel als einzelne Etiketten</option><option value="low">Nur Nachbestellungen</option></select></label>
       <label id="labelItemWrap">Artikel<select name="itemId" id="labelItem"></select></label>
       <div id="labelVariantWrap" class="variant-checklist" hidden></div>
+      <div id="labelGroupHelp" class="group-label-help" hidden><b>Ein gemeinsamer Barcode für diese Auswahl?</b><span>Normale Varianten-Etiketten enthalten jeweils nur ihren eigenen Artikelcode. Erstelle hier stattdessen ein echtes Gruppenetikett, das beim Scan alle ausgewählten Varianten auflistet.</span><button id="createGroupFromLabels" type="button" class="primary-btn">Aus Auswahl Gruppenetikett erstellen</button></div>
       <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="40x15">Nelko · 40 × 15 mm · P21 Mini</option><option value="50x25">Nelko · 50 × 25 mm</option><option value="50x30">Nelko · 50 × 30 mm · PM220</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="70x40">Nelko · 70 × 40 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
       <div class="form-grid custom-size" id="customLabelSize" hidden><label>Breite mm<input name="width" type="number" min="20" max="200" value="62"></label><label>Höhe mm<input name="height" type="number" min="15" max="150" value="29"></label></div>
       <div class="form-grid"><label>Anzahl je Artikel<input name="copies" type="number" min="1" max="100" value="1"></label><label>Leere Startfelder<input name="startAt" type="number" min="0" max="100" value="0"></label></div>
@@ -412,7 +414,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=313"></script>
-  <script src="smart-camera.js?v=313"></script>
+  <script src="app.js?v=314"></script>
+  <script src="smart-camera.js?v=314"></script>
 </body>
 </html>
