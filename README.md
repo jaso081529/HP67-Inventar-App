@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.7
+
+- Einzelne Exemplare je Farb-/Größenkombination erhalten automatisch fortlaufende SKUs und eigene Barcodes.
+- Gruppenbarcodes bündeln frei ausgewählte Produkte und öffnen beim Scan zuerst die Artikelauswahl.
+- Gruppenbarcodes lassen sich bearbeiten, löschen und direkt im 50 × 25-mm-Format drucken.
+
 ## Neu in Version 3.6
 
 - sichere Dialog-Navigation: iPhone-Zurück, Escape und Schließen schützen ungespeicherte Artikel-, Buchungs-, Inventur-, Import- und Bestelldaten
