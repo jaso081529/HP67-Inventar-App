@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=316">
+  <link rel="stylesheet" href="app.css?v=317">
 </head>
 <body>
   <header class="topbar">
@@ -176,7 +176,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.16</p>
+      <p class="version">HP67 Inventar · Version 3.17</p>
     </section>
   </main>
 
@@ -232,7 +232,7 @@
       <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="testGroupBarcode" type="button">Gruppenauswahl testen</button></div>
       <div id="barcodeGroupPreview" class="item-barcode-preview" hidden><svg id="barcodeGroupSvg" aria-label="Gruppenbarcode"></svg><small id="barcodeGroupStatus"></small></div>
       <button class="primary-btn" type="submit">Gruppe speichern</button>
-      <div class="group-export-tools"><label>Gruppenetikett-Format<select id="groupLabelSize"><option value="40x15">Nelko 40 × 15 mm</option><option value="50x25" selected>Nelko 50 × 25 mm</option><option value="50x30">Nelko 50 × 30 mm</option><option value="70x40">Nelko 70 × 40 mm</option></select></label><div class="export-grid"><button id="shareGroupNelko" class="primary-btn" type="button">An Nelko senden</button><button id="downloadGroupPng" type="button">PNG</button><button id="downloadGroupSvg" type="button">SVG</button><button id="printGroupBarcode" type="button">Drucken</button></div><small>Diese Ausgaben verwenden garantiert den gespeicherten Gruppencode – niemals den Barcode der ersten Variante.</small></div>
+      <div class="group-export-tools"><label>Gruppenetikett-Format<select id="groupLabelSize"><option value="40x15">Nelko 40 × 15 mm</option><option value="50x25" selected>Nelko 50 × 25 mm</option><option value="50x30">Nelko 50 × 30 mm</option><option value="70x40">Nelko 70 × 40 mm</option></select></label><div class="font-controls"><label>Name <output id="groupNameScaleValue">100 %</output><input id="groupNameScale" type="range" min="60" max="200" step="5" value="100"></label><label>Hinweise <output id="groupMetaScaleValue">100 %</output><input id="groupMetaScale" type="range" min="60" max="200" step="5" value="100"></label><label>Barcode-Zahl <output id="groupBarcodeScaleValue">100 %</output><input id="groupBarcodeScale" type="range" min="60" max="200" step="5" value="100"></label></div><div class="export-grid"><button id="shareGroupNelko" class="primary-btn" type="button">An Nelko senden</button><button id="downloadGroupPng" type="button">PNG</button><button id="downloadGroupSvg" type="button">SVG</button><button id="printGroupBarcode" type="button">Drucken</button></div><small>Diese Ausgaben verwenden garantiert den gespeicherten Gruppencode – niemals den Barcode der ersten Variante.</small></div>
       <button id="saveGroupToLibrary" class="secondary-btn" type="button">Gruppenetikett in Bibliothek speichern</button>
       <div id="barcodeGroupList" class="category-list"></div>
     </form>
@@ -368,7 +368,8 @@
       <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="40x15">Nelko · 40 × 15 mm · P21 Mini</option><option value="50x25">Nelko · 50 × 25 mm</option><option value="50x30">Nelko · 50 × 30 mm · PM220</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="70x40">Nelko · 70 × 40 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
       <div class="form-grid custom-size" id="customLabelSize" hidden><label>Breite mm<input name="width" type="number" min="20" max="200" value="62"></label><label>Höhe mm<input name="height" type="number" min="15" max="150" value="29"></label></div>
       <div class="form-grid"><label>Anzahl je Artikel<input name="copies" type="number" min="1" max="100" value="1"></label><label>Leere Startfelder<input name="startAt" type="number" min="0" max="100" value="0"></label></div>
-      <div class="form-grid"><label>PNG-Auflösung<select name="dpi"><option value="300">300 DPI</option><option value="600">600 DPI</option></select></label><label>Schriftgröße<select name="fontScale"><option value="0.85">Kompakt</option><option value="1" selected>Normal</option><option value="1.2">Groß</option></select></label></div>
+      <div class="form-grid"><label>PNG-Auflösung<select name="dpi"><option value="300">300 DPI</option><option value="600">600 DPI</option></select></label></div>
+      <div class="font-controls"><label>Artikelname <output id="nameFontScaleValue">100 %</output><input name="nameFontScale" type="range" min="60" max="200" step="5" value="100"></label><label>SKU, Farbe, Größe und Preis <output id="metaFontScaleValue">100 %</output><input name="metaFontScale" type="range" min="60" max="200" step="5" value="100"></label><label>Zahl unter dem Barcode <output id="barcodeFontScaleValue">100 %</output><input name="barcodeFontScale" type="range" min="60" max="200" step="5" value="100"></label></div>
       <div class="form-grid"><label>Hintergrund<input name="background" type="color" value="#ffffff"></label><label>Textfarbe<input name="textColor" type="color" value="#101827"></label></div>
       <div class="logo-import"><img id="labelLogoPreview" alt="Logo"><label class="secondary-btn file-btn">SVG-/PNG-Logo<input id="labelLogoInput" type="file" accept="image/svg+xml,image/png,image/jpeg"></label><button id="removeLabelLogo" class="photo-remove" type="button" hidden>Logo entfernen</button></div>
       <div class="check-grid"><label><input name="showName" type="checkbox" checked> Artikelname</label><label><input name="showPrice" type="checkbox" checked> Verkaufspreis</label><label><input name="showSku" type="checkbox" checked> SKU</label><label><input name="showVariant" type="checkbox" checked> Farbe/Größe</label><label><input name="showLocation" type="checkbox" checked> Lagerplatz</label><label><input name="showBrand" type="checkbox"> Marke</label><label><input name="showMaterial" type="checkbox"> Material</label></div>
@@ -426,7 +427,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=316"></script>
-  <script src="smart-camera.js?v=316"></script>
+  <script src="app.js?v=317"></script>
+  <script src="smart-camera.js?v=317"></script>
 </body>
 </html>

@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.17
+
+- Schriftgrößen lassen sich vor dem Druck frei von 60 bis 200 Prozent einstellen.
+- Artikelname, Detailzeile mit SKU/Farbe/Größe/Preis und die Zahl unter dem Barcode besitzen getrennte Regler mit sofortiger Vorschau.
+- Gruppenetiketten bieten dieselben getrennten Regler für Gruppenname, Hinweise und Barcode-Zahl.
+- Gewählte Schriftgrößen werden lokal gespeichert und bei Etikettenvorlagen aus der Bibliothek wiederhergestellt.
+
 ## Neu in Version 3.16
 
 - Gruppenetiketten besitzen jetzt eigene, klar getrennte Ausgaben für Nelko, PNG, SVG und Systemdruck.
