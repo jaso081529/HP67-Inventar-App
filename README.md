@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.13
+
+- Ein gescannter Gruppenbarcode öffnet jetzt immer eine vollständige, scrollbare Artikelliste und nicht mehr nur den ersten Artikel.
+- Jede Zeile zeigt Artikelname, Farbe, Größe, SKU, Lagerplatz und aktuellen Bestand.
+- Pro Artikel stehen direkt Verkauf, Wareneingang und Artikel öffnen zur Auswahl; ausverkaufte Varianten können nicht versehentlich verkauft werden.
+- Gruppenbarcodes werden vor gleichlautenden Einzelcodes ausgewertet, damit die Gruppenauswahl nicht mehr zusammenklappt.
+
 ## Neu in Version 3.12
 
 - Der editierbare Kategorienkatalog umfasst jetzt über 30 Textilarten mit passenden SKU-Kürzeln und Kennfarben.
