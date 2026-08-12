@@ -34,16 +34,21 @@ const missing=[...new Set(referenced.filter(id=>!idSet.has(id)))];
 if(missing.length)fail(`Von app.js referenzierte HTML-IDs fehlen: ${missing.join(', ')}`);
 
 for(const feature of ['sizeRangeFrom','sizeRangeTo','applySizeRange','variantSizes'])if(!idSet.has(feature))fail(`Größenautomatik fehlt: ${feature}`);
-for(const feature of ['variantCopies','manageBarcodeGroups','barcodeGroupDialog','barcodeGroupItems','barcodeGroupSelectionStatus','generateGroupCode','printGroupBarcode','labelGroupHelp','createGroupFromLabels'])if(!idSet.has(feature))fail(`Barcodegruppen-/Exemplar-Funktion fehlt: ${feature}`);
+for(const feature of ['variantCopies','manageBarcodeGroups','barcodeGroupDialog','barcodeGroupItems','barcodeGroupSelectionStatus','generateGroupCode','testGroupBarcode','groupLabelSize','shareGroupNelko','downloadGroupPng','downloadGroupSvg','printGroupBarcode','labelGroupHelp','createGroupFromLabels'])if(!idSet.has(feature))fail(`Barcodegruppen-/Exemplar-Funktion fehlt: ${feature}`);
 for(const feature of ['manageLabelLibrary','labelLibraryDialog','labelLibraryList','saveLabelsToLibrary','saveGroupToLibrary'])if(!idSet.has(feature))fail(`Lokale Etikettenbibliothek fehlt: ${feature}`);
 for(const logic of ['function labelLibrary','function labelLibraryConfig','function applyLabelLibraryConfig','function storeLabelLibraryEntry','function renderLabelLibrary',"type:'group'","type:'items'",'state.settings.labelLibrary'])if(!app.includes(logic))fail(`Etikettenbibliothek ist nicht vollständig verbunden: ${logic}`);
 for(const logic of ['function createGroupCode','function openBarcodeGroupManager','scannedBarcodeGroup','data-scan-group-item','for(let copy=0;copy<copies;copy++)'])if(!app.includes(logic))fail(`Barcodegruppen oder Einzelartikel-Staffelung fehlt: ${logic}`);
-for(const logic of ['function updateBarcodeGroupSelectionStatus',"$('#createGroupFromLabels').onclick",'openBarcodeGroupManager(\'\',ids,suggestedName)','Bitte dieses Gruppenetikett zuerst speichern','GRUPPENETIKETT · ${itemIds.length} VARIANTEN'])if(!app.includes(logic))fail(`Sicherer Gruppenetikett-Ablauf fehlt: ${logic}`);
+for(const logic of ['function updateBarcodeGroupSelectionStatus',"$('#createGroupFromLabels').onclick",'openBarcodeGroupManager(\'\',ids,suggestedName)','Bitte dieses Gruppenetikett zuerst speichern','GRUPPENETIKETT · ${group.itemIds.length} VARIANTEN','function currentSavedGroupLabel','function buildGroupLabelSvg',"barcodeVector(group.code,'CODE128'",'svgToThermalPngBlob(buildGroupLabelSvg(group,cfg)'])if(!app.includes(logic))fail(`Sicherer Gruppenetikett-Ablauf fehlt: ${logic}`);
 if(!html.includes('Mehrere einzelne Varianten-Etiketten')||!html.includes('Aus Auswahl Gruppenetikett erstellen'))fail('Einzel- und Gruppenetiketten sind in der Oberfläche nicht eindeutig getrennt.');
 const scannerGroupSource=sourceSection(app,'async function handleScannedCode','function bookScanned');
 for(const logic of ['data-group-sale','data-group-purchase','data-group-open',"openTransaction(button.dataset.groupSale,'sale')","openTransaction(button.dataset.groupPurchase,'purchase')",'openItem(button.dataset.groupOpen)'])if(!scannerGroupSource.includes(logic))fail(`Gruppenscan-Aktion fehlt: ${logic}`);
 if(scannerGroupSource.indexOf('if(scannedBarcodeGroup)')<0||scannerGroupSource.indexOf('if(scannedBarcodeGroup)')>scannerGroupSource.indexOf('else if(scannedItem)'))fail('Ein Gruppenbarcode wird nicht vor einem eventuell gleichlautenden Artikelcode aufgelöst.');
 if(scannerGroupSource.includes('handleScannedCode(scannedItem?.barcode'))fail('Die Gruppenliste kollabiert weiterhin rekursiv auf einen einzelnen Artikel.');
+const groupLabelSource=extractBetween(app,'function groupLabelConfig',"$('#testGroupBarcode').onclick");
+let renderedGroupCode='';const groupLabelContext={$:()=>({value:'50x25'}),xmlEscape:value=>String(value),barcodeVector:value=>{renderedGroupCode=value;return{svg:`<g data-group-code="${value}"></g>`};}};
+vm.runInNewContext(`${groupLabelSource}\nglobalThis.__buildGroupLabelSvg=buildGroupLabelSvg;`,groupLabelContext,{filename:'group-label-test.js'});
+const renderedGroupSvg=groupLabelContext.__buildGroupLabelSvg({name:'Testgruppe',code:'HP67-GRP-12345678',itemIds:['rot-s','schwarz-s','weiss-s']},{width:50,height:25,dpi:300});
+if(renderedGroupCode!=='HP67-GRP-12345678'||!renderedGroupSvg.includes('HP67-GRP-12345678')||!renderedGroupSvg.includes('3 VARIANTEN'))fail('Das exportierte Gruppenetikett verwendet nicht eindeutig den gespeicherten Gruppencode.');
 for(const logic of ['function textileSkuFamily','function createTextileSkuAtSequence','let colorSequence=Math.max(0,...existingSequence)+1','colorSequence=(Number(variant.sku.match'])if(!app.includes(logic))fail(`Fortlaufende SKU-Nummerierung je Farbe fehlt: ${logic}`);
 if(!app.includes("const SIZE_SCALE=['XXS','XS','S','M','L','XL','XXL','3XL','4XL','5XL']"))fail('Größenfolge XXS bis 5XL fehlt.');
 if(!app.includes('SIZE_SCALE.slice(start,end+1)'))fail('Automatische Größenbereich-Auswahl fehlt.');
@@ -76,7 +81,7 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("needsConfirmation=candidate.source!=='barcode'")||!smart.includes('needsConfirmation&&!confirm('))fail('Foto-/OCR-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
-if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=315',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=316',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
 if(!css.includes('[hidden]{display:none!important}'))fail('Versteckte Schaltflächen können durch Komponenten-CSS sichtbar werden.');
 if(!css.includes('.item-save-bar{position:sticky'))fail('Artikelspeichern ist in langen iPhone-Formularen nicht dauerhaft erreichbar.');
 if(!app.includes("typeof root==='string'?document.querySelector(root):root"))fail('Dialoglisten mit einer Container-ID können nicht sicher gelesen werden.');
@@ -365,8 +370,8 @@ if(!capturedPdfExport||pdfTable?.body?.length!==1||pdfTable.body[0]?.[0]!=='Akti
 
 if(!sw.includes("CACHE_PREFIX='hp67-inventar-'")||!sw.includes('k.startsWith(CACHE_PREFIX)'))fail('Service Worker löscht Caches nicht app-spezifisch.');
 if(!sw.includes("isShell?'./index.html':e.request"))fail('Fremde Navigationen können weiterhin den Offline-App-Shell überschreiben.');
-if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v315/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
-for(const releaseAsset of ['./v315/app.css','./v315/app.js','./v315/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
+if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v316/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
+for(const releaseAsset of ['./v316/app.css','./v316/app.js','./v316/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
 if(!sw.includes("cached||caches.match(fallbackAsset)"))fail('Versionsgebundene Offline-Dateien haben keinen sicheren Fallback.');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
@@ -395,7 +400,7 @@ const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("registration.scope===scope")||!updatePage.includes("name.startsWith('hp67-inventar-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 const pagesWorkflow=read('.github/workflows/pages.yml');
 for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
-for(const releaseAsset of ['v315/app.css','v315/app.js','v315/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v315'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
-if(!pagesWorkflow.includes("sed -i 's|app.css?v=315|v315/app.css|g; s|app.js?v=315|v315/app.js|g; s|smart-camera.js?v=315|v315/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v315-Kern-Dateien.');
+for(const releaseAsset of ['v316/app.css','v316/app.js','v316/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v316'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
+if(!pagesWorkflow.includes("sed -i 's|app.css?v=316|v316/app.css|g; s|app.js?v=316|v316/app.js|g; s|smart-camera.js?v=316|v316/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v316-Kern-Dateien.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);

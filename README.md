@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.16
+
+- Gruppenetiketten besitzen jetzt eigene, klar getrennte Ausgaben für Nelko, PNG, SVG und Systemdruck.
+- Jede dieser Ausgaben wird ausschließlich aus dem gespeicherten Gruppencode aufgebaut und kann nicht mehr versehentlich den Barcode der ersten Variante verwenden.
+- Ein integrierter „Gruppenauswahl testen“-Knopf zeigt vor dem Drucken direkt die vollständige Scannerliste aller enthaltenen Varianten.
+- Das gewünschte Nelko-Format 40 × 15, 50 × 25, 50 × 30 oder 70 × 40 mm kann direkt im Gruppenmanager gewählt werden.
+
 ## Neu in Version 3.15
 
 - Eine lokale Etikettenbibliothek speichert auf Wunsch einzelne Artikel-, Varianten- und Gruppenetiketten als wiederverwendbare Vorlagen.

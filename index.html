@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=315">
+  <link rel="stylesheet" href="app.css?v=316">
 </head>
 <body>
   <header class="topbar">
@@ -176,7 +176,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.15</p>
+      <p class="version">HP67 Inventar · Version 3.16</p>
     </section>
   </main>
 
@@ -229,9 +229,10 @@
       <label>Gruppencode<input name="code" placeholder="Wird automatisch erzeugt"></label>
       <div class="variant-checklist" id="barcodeGroupItems"></div>
       <div id="barcodeGroupSelectionStatus" class="group-selection-status">Noch keine Varianten ausgewählt.</div>
-      <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="printGroupBarcode" type="button">Barcode drucken</button></div>
+      <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="testGroupBarcode" type="button">Gruppenauswahl testen</button></div>
       <div id="barcodeGroupPreview" class="item-barcode-preview" hidden><svg id="barcodeGroupSvg" aria-label="Gruppenbarcode"></svg><small id="barcodeGroupStatus"></small></div>
       <button class="primary-btn" type="submit">Gruppe speichern</button>
+      <div class="group-export-tools"><label>Gruppenetikett-Format<select id="groupLabelSize"><option value="40x15">Nelko 40 × 15 mm</option><option value="50x25" selected>Nelko 50 × 25 mm</option><option value="50x30">Nelko 50 × 30 mm</option><option value="70x40">Nelko 70 × 40 mm</option></select></label><div class="export-grid"><button id="shareGroupNelko" class="primary-btn" type="button">An Nelko senden</button><button id="downloadGroupPng" type="button">PNG</button><button id="downloadGroupSvg" type="button">SVG</button><button id="printGroupBarcode" type="button">Drucken</button></div><small>Diese Ausgaben verwenden garantiert den gespeicherten Gruppencode – niemals den Barcode der ersten Variante.</small></div>
       <button id="saveGroupToLibrary" class="secondary-btn" type="button">Gruppenetikett in Bibliothek speichern</button>
       <div id="barcodeGroupList" class="category-list"></div>
     </form>
@@ -425,7 +426,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=315"></script>
-  <script src="smart-camera.js?v=315"></script>
+  <script src="app.js?v=316"></script>
+  <script src="smart-camera.js?v=316"></script>
 </body>
 </html>
