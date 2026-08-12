@@ -2,6 +2,11 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.8
+
+- Die laufende SKU-Endnummer zählt jetzt gemeinsam je Artikel und Farbe über alle Größen weiter: Rot/S 001, Rot/M 002, Rot/L 003.
+- Jede andere Farbe führt eine eigene, automatisch fortgesetzte Nummernreihe.
+
 ## Neu in Version 3.7
 
 - Einzelne Exemplare je Farb-/Größenkombination erhalten automatisch fortlaufende SKUs und eigene Barcodes.

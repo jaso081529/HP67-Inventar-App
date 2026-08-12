@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=37">
+  <link rel="stylesheet" href="app.css?v=38">
 </head>
 <body>
   <header class="topbar">
@@ -173,7 +173,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.7</p>
+      <p class="version">HP67 Inventar · Version 3.8</p>
     </section>
   </main>
 
@@ -198,7 +198,7 @@
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
       <div class="form-grid"><label>Farbe auswählen oder schreiben<input name="color" list="colorOptions" placeholder="Schwarz"><datalist id="colorOptions"><option value="Schwarz"></option><option value="Weiß"></option><option value="Navy"></option><option value="Grau"></option><option value="Rot"></option><option value="Blau"></option><option value="Grün"></option><option value="Beige"></option><option value="Gelb"></option><option value="Rosa"></option><option value="Lila"></option><option value="Orange"></option></datalist></label><label>Größe auswählen oder schreiben<input name="size" list="sizeOptions" placeholder="M / gemischt"><datalist id="sizeOptions"><option value="XXS"></option><option value="XS"></option><option value="S"></option><option value="M"></option><option value="L"></option><option value="XL"></option><option value="XXL"></option><option value="3XL"></option><option value="4XL"></option><option value="5XL"></option><option value="Einheitsgröße"></option></datalist></label></div>
-      <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Jedes Exemplar erhält eine eigene fortlaufende SKU und einen eigenen Barcode. Zusätzlich kannst du später mehrere Artikel in einem Gruppenbarcode bündeln.</p><div class="form-grid"><label>Farben · auswählen oder schreiben<input id="variantColors" list="colorOptions" placeholder="Schwarz, Weiß, Navy"></label><label>Größen · automatisch oder selbst schreiben<input id="variantSizes" placeholder="S, M, L, XL"></label></div><div class="form-grid"><label>Einzelne Exemplare je Farbe/Größe<input id="variantCopies" type="number" min="1" max="20" step="1" value="1"><small>Beispiel: Rot/S mit 3 Exemplaren erzeugt …-001, …-002 und …-003 – jeweils mit eigenem Barcode.</small></label></div><div class="size-range"><label>Von<select id="sizeRangeFrom"><option>XXS</option><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option>5XL</option></select></label><span>bis</span><label>Bis<select id="sizeRangeTo"><option>XXS</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option selected>5XL</option></select></label><button type="button" id="applySizeRange">Größen übernehmen</button></div><div class="size-presets"><button type="button" data-size-preset="S,M,L,XL,XXL,3XL,4XL,5XL">S–5XL</button><button type="button" data-size-preset="XS,S,M,L,XL,XXL,3XL">XS–3XL</button><button type="button" data-size-preset="S,M,L,XL,XXL">S–XXL</button><button type="button" data-size-preset="Einheitsgröße">Einheitsgröße</button></div><div class="variant-help"><b>Automatische Staffelung</b><span>Die Nummerierung beginnt für jede Textil-/Farb-/Größenkombination bei 001 und zählt vorhandene Artikel zuverlässig weiter.</span></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
+      <details class="variant-builder" id="variantBuilder"><summary>Mehrere Farben und Größen auf einmal anlegen</summary><p>Jedes Exemplar erhält eine eigene fortlaufende SKU und einen eigenen Barcode. Zusätzlich kannst du später mehrere Artikel in einem Gruppenbarcode bündeln.</p><div class="form-grid"><label>Farben · auswählen oder schreiben<input id="variantColors" list="colorOptions" placeholder="Schwarz, Weiß, Navy"></label><label>Größen · automatisch oder selbst schreiben<input id="variantSizes" placeholder="S, M, L, XL"></label></div><div class="form-grid"><label>Einzelne Exemplare je Farbe/Größe<input id="variantCopies" type="number" min="1" max="20" step="1" value="1"><small>Beispiel: Rot/S mit 3 Exemplaren erzeugt …-001, …-002 und …-003 – jeweils mit eigenem Barcode.</small></label></div><div class="size-range"><label>Von<select id="sizeRangeFrom"><option>XXS</option><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option>5XL</option></select></label><span>bis</span><label>Bis<select id="sizeRangeTo"><option>XXS</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>4XL</option><option selected>5XL</option></select></label><button type="button" id="applySizeRange">Größen übernehmen</button></div><div class="size-presets"><button type="button" data-size-preset="S,M,L,XL,XXL,3XL,4XL,5XL">S–5XL</button><button type="button" data-size-preset="XS,S,M,L,XL,XXL,3XL">XS–3XL</button><button type="button" data-size-preset="S,M,L,XL,XXL">S–XXL</button><button type="button" data-size-preset="Einheitsgröße">Einheitsgröße</button></div><div class="variant-help"><b>Automatische Staffelung je Farbe</b><span>Beispiel Rot: S erhält 001, M erhält 002, L erhält 003. Für eine andere Farbe beginnt eine eigene Folge bei 001. Bereits vorhandene Nummern werden automatisch weitergezählt.</span></div><small id="variantCount">Keine Variantenliste eingegeben.</small></details>
       <div class="form-grid"><label>Lieferant<input name="supplier" placeholder="z. B. Textilhandel"></label><label>Lagerplatz auswählen oder schreiben<input name="location" list="locationOptions" placeholder="z. B. Regal A3"><datalist id="locationOptions"></datalist></label></div>
       <div class="form-grid"><label>Marke<input name="brand" list="brandOptions" placeholder="z. B. B&C Collection"><datalist id="brandOptions"></datalist></label><label>Material auswählen<select id="materialPreset"><option value="">Bitte auswählen …</option></select><input name="material" list="materialOptions" placeholder="oder selbst eintragen"><datalist id="materialOptions"></datalist></label></div>
       <div class="form-grid"><label>Saison / Kollektion<input name="season" placeholder="z. B. Sommer 2026"></label><label>Einheit<input name="unit" placeholder="Stück"></label></div>
@@ -403,7 +403,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=37"></script>
-  <script src="smart-camera.js?v=37"></script>
+  <script src="app.js?v=38"></script>
+  <script src="smart-camera.js?v=38"></script>
 </body>
 </html>
