@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=39">
+  <link rel="stylesheet" href="app.css?v=310">
 </head>
 <body>
   <header class="topbar">
@@ -144,6 +144,7 @@
       </div>
       <div class="settings-card">
         <h2>Barcodes & Etiketten</h2>
+        <p>Nelko: Etikett gestalten, „An Nelko senden“ tippen und im iPhone-Teilen-Menü Nelko wählen. Die App erzeugt dafür automatisch ein kontrastreiches 203-DPI-PNG in der gewählten Größe.</p>
         <button id="settingsScanner">Barcode scannen <span>›</span></button>
         <button id="settingsLabels">Etiketten erstellen <span>›</span></button>
         <button id="generateMissingBarcodes">Fehlende Barcodes erzeugen <span>›</span></button>
@@ -174,7 +175,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.9</p>
+      <p class="version">HP67 Inventar · Version 3.10</p>
     </section>
   </main>
 
@@ -346,7 +347,7 @@
       <label>Auswahl<select name="scope" id="labelScope"><option value="single">Ein Artikel</option><option value="variants">Mehrere Varianten auswählen</option><option value="all">Alle Artikel</option><option value="low">Nur Nachbestellungen</option></select></label>
       <label id="labelItemWrap">Artikel<select name="itemId" id="labelItem"></select></label>
       <div id="labelVariantWrap" class="variant-checklist" hidden></div>
-      <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="50x25">Thermo · 50 × 25 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
+      <div class="form-grid"><label>Etikettenformat<select name="preset" id="labelPreset"><option value="70x37">A4 · 70 × 37 mm · 24 Stück</option><option value="52.5x29.7">A4 · 52,5 × 29,7 mm · 40 Stück</option><option value="40x15">Nelko · 40 × 15 mm · P21 Mini</option><option value="50x25">Nelko · 50 × 25 mm</option><option value="50x30">Nelko · 50 × 30 mm · PM220</option><option value="62x29">Thermo · 62 × 29 mm</option><option value="70x40">Nelko · 70 × 40 mm</option><option value="custom">Benutzerdefiniert</option></select></label><label>Barcode-Typ<select name="barcodeFormat" id="barcodeFormat"><option value="auto">Automatisch</option><option value="EAN13">EAN-13</option><option value="CODE128">Code 128</option><option value="CODE39">Code 39</option></select></label></div>
       <div class="form-grid custom-size" id="customLabelSize" hidden><label>Breite mm<input name="width" type="number" min="20" max="200" value="62"></label><label>Höhe mm<input name="height" type="number" min="15" max="150" value="29"></label></div>
       <div class="form-grid"><label>Anzahl je Artikel<input name="copies" type="number" min="1" max="100" value="1"></label><label>Leere Startfelder<input name="startAt" type="number" min="0" max="100" value="0"></label></div>
       <div class="form-grid"><label>PNG-Auflösung<select name="dpi"><option value="300">300 DPI</option><option value="600">600 DPI</option></select></label><label>Schriftgröße<select name="fontScale"><option value="0.85">Kompakt</option><option value="1" selected>Normal</option><option value="1.2">Groß</option></select></label></div>
@@ -357,7 +358,8 @@
       <div class="label-preview" id="labelPreview"></div>
       <div id="labelStatus" class="label-status"></div>
       <button id="labelOpenItem" type="button" class="secondary-btn">Ausgewählten Artikel öffnen</button>
-      <div class="export-grid"><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button" class="primary-btn">Direkt drucken</button></div>
+      <div class="nelko-share-help"><b>Nelko auf dem iPhone</b><span>„An Nelko senden“ erstellt das aktuelle Etikett als 203-DPI-Schwarzweiß-PNG. Im Teilen-Menü Nelko wählen. Falls Nelko dort nicht erscheint, wird die Datei gespeichert und kann in Nelko unter „Picture/Bild“ geöffnet werden.</span></div>
+      <div class="export-grid"><button id="shareNelkoLabel" type="button" class="primary-btn">An Nelko senden</button><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button">Systemdruck</button></div>
     </form>
   </dialog>
 
@@ -404,7 +406,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=39"></script>
-  <script src="smart-camera.js?v=39"></script>
+  <script src="app.js?v=310"></script>
+  <script src="smart-camera.js?v=310"></script>
 </body>
 </html>

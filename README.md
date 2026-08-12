@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.10
+
+- Vollständige Etiketten lassen sich als kontrastreiche 203-DPI-PNGs direkt an das iPhone-Teilen-Menü und – sofern dort verfügbar – an Nelko übergeben.
+- Nelko-Formate 40 × 15, 50 × 25, 50 × 30 und 70 × 40 mm stehen direkt im Etikettenstudio bereit.
+- Ohne Nelko-Freigabeerweiterung speichert die App dieselbe druckfertige PNG-Datei als zuverlässigen Fallback für „Picture/Bild“.
+
 ## Neu in Version 3.9
 
 - Beliebig viele eigene Preisvarianten pro Artikel, zum Beispiel „Vorne“ und „Vorne + hinten“.
