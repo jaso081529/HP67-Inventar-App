@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.11
+
+- Buchungen besitzen eine Suche nach Name, Farbe, Größe, SKU, Barcode und Lagerplatz sowie direkt anklickbare Farb-/Größenvarianten.
+- Vor dem Speichern werden Artikel, Farbe, Größe, SKU, Barcode, Lagerplatz, Bestand, Mindestbestand, Marke und Kategorie übersichtlich angezeigt.
+- Eine Live-Vorschau zeigt „Bestand vorher → Bestand nachher“, Schnellmengen und beim Verkauf den gesamten verfügbaren Bestand.
+- Neue Buchungen speichern Farbe, Größe, SKU und Lagerplatz mit; CSV-/Excel-Exporte enthalten außerdem Bestand vorher und nachher.
+
 ## Neu in Version 3.10
 
 - Vollständige Etiketten lassen sich als kontrastreiche 203-DPI-PNGs direkt an das iPhone-Teilen-Menü und – sofern dort verfügbar – an Nelko übergeben.

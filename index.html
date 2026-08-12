@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=310">
+  <link rel="stylesheet" href="app.css?v=311">
 </head>
 <body>
   <header class="topbar">
@@ -175,7 +175,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.10</p>
+      <p class="version">HP67 Inventar · Version 3.11</p>
     </section>
   </main>
 
@@ -238,9 +238,14 @@
     <form method="dialog" id="transactionForm">
       <div class="dialog-head"><div><p class="eyebrow">BUCHUNG</p><h2>Bestand ändern</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <label>Art<select required name="type"><option value="purchase">Einkauf / Zugang</option><option value="sale">Verkauf / Abgang</option><option value="return">Kundenretoure / Zugang</option><option value="damage">Beschädigt / Entnahme</option><option value="adjustment">Korrektur auf neuen Bestand</option></select></label>
+      <label>Artikel suchen<input id="transactionItemSearch" type="search" autocomplete="off" placeholder="Name, Farbe, Größe, SKU oder Barcode"></label>
       <label>Artikel<select required name="itemId" id="transactionItem"></select></label>
+      <div class="transaction-variant-wrap"><span class="field-title">Farbe und Größe auswählen</span><div id="transactionVariantChoices" class="transaction-variant-choices"></div></div>
+      <div id="transactionItemSummary" class="transaction-item-summary" aria-live="polite"></div>
       <label id="transactionPriceTypeWrap">Preisart<select name="priceType" id="transactionPriceType"><option value="standard">Standard-/Ladenpreis</option><option value="online">Onlineshoppreis</option><option value="market">Markt-/Eventpreis</option><option value="wholesale">Großhandel/B2B</option><option value="special">Sonderpreis</option></select><small id="transactionPriceHelp">Der passende Artikelpreis wird automatisch übernommen und kann danach geändert werden.</small></label>
       <div class="form-grid"><label><span id="transactionQuantityLabel">Menge</span><input required name="quantity" type="number" min="1" step="1" value="1"></label><label>Preis pro Teil €<input name="unitPrice" type="number" min="0" step="0.01" value="0"></label></div>
+      <div class="transaction-quantity-tools"><button type="button" data-transaction-qty="1">1 Stück</button><button type="button" data-transaction-qty="5">5 Stück</button><button id="transactionAllStock" type="button">Gesamten Bestand</button></div>
+      <div id="transactionStockPreview" class="transaction-stock-preview" aria-live="polite"></div>
       <label>Notiz<input name="note" placeholder="Kunde, Lieferant, Belegnummer …"></label>
       <label>Buchungsdatum<input name="date" type="datetime-local"></label>
       <button class="primary-btn" type="submit" value="default">Buchung speichern</button>
@@ -406,7 +411,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=310"></script>
-  <script src="smart-camera.js?v=310"></script>
+  <script src="app.js?v=311"></script>
+  <script src="smart-camera.js?v=311"></script>
 </body>
 </html>
