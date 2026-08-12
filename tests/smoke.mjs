@@ -51,9 +51,28 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("needsConfirmation=candidate.source!=='barcode'")||!smart.includes('needsConfirmation&&!confirm('))fail('Foto-/OCR-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
-if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=34',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')"))fail('Zuverlässige PWA-Update-Funktion fehlt.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=35',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')"))fail('Zuverlässige PWA-Update-Funktion fehlt.');
 if(!css.includes('[hidden]{display:none!important}'))fail('Versteckte Schaltflächen können durch Komponenten-CSS sichtbar werden.');
 if(!css.includes('.item-save-bar{position:sticky'))fail('Artikelspeichern ist in langen iPhone-Formularen nicht dauerhaft erreichbar.');
+if(!app.includes("typeof root==='string'?document.querySelector(root):root"))fail('Dialoglisten mit einer Container-ID können nicht sicher gelesen werden.');
+for(const feature of ['inventoryContext','inventoryContextClear','activityContext','activityContextOpen','activityContextClear','itemActionHub','itemActionPurchase','itemActionSale','itemActionHistory','itemActionLabel','itemActionReorder','itemActionLocation','orderOpenItem','orderHistory','labelOpenItem'])if(!idSet.has(feature))fail(`Bereichsübergreifende Navigation fehlt: ${feature}`);
+for(const logic of ['function filteredInventoryItems','function openInventoryLocation','function openActivityForItem','function openActivityForOrder','function openActivityForMonth','function navigationState','history[method](navigationState()','lastRenderedActivity[0]','ensureBarcodesPersisted(targets)','requestAnimationFrame(openOrdersList)','function serializeItemDraft','Ungespeicherte Änderungen verwerfen','function serializeReceiveDraft','Geänderte Eingangsmengen verwerfen'])if(!app.includes(logic))fail(`Verbundener Arbeitsablauf fehlt: ${logic}`);
+if(app.includes('if(!ensureBarcodesPersisted(active))return'))fail('Das Öffnen eines Einzeletiketts erzeugt weiterhin Barcodes für das gesamte Inventar.');
+if(!app.includes('item.minStock*2-item.stock-pendingIncomingQuantity(item.id)')||app.includes('Math.max(1,suggested)'))fail('Offene Bestellmengen werden beim Nachbestellvorschlag nicht sicher abgezogen.');
+if(!app.includes('Es wurde nichts verändert.'))fail('Wareneingänge werden nicht vor jeder Bestandsänderung vollständig validiert.');
+for(const lineLogic of ['data-receive="${esc(line.id)}"','order.lines.find(l=>l.id===row.dataset.receive)','orderLineId:line.id','entry.id===tx.orderLineId'])if(!app.includes(lineLogic))fail(`Bestellzeilen sind nicht eindeutig verknüpft: ${lineLogic}`);
+if(!smart.includes('openInventoryLocation(location.id)')||smart.includes("$('#search').value=location.name"))fail('Smart-Kamera öffnet Lagerplätze nicht mit einem exakten Lagerplatzfilter.');
+
+const pendingLine=app.split(/\r?\n/).find(line=>line.startsWith('function pendingIncomingQuantity('));
+if(!pendingLine)fail('Berechnung offener Bestellmengen fehlt.');
+const pendingContext={state:{orders:[{status:'ordered',lines:[{itemId:'hoodie',quantity:5,received:2}]},{status:'partial',lines:[{itemId:'hoodie',quantity:6,received:2}]},{status:'cancelled',lines:[{itemId:'hoodie',quantity:99,received:0}]}]}};
+vm.runInNewContext(`${pendingLine}\nglobalThis.__pending=pendingIncomingQuantity;`,pendingContext,{filename:'pending-order-test.js'});
+if(pendingContext.__pending('hoodie')!==7)fail('Offene und teilweise erhaltene Bestellmengen werden nicht korrekt summiert.');
+if(Math.max(0,5*2-3-pendingContext.__pending('hoodie'))!==0)fail('Bereits bestellte Ware verhindert keine doppelte Nachbestellung.');
+const selectorLine=app.split(/\r?\n/).find(line=>line.startsWith('const $$ ='));
+const selectorRoot={querySelectorAll:selector=>selector==='[data-row]'?[{id:'row'}]:[]},selectorContext={document:{querySelector:selector=>selector==='#rows'?selectorRoot:null}};
+vm.runInNewContext(`${selectorLine}\nglobalThis.__all=$$;`,selectorContext,{filename:'dialog-selector-test.js'});
+if(selectorContext.__all('[data-row]','#rows')[0]?.id!=='row')fail('Container-ID wird in Dialoglisten nicht in ein DOM-Element aufgelöst.');
 
 const stateHelpers=extractBetween(app,'function safeText','function loadState');
 const stateContext={console,Date,Set,Map,Number,String,variantValues:value=>[...new Set(String(value||'').split(/[,;\n]+/).map(entry=>entry.trim()).filter(Boolean))]};
@@ -99,8 +118,8 @@ if(smartContext.__visualSimilarity(shirtSample,differentShelf)>=.72)fail('Deutli
 const sw=read('sw.js');
 if(!sw.includes("CACHE_PREFIX='hp67-inventar-'")||!sw.includes('k.startsWith(CACHE_PREFIX)'))fail('Service Worker löscht Caches nicht app-spezifisch.');
 if(!sw.includes("isShell?'./index.html':e.request"))fail('Fremde Navigationen können weiterhin den Offline-App-Shell überschreiben.');
-if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v34/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
-for(const releaseAsset of ['./v34/app.css','./v34/app.js','./v34/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
+if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v35/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
+for(const releaseAsset of ['./v35/app.css','./v35/app.js','./v35/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
 if(!sw.includes("cached||caches.match(fallbackAsset)"))fail('Versionsgebundene Offline-Dateien haben keinen sicheren Fallback.');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
@@ -125,7 +144,7 @@ const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("registration.scope===scope")||!updatePage.includes("name.startsWith('hp67-inventar-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 const pagesWorkflow=read('.github/workflows/pages.yml');
 for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
-for(const releaseAsset of ['v34/app.css','v34/app.js','v34/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v34'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
-if(!pagesWorkflow.includes("sed -i 's|app.css?v=34|v34/app.css|g; s|app.js?v=34|v34/app.js|g; s|smart-camera.js?v=34|v34/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v34-Kern-Dateien.');
+for(const releaseAsset of ['v35/app.css','v35/app.js','v35/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v35'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
+if(!pagesWorkflow.includes("sed -i 's|app.css?v=35|v35/app.css|g; s|app.js?v=35|v35/app.js|g; s|smart-camera.js?v=35|v35/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v35-Kern-Dateien.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);

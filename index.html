@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=34">
+  <link rel="stylesheet" href="app.css?v=35">
 </head>
 <body>
   <header class="topbar">
@@ -35,10 +35,10 @@
       <div class="stats-grid">
         <button class="stat" data-filter-link="low"><span class="dot orange"></span><b id="lowCount">0</b><small>Nachkaufen</small></button>
         <button class="stat" data-filter-link="out"><span class="dot red"></span><b id="outCount">0</b><small>Ausverkauft</small></button>
-        <div class="stat"><span class="dot green"></span><b id="totalUnits">0</b><small>Teile lagernd</small></div>
-        <div class="stat"><span class="dot blue"></span><b id="monthSales">0,00 €</b><small>Verkäufe Monat</small></div>
-        <div class="stat"><span class="dot purple"></span><b id="monthProfit">0,00 €</b><small>Rohertrag Monat</small></div>
-        <div class="stat"><span class="dot slate"></span><b id="skuCount">0</b><small>Artikelvarianten</small></div>
+        <button class="stat" data-inventory-link="all"><span class="dot green"></span><b id="totalUnits">0</b><small>Teile lagernd</small></button>
+        <button class="stat" data-activity-link="sale" data-activity-month-link="current"><span class="dot blue"></span><b id="monthSales">0,00 €</b><small>Verkäufe Monat</small></button>
+        <button class="stat" data-activity-link="all" data-activity-month-link="current"><span class="dot purple"></span><b id="monthProfit">0,00 €</b><small>Rohertrag Monat</small></button>
+        <button class="stat" data-inventory-link="all"><span class="dot slate"></span><b id="skuCount">0</b><small>Artikelvarianten</small></button>
       </div>
       <div class="quick-actions">
         <button id="quickPurchase"><i>＋</i><span>Wareneingang</span></button>
@@ -47,8 +47,8 @@
         <button id="openStocktake"><i>✓</i><span>Inventur</span></button>
       </div>
       <div class="section-head"><h2>Umsatz · 6 Monate</h2><span class="section-note">Verkauf / Rohertrag</span></div>
-      <div id="salesChart" class="chart-card" role="img" aria-label="Umsatz und Rohertrag der letzten sechs Monate"></div>
-      <div class="section-head"><h2>Bestandsalarm</h2><button class="text-btn" data-goto="inventory">Alle zeigen</button></div>
+      <div id="salesChart" class="chart-card" role="group" aria-label="Umsatz und Rohertrag der letzten sechs Monate · Monat antippen für den Verlauf"></div>
+      <div class="section-head"><h2>Bestandsalarm</h2><button class="text-btn" data-filter-link="attention">Alle zeigen</button></div>
       <div id="alerts" class="card-list"></div>
       <div class="section-head"><h2>Offene Bestellungen</h2><button class="text-btn" id="showAllOrders">Alle Bestellungen</button></div>
       <div id="openOrders" class="card-list"></div>
@@ -66,6 +66,7 @@
         <button class="chip" data-filter="ok">Gut</button>
         <button class="chip" data-filter="low">Nachkaufen</button>
         <button class="chip" data-filter="out">Ausverkauft</button>
+        <button class="chip" data-filter="attention">Alle Engpässe</button>
         <button class="chip" data-filter="archived">Archiviert</button>
       </div>
       <div class="inventory-tools">
@@ -75,6 +76,7 @@
         <button id="inventoryReorder">Nachbestellung</button>
         <button id="inventoryStocktake">Inventur</button>
       </div>
+      <div class="context-bar" id="inventoryContext" hidden><div><b id="inventoryContextTitle">Inventarfilter</b><small id="inventoryContextMeta"></small></div><button id="inventoryContextClear" type="button">Filter lösen</button></div>
       <div class="inventory-summary"><span id="itemCount">0 Artikel</span><span id="inventoryUnits">0 Teile</span></div>
       <div id="inventoryList" class="card-list"></div>
       <button class="secondary-btn load-more" id="loadMoreInventory" hidden>Weitere Artikel laden</button>
@@ -109,6 +111,7 @@
 
     <section class="page" data-page="activity">
       <div class="activity-summary" id="activitySummary"></div>
+      <div class="context-bar" id="activityContext" hidden><div><b id="activityContextTitle">Gefilterter Verlauf</b><small id="activityContextMeta"></small></div><div class="context-actions"><button id="activityContextOpen" type="button">Öffnen</button><button id="activityContextClear" type="button">Filter lösen</button></div></div>
       <button class="undo-btn" id="undoLatest" hidden>↶ Letzte Buchung rückgängig machen</button>
       <div class="chips">
         <button class="chip active" data-activity="all">Alle</button>
@@ -168,7 +171,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.4</p>
+      <p class="version">HP67 Inventar · Version 3.5</p>
     </section>
   </main>
 
@@ -185,6 +188,10 @@
       <div class="dialog-head"><div><p class="eyebrow">ARTIKEL</p><h2 id="itemDialogTitle">Neuer Artikel</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <input type="hidden" name="id">
       <div class="item-save-bar"><button class="primary-btn" value="default" type="submit">Artikel speichern</button></div>
+      <div class="item-action-hub" id="itemActionHub" hidden>
+        <div class="item-action-summary"><b id="itemActionTitle">Direkt weiterarbeiten</b><small id="itemActionSummary"></small></div>
+        <div class="item-action-grid"><button id="itemActionPurchase" type="button">＋ Eingang</button><button id="itemActionSale" type="button">− Verkauf</button><button id="itemActionHistory" type="button">↕ Verlauf</button><button id="itemActionLabel" type="button">▤ Etikett</button><button id="itemActionReorder" type="button">↻ Bestellen</button><button id="itemActionLocation" type="button">⌖ Lagerplatz</button></div>
+      </div>
       <label>Artikelname<input required name="name" placeholder="z. B. Hoodie Basic"></label>
       <div class="form-grid"><label>SKU / Artikelnummer<input name="sku" placeholder="HD-001"></label><label>Kategorie<input name="category" list="categoryOptions" placeholder="Hoodies"><datalist id="categoryOptions"></datalist></label></div>
       <div class="barcode-tools"><button id="generateSku" type="button">Artikelnummer aus Textil erzeugen</button></div>
@@ -224,7 +231,7 @@
   <dialog id="reorderDialog">
     <form method="dialog" id="reorderForm">
       <div class="dialog-head"><div><p class="eyebrow">EINKAUFSPLANUNG</p><h2>Nachbestellung</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
-      <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf.</p>
+      <p class="dialog-copy">Die Vorschläge füllen jeden knappen Artikel bis zum doppelten Mindestbestand auf. Bereits offene Bestellmengen werden automatisch abgezogen.</p>
       <div id="reorderRows" class="planning-list"></div>
       <div class="reorder-export-grid"><button id="exportReorder" type="button">CSV</button><button id="exportReorderPdf" type="button">PDF speichern</button><button id="printReorder" type="button" class="primary-btn">PDF öffnen / drucken</button></div>
       <button class="primary-btn" type="submit" value="default">Lieferantenbestellung anlegen</button>
@@ -244,6 +251,7 @@
       <input type="hidden" name="orderId">
       <p id="receiveMeta" class="dialog-copy"></p>
       <div id="receiveRows" class="planning-list"></div>
+      <div class="order-related-actions"><button type="button" id="orderOpenItem">Artikel öffnen</button><button type="button" id="orderHistory">Zugehörige Buchungen</button></div>
       <button class="primary-btn" type="submit" value="default">Eingang verbuchen</button>
       <button class="danger-btn" type="button" id="cancelOrder">Bestellung stornieren</button>
     </form>
@@ -330,6 +338,7 @@
       <label id="labelPriceTypeWrap">Preis auf dem Etikett<select name="labelPriceType" id="labelPriceType"><option value="standard">Standard-/Ladenpreis</option><option value="online">Onlineshoppreis</option><option value="market">Markt-/Eventpreis</option><option value="wholesale">Großhandel/B2B</option><option value="special">Sonderpreis</option></select></label>
       <div class="label-preview" id="labelPreview"></div>
       <div id="labelStatus" class="label-status"></div>
+      <button id="labelOpenItem" type="button" class="secondary-btn">Ausgewählten Artikel öffnen</button>
       <div class="export-grid"><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button" class="primary-btn">Direkt drucken</button></div>
     </form>
   </dialog>
@@ -377,7 +386,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=34"></script>
-  <script src="smart-camera.js?v=34"></script>
+  <script src="app.js?v=35"></script>
+  <script src="smart-camera.js?v=35"></script>
 </body>
 </html>

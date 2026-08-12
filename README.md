@@ -2,6 +2,18 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.5
+
+- Artikel als Arbeitszentrale: Einkauf, Verkauf, Verlauf, Etikett, Nachbestellung und Lagerplatz direkt miteinander verknüpft
+- anklickbare Dashboard-Kennzahlen und Monatsbalken führen mit sichtbarem Kontext zum passenden Inventar oder Verlauf
+- exakte Lagerplatzansicht aus Lagerverwaltung, Scanner und Smart-Kamera statt fehleranfälliger Freitextsuche
+- Etiketten, Inventur und Nachbestellung übernehmen die aktuelle Inventarsuche und den aktuellen Filter
+- offene Bestellmengen werden als „unterwegs“ angezeigt und verhindern doppelte Nachbestellvorschläge
+- Bestellungen bleiben nach Erhalt oder Stornierung schreibgeschützt einsehbar; jede Position führt zurück zum Artikel
+- Wareneingänge werden vollständig geprüft, bevor Bestand, Einkaufspreis oder Verlauf verändert werden
+- „Rückgängig“ betrifft immer die neueste sichtbare Buchung im gewählten Artikel-, Bestell-, Monats- und Typfilter
+- Browser-Zurück stellt Seiten- und Arbeitskontext wieder her, ohne Artikel-IDs oder andere lokale Daten in die URL zu schreiben
+
 ## Neu in Version 3.4
 
 - iPhone-Formulare mit gut lesbaren Einzelfeldern und dauerhaft erreichbarem Speichern-Knopf
