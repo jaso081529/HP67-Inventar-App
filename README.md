@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.12
+
+- Der editierbare Kategorienkatalog umfasst jetzt über 30 Textilarten mit passenden SKU-Kürzeln und Kennfarben.
+- Neu sind unter anderem Tank Tops, Longsleeves, Zipper, Blusen, Westen, Softshell, Arbeits-/Sport-/Kinder-/Babytextilien, Schürzen, Taschen und Handtücher.
+- Bestehende eigene oder bearbeitete Kategorien bleiben erhalten; neue Standards werden beim Update einmalig ergänzt.
+- Gelöschte Standards bleiben gelöscht und lassen sich bei Bedarf über „Fehlende Standardkategorien ergänzen“ gezielt wiederherstellen.
+
 ## Neu in Version 3.11
 
 - Buchungen besitzen eine Suche nach Name, Farbe, Größe, SKU, Barcode und Lagerplatz sowie direkt anklickbare Farb-/Größenvarianten.

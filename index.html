@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=311">
+  <link rel="stylesheet" href="app.css?v=312">
 </head>
 <body>
   <header class="topbar">
@@ -157,7 +157,7 @@
       </div>
       <div class="settings-card">
         <h2>Kategorien</h2>
-        <p>Textilarten, Kürzel und Farben zentral verwalten.</p>
+        <p>Über 30 Textilarten mit passenden SKU-Kürzeln und Farben zentral verwalten. Eigene Kategorien bleiben möglich.</p>
         <button id="manageCategories">Kategorien verwalten <span>›</span></button>
       </div>
       <div class="settings-card">
@@ -175,7 +175,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.11</p>
+      <p class="version">HP67 Inventar · Version 3.12</p>
     </section>
   </main>
 
@@ -376,6 +376,7 @@
       <label>Kategoriefarbe<input name="color" type="color" value="#2563eb"></label>
       <button class="primary-btn" type="submit" value="default" id="saveCategory">Kategorie hinzufügen</button>
       <button class="secondary-btn" type="button" id="cancelCategoryEdit" hidden>Bearbeitung abbrechen</button>
+      <button class="secondary-btn" type="button" id="restoreDefaultCategories">Fehlende Standardkategorien ergänzen</button>
       <div class="category-list" id="categoryList"></div>
     </form>
   </dialog>
@@ -411,7 +412,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=311"></script>
-  <script src="smart-camera.js?v=311"></script>
+  <script src="app.js?v=312"></script>
+  <script src="smart-camera.js?v=312"></script>
 </body>
 </html>
