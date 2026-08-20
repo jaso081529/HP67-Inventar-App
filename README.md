@@ -2,6 +2,22 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.19
+
+- Ein lokales Sicherungscenter speichert vollständige Inventarstände in einer separaten IndexedDB direkt auf dem iPhone oder iPad.
+- Sicherungsstände lassen sich benennen, kopieren, umbenennen, wiederherstellen, löschen und als versionierte `.hp67-backup.json`-Datei über das iOS-Teilen-Menü in „Dateien“ sichern.
+- Alte direkte JSON-Sicherungen bleiben importierbar; neue Dateien enthalten zusätzlich Format-, Schema- und App-Versionsinformationen.
+- Vor Wiederherstellung, vollständigem Tabellenimport, Zurücksetzen und App-Update wird automatisch ein Schutzstand angelegt. Zusätzlich wird bei Nutzung höchstens einmal täglich ein automatischer Stand gespeichert; die letzten fünf automatischen Stände bleiben erhalten.
+- Das Sicherungscenter zeigt die geschätzte Speichernutzung und kann auf unterstützten iPhones/iPads dauerhaften Browser-Speicher anfragen.
+- Private Inventardaten werden dabei nicht an GitHub oder einen anderen Server übertragen.
+
+## Neu in Version 3.18
+
+- Die Artikelerfassung bietet scrollbare Schnellauswahlen und weiterhin freie Texteingaben für Produktname, Kategorie, Farbe, Größe, Lieferant, Lagerplatz, Marke, Material, Saison, Einheit und Tags.
+- Die Produktauswahl lernt lokal aus bereits angelegten Artikeln und ergänzt passende Textilvorlagen für B&C Collection, Russell Athletic, Beechfield und HP67.
+- Eine gewählte Produktvorlage kann Kategorie, Marke und Material passend vorbelegen; alle Werte bleiben frei bearbeitbar.
+- Die automatische Artikelnummer wird erst freigeschaltet, wenn Artikelname und Kategorie feststehen.
+
 ## Neu in Version 3.17
 
 - Schriftgrößen lassen sich vor dem Druck frei von 60 bis 200 Prozent einstellen.
