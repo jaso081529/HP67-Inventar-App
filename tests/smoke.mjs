@@ -34,6 +34,21 @@ const missing=[...new Set(referenced.filter(id=>!idSet.has(id)))];
 if(missing.length)fail(`Von app.js referenzierte HTML-IDs fehlen: ${missing.join(', ')}`);
 
 for(const feature of ['sizeRangeFrom','sizeRangeTo','applySizeRange','variantSizes'])if(!idSet.has(feature))fail(`Größenautomatik fehlt: ${feature}`);
+for(const feature of ['productPreset','productNameOptions','categoryPreset','colorPreset','sizePreset','supplierPreset','supplierOptions','locationPreset','brandPreset','materialPreset','seasonPreset','seasonOptions','unitPreset','unitOptions','tagPreset','tagOptions','skuHelp'])if(!idSet.has(feature))fail(`Verknüpfte Artikelauswahl fehlt: ${feature}`);
+for(const logic of ['const PRODUCT_CATALOG=','function buildProductSuggestions','state.items.map(item=>({name:item.name','function renderArticleEntryOptions','function applyProductSuggestion','function updateSkuReadiness','button.disabled=!ready','Bitte zuerst die passende Kategorie auswählen'])if(!app.includes(logic))fail(`Lokale Produktvorschläge oder SKU-Abhängigkeit fehlen: ${logic}`);
+if(!/<input required name="category"/.test(html)||!/<button id="generateSku" type="button" disabled>/.test(html))fail('Kategorie und anfängliche SKU-Sperre sind nicht verbindlich umgesetzt.');
+for(const feature of ['openBackupCenter','backupStatusSummary','backupDialog','backupStorageStatus','requestPersistentStorage','backupName','createLocalBackup','shareCurrentBackup','backupImportFile','backupCount','backupList'])if(!idSet.has(feature))fail(`Lokales Sicherungscenter fehlt: ${feature}`);
+for(const logic of ["const BACKUP_DB_NAME='hp67-inventory-backups'","format:'HP67_INVENTORY_BACKUP'",'schemaVersion:BACKUP_SCHEMA_VERSION','function extractBackupData','function prepareBackupState','function createLocalBackupRecord','function createSafetyBackup','function scheduleDailyBackup','function shareBackupPackage','navigator.storage?.persist','navigator.storage?.estimate','data-backup-restore','data-backup-rename','data-backup-copy','data-backup-delete','Vor vollständigem Tabellenimport','Vor App-Update'])if(!app.includes(logic))fail(`Lokale Sicherung, Dateiformat oder Schutzstand fehlt: ${logic}`);
+if(!app.includes("rows.length===1?'1 lokaler Sicherungsstand'"))fail('Die Sicherungsanzahl wird bei genau einem Stand nicht korrekt bezeichnet.');
+if(!html.includes('.hp67-backup.json')||!html.includes('Auf meinem iPhone/iPad'))fail('iPhone-Dateien-Ablage oder HP67-Sicherungsformat wird nicht erklärt.');
+const backupFormatSource=extractBetween(app,'function cloneBackupData','function prepareBackupState');
+const backupFormatContext={structuredClone:value=>JSON.parse(JSON.stringify(value)),JSON,Date,BACKUP_SCHEMA_VERSION:1,APP_VERSION:'3.19',safeText:value=>String(value??'').trim()};
+vm.runInNewContext(`${backupFormatSource}\nglobalThis.__makeBackupPackage=makeBackupPackage;globalThis.__extractBackupData=extractBackupData;`,backupFormatContext,{filename:'backup-format-test.js'});
+const legacyBackup={items:[{id:'legacy-item'}],transactions:[],orders:[],locations:[],snapshots:[],settings:{}};
+const wrappedBackup=backupFormatContext.__makeBackupPackage(legacyBackup,'iPhone Test','manual');
+if(wrappedBackup.format!=='HP67_INVENTORY_BACKUP'||wrappedBackup.schemaVersion!==1||wrappedBackup.label!=='iPhone Test'||backupFormatContext.__extractBackupData(wrappedBackup).items[0]?.id!=='legacy-item')fail('Das neue HP67-iPhone-Sicherungsformat kann nicht verlustfrei gelesen werden.');
+if(backupFormatContext.__extractBackupData(legacyBackup)!==legacyBackup)fail('Frühere direkte JSON-Sicherungen sind nicht mehr importierbar.');
+if(!throws(()=>backupFormatContext.__extractBackupData({...wrappedBackup,schemaVersion:99})))fail('Unbekannte zukünftige Sicherungsformate werden nicht sicher abgewiesen.');
 for(const feature of ['variantCopies','manageBarcodeGroups','barcodeGroupDialog','barcodeGroupItems','barcodeGroupSelectionStatus','generateGroupCode','testGroupBarcode','groupLabelSize','shareGroupNelko','downloadGroupPng','downloadGroupSvg','printGroupBarcode','labelGroupHelp','createGroupFromLabels'])if(!idSet.has(feature))fail(`Barcodegruppen-/Exemplar-Funktion fehlt: ${feature}`);
 for(const feature of ['manageLabelLibrary','labelLibraryDialog','labelLibraryList','saveLabelsToLibrary','saveGroupToLibrary'])if(!idSet.has(feature))fail(`Lokale Etikettenbibliothek fehlt: ${feature}`);
 for(const logic of ['function labelLibrary','function labelLibraryConfig','function applyLabelLibraryConfig','function storeLabelLibraryEntry','function renderLabelLibrary',"type:'group'","type:'items'",'state.settings.labelLibrary'])if(!app.includes(logic))fail(`Etikettenbibliothek ist nicht vollständig verbunden: ${logic}`);
@@ -83,7 +98,7 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("needsConfirmation=candidate.source!=='barcode'")||!smart.includes('needsConfirmation&&!confirm('))fail('Foto-/OCR-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
-if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=317',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=319',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
 if(!css.includes('[hidden]{display:none!important}'))fail('Versteckte Schaltflächen können durch Komponenten-CSS sichtbar werden.');
 if(!css.includes('.item-save-bar{position:sticky'))fail('Artikelspeichern ist in langen iPhone-Formularen nicht dauerhaft erreichbar.');
 if(!app.includes("typeof root==='string'?document.querySelector(root):root"))fail('Dialoglisten mit einer Container-ID können nicht sicher gelesen werden.');
@@ -373,8 +388,8 @@ if(!capturedPdfExport||pdfTable?.body?.length!==1||pdfTable.body[0]?.[0]!=='Akti
 
 if(!sw.includes("CACHE_PREFIX='hp67-inventar-'")||!sw.includes('k.startsWith(CACHE_PREFIX)'))fail('Service Worker löscht Caches nicht app-spezifisch.');
 if(!sw.includes("isShell?'./index.html':e.request"))fail('Fremde Navigationen können weiterhin den Offline-App-Shell überschreiben.');
-if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v317/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
-for(const releaseAsset of ['./v317/app.css','./v317/app.js','./v317/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
+if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v319/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
+for(const releaseAsset of ['./v319/app.css','./v319/app.js','./v319/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
 if(!sw.includes("cached||caches.match(fallbackAsset)"))fail('Versionsgebundene Offline-Dateien haben keinen sicheren Fallback.');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
@@ -403,7 +418,7 @@ const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("registration.scope===scope")||!updatePage.includes("name.startsWith('hp67-inventar-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 const pagesWorkflow=read('.github/workflows/pages.yml');
 for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
-for(const releaseAsset of ['v317/app.css','v317/app.js','v317/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v317'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
-if(!pagesWorkflow.includes("sed -i 's|app.css?v=317|v317/app.css|g; s|app.js?v=317|v317/app.js|g; s|smart-camera.js?v=317|v317/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v317-Kern-Dateien.');
+for(const releaseAsset of ['v319/app.css','v319/app.js','v319/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v319'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
+if(!pagesWorkflow.includes("sed -i 's|app.css?v=319|v319/app.css|g; s|app.js?v=319|v319/app.js|g; s|smart-camera.js?v=319|v319/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v319-Kern-Dateien.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);
