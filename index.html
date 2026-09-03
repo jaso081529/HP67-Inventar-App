@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=319">
+  <link rel="stylesheet" href="app.css?v=320">
 </head>
 <body>
   <header class="topbar">
@@ -76,6 +76,7 @@
         <button id="inventoryLabels">Etiketten</button>
         <button id="inventoryReorder">Nachbestellung</button>
         <button id="inventoryStocktake">Inventur</button>
+        <button id="bulkAddItems">＋ Mehrere Artikel</button>
       </div>
       <div class="context-bar" id="inventoryContext" hidden><div><b id="inventoryContextTitle">Inventarfilter</b><small id="inventoryContextMeta"></small></div><button id="inventoryContextClear" type="button">Filter lösen</button></div>
       <div class="inventory-summary"><span id="itemCount">0 Artikel</span><span id="inventoryUnits">0 Teile</span></div>
@@ -179,7 +180,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.19</p>
+      <p class="version">HP67 Inventar · Version 3.20</p>
     </section>
   </main>
 
@@ -223,6 +224,18 @@
     </form>
   </dialog>
 
+  <dialog id="bulkItemDialog" aria-labelledby="bulkItemDialogTitle">
+    <form id="bulkItemForm">
+      <div class="dialog-head"><div><p class="eyebrow">MEHRFACH ERFASSEN</p><h2 id="bulkItemDialogTitle">Mehrere Artikel anlegen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
+      <div class="bulk-intro"><b>Jeder Eintrag bleibt ein eigener Artikel</b><span>Die App erzeugt beim Speichern für jede Karte eine eigene fortlaufende Artikelnummer, einen eigenen Barcode und ein eigenes Etikett.</span></div>
+      <div id="bulkItemRows" class="bulk-item-rows"></div>
+      <button id="addBulkItemRow" type="button" class="secondary-btn">＋ Weiteren Artikel hinzufügen</button>
+      <div id="bulkItemCount" class="bulk-item-count" aria-live="polite">1 Artikel vorbereitet</div>
+      <label class="bulk-open-labels"><input id="bulkOpenLabels" type="checkbox" checked> Etiketten dieser Artikel nach dem Speichern öffnen</label>
+      <button id="saveBulkItems" class="primary-btn" type="submit">Alle Artikel getrennt speichern</button>
+    </form>
+  </dialog>
+
   <dialog id="barcodeGroupDialog" aria-label="Gruppenbarcodes verwalten">
     <form id="barcodeGroupForm">
       <div class="dialog-head"><div><p class="eyebrow">GRUPPENBARCODES</p><h2>Produkte gemeinsam scannen</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
@@ -235,7 +248,7 @@
       <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="testGroupBarcode" type="button">Gruppenauswahl testen</button></div>
       <div id="barcodeGroupPreview" class="item-barcode-preview" hidden><svg id="barcodeGroupSvg" aria-label="Gruppenbarcode"></svg><small id="barcodeGroupStatus"></small></div>
       <button class="primary-btn" type="submit">Gruppe speichern</button>
-      <div class="group-export-tools"><label>Gruppenetikett-Format<select id="groupLabelSize"><option value="40x15">Nelko 40 × 15 mm</option><option value="50x25" selected>Nelko 50 × 25 mm</option><option value="50x30">Nelko 50 × 30 mm</option><option value="70x40">Nelko 70 × 40 mm</option></select></label><div class="font-controls"><label>Name <output id="groupNameScaleValue">100 %</output><input id="groupNameScale" type="range" min="60" max="200" step="5" value="100"></label><label>Hinweise <output id="groupMetaScaleValue">100 %</output><input id="groupMetaScale" type="range" min="60" max="200" step="5" value="100"></label><label>Barcode-Zahl <output id="groupBarcodeScaleValue">100 %</output><input id="groupBarcodeScale" type="range" min="60" max="200" step="5" value="100"></label></div><div class="export-grid"><button id="shareGroupNelko" class="primary-btn" type="button">An Nelko senden</button><button id="downloadGroupPng" type="button">PNG</button><button id="downloadGroupSvg" type="button">SVG</button><button id="printGroupBarcode" type="button">Drucken</button></div><small>Diese Ausgaben verwenden garantiert den gespeicherten Gruppencode – niemals den Barcode der ersten Variante.</small></div>
+      <div class="group-export-tools"><label>Gruppenetikett-Format<select id="groupLabelSize"><option value="40x15">Nelko 40 × 15 mm</option><option value="50x25" selected>Nelko 50 × 25 mm</option><option value="50x30">Nelko 50 × 30 mm</option><option value="70x40">Nelko 70 × 40 mm</option></select></label><div class="font-controls"><label>Name <output id="groupNameScaleValue">100 %</output><input id="groupNameScale" type="range" min="60" max="200" step="5" value="100"></label><label>Hinweise <output id="groupMetaScaleValue">100 %</output><input id="groupMetaScale" type="range" min="60" max="200" step="5" value="100"></label><label>Barcode-Zahl <output id="groupBarcodeScaleValue">100 %</output><input id="groupBarcodeScale" type="range" min="60" max="200" step="5" value="100"></label></div><div class="export-grid"><button id="shareGroupNelko" class="primary-btn" type="button">An Nelko senden</button><button id="downloadGroupPng" type="button">PNG</button><button id="downloadGroupSvg" type="button">SVG</button><button id="downloadGroupPdf" type="button">PDF</button><button id="printGroupBarcode" type="button">Drucken</button></div><small>Diese Ausgaben verwenden garantiert den gespeicherten Gruppencode – niemals den Barcode der ersten Variante.</small></div>
       <button id="saveGroupToLibrary" class="secondary-btn" type="button">Gruppenetikett in Bibliothek speichern</button>
       <div id="barcodeGroupList" class="category-list"></div>
     </form>
@@ -244,7 +257,7 @@
   <dialog id="labelLibraryDialog" aria-label="Etikettenbibliothek">
     <form method="dialog">
       <div class="dialog-head"><div><p class="eyebrow">LOKAL GESPEICHERT</p><h2>Etikettenbibliothek</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
-      <p>Gespeicherte Etiketten bleiben ausschließlich auf diesem Gerät. Du kannst sie wieder öffnen, anpassen und erneut drucken.</p>
+      <p>Gespeicherte Etiketten bleiben ausschließlich auf diesem Gerät. Öffne, lade oder drucke sie hier mit einem Klick erneut.</p>
       <div id="labelLibraryList" class="label-library-list"></div>
     </form>
   </dialog>
@@ -382,7 +395,7 @@
       <button id="labelOpenItem" type="button" class="secondary-btn">Ausgewählten Artikel öffnen</button>
       <button id="saveLabelsToLibrary" type="button" class="secondary-btn">Diese Auswahl in Bibliothek speichern</button>
       <div class="nelko-share-help"><b>Nelko auf dem iPhone</b><span>„An Nelko senden“ erstellt das aktuelle Etikett als 203-DPI-Schwarzweiß-PNG. Im Teilen-Menü Nelko wählen. Falls Nelko dort nicht erscheint, wird die Datei gespeichert und kann in Nelko unter „Picture/Bild“ geöffnet werden.</span></div>
-      <div class="export-grid"><button id="shareNelkoLabel" type="button" class="primary-btn">An Nelko senden</button><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsZip" type="button">ZIP</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button">Systemdruck</button></div>
+      <div class="export-grid"><button id="shareNelkoLabel" type="button" class="primary-btn">An Nelko senden</button><button id="exportLabelSvg" type="button">SVG</button><button id="exportLabelPng" type="button">PNG</button><button id="exportLabelsPngZip" type="button">PNG-Auswahl</button><button id="exportLabelsZip" type="button">SVG-Auswahl</button><button id="exportLabelsPdf" type="button">PDF speichern</button><button id="printLabels" type="button">Systemdruck</button></div>
     </form>
   </dialog>
 
@@ -444,7 +457,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=319"></script>
-  <script src="smart-camera.js?v=319"></script>
+  <script src="app.js?v=320"></script>
+  <script src="smart-camera.js?v=320"></script>
 </body>
 </html>

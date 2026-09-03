@@ -2,6 +2,14 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.20
+
+- Ein neuer Mehrfachartikel-Assistent legt bis zu 60 unterschiedliche Produkte in einem Vorgang an. Über „Weiteren Artikel hinzufügen“ und „Karte kopieren“ bleiben die Eingaben übersichtlich getrennt.
+- Jeder gespeicherte Artikel erhält garantiert eine eigene ID, eine fortlaufende textile SKU, einen eigenen EAN-Barcode und ein eigenes auswählbares Etikett.
+- Die lokale Etikettenbibliothek bietet Direktaktionen für PNG, PDF, SVG und Systemdruck. Mehrere gewählte PNG- oder SVG-Etiketten werden gesammelt als ZIP gespeichert.
+- Gruppenetiketten können zusätzlich direkt als PDF ausgegeben werden; gespeicherte Größe und Schriftregler werden aus der Bibliothek wiederhergestellt.
+- Alle Dialoge besitzen einen klaren Zurück-Pfeil. Private Inventar- und Bibliotheksdaten bleiben unverändert nur im lokalen Gerätespeicher und in selbst erstellten Sicherungsdateien.
+
 ## Neu in Version 3.19
 
 - Ein lokales Sicherungscenter speichert vollständige Inventarstände in einer separaten IndexedDB direkt auf dem iPhone oder iPad.
