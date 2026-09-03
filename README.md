@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.23
+
+- Artikelbarcodes, Gruppenetiketten und vollständige Artikeletiketten verwenden jetzt durchgehend das gewählte Maß; der frühere feste 80-×-32-mm-PNG-Export wurde entfernt.
+- Eigene Breite und Höhe sind auch für reine Barcode-, Gruppen- und Lagerplatzetiketten einstellbar und werden lokal für den nächsten Export gespeichert.
+- Vor jedem Export zeigt die App Millimeter, resultierende Pixelgröße und DPI an. SVG-, PNG-, PDF- und ZIP-Dateinamen enthalten das gewählte Format.
+- 203 DPI für Nelko/Thermodruck, 300 DPI als Standard und 600 DPI für hochauflösende PNG-Ausgaben sind direkt auswählbar.
+
 ## Neu in Version 3.22
 
 - Die lokale Etikettenbibliothek zeigt jetzt sämtliche aktiven Artikelbarcodes mit Artikelname, Farbe, Größe, SKU und Barcode-Vorschau.
