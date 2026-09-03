@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=321">
+  <link rel="stylesheet" href="app.css?v=322">
 </head>
 <body>
   <header class="topbar">
@@ -180,7 +180,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.21</p>
+      <p class="version">HP67 Inventar · Version 3.22</p>
     </section>
   </main>
 
@@ -259,6 +259,15 @@
       <div class="dialog-head"><div><p class="eyebrow">LOKAL GESPEICHERT</p><h2>Etikettenbibliothek</h2></div><button type="button" value="cancel" class="close-btn">×</button></div>
       <p>Gespeicherte Etiketten bleiben ausschließlich auf diesem Gerät. Öffne, lade oder drucke sie hier mit einem Klick erneut.</p>
       <div id="labelLibraryList" class="label-library-list"></div>
+      <section class="barcode-library-section">
+        <div class="section-head"><div><p class="eyebrow">ALLE ARTIKELCODES</p><h3>Barcode-Bibliothek</h3></div><span id="barcodeLibraryCount">0 ausgewählt</span></div>
+        <p>Jeder Artikelbarcode wird mit Artikelname, Farbe, Größe und SKU angezeigt. Wähle einzelne oder mehrere Codes für Etiketten und Ausgaben aus.</p>
+        <div class="barcode-library-select"><button id="barcodeLibrarySelectAll" type="button">Alle auswählen</button><button id="barcodeLibraryClear" type="button">Auswahl löschen</button></div>
+        <div class="barcode-library-actions"><button id="barcodeLibraryOpenLabels" class="primary-btn" type="button">Auswahl als Etiketten öffnen</button><button type="button" data-barcode-library-export="png">PNG</button><button type="button" data-barcode-library-export="pdf">PDF</button><button type="button" data-barcode-library-export="svg">SVG</button><button type="button" data-barcode-library-export="print">Drucken</button><button id="barcodeLibraryCreateGroup" type="button">Gruppenetikett erstellen</button></div>
+        <div id="barcodeLibraryList" class="barcode-library-list"></div>
+        <div class="section-head"><div><p class="eyebrow">GEMEINSAME CODES</p><h3>Gruppenbarcodes</h3></div></div>
+        <div id="barcodeGroupLibraryList" class="barcode-library-list"></div>
+      </section>
     </form>
   </dialog>
 
@@ -457,7 +466,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=321"></script>
-  <script src="smart-camera.js?v=321"></script>
+  <script src="app.js?v=322"></script>
+  <script src="smart-camera.js?v=322"></script>
 </body>
 </html>
