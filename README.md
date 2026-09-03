@@ -2,6 +2,11 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.21
+
+- Alle Popups lassen sich zusätzlich durch Tippen auf den dunklen Bereich außerhalb des weißen Fensters schließen.
+- Bei bereits geänderten Eingaben bleibt die Rückfrage zum Verwerfen aktiv, damit kein angefangener Artikel versehentlich verloren geht.
+
 ## Neu in Version 3.20
 
 - Ein neuer Mehrfachartikel-Assistent legt bis zu 60 unterschiedliche Produkte in einem Vorgang an. Über „Weiteren Artikel hinzufügen“ und „Karte kopieren“ bleiben die Eingaben übersichtlich getrennt.
