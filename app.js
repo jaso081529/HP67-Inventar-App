@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'hp67-inventory-v1';
-const APP_VERSION='3.20';
+const APP_VERSION='3.21';
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DB_NAME='hp67-inventory-backups';
 const BACKUP_STORE_NAME='saved-states';
@@ -235,6 +235,7 @@ function requestDialogClose(dialog,after=null,{skipDirty=false}={}){
 function closeDialogSafely(dialog){return requestDialogClose(dialog);}
 $$('.close-btn').forEach(button=>button.addEventListener('click',()=>closeDialogSafely(button.closest('dialog'))));
 $$('dialog').forEach(dialog=>dialog.addEventListener('cancel',event=>{event.preventDefault();if(!suppressDialogCancelGuard)closeDialogSafely(dialog);}));
+$$('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{const bounds=dialog.getBoundingClientRect(),outside=event.target===dialog&&(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom);if(outside)closeDialogSafely(dialog);}));
 DIRTY_DIALOG_IDS.forEach(id=>{const dialog=$(`#${id}`);dialog?.addEventListener('input',()=>{if(dialog.open)dialog.dataset.dirty='true';});dialog?.addEventListener('change',()=>{if(dialog.open)dialog.dataset.dirty='true';});dialog?.addEventListener('close',()=>{delete dialog.dataset.dirty;});});
 function markDialogClean(dialog){if(dialog)delete dialog.dataset.dirty;}
 function topOpenDialog(){return[...document.querySelectorAll('dialog[open]')].at(-1)||null;}
@@ -1011,8 +1012,8 @@ $('#importForm').addEventListener('submit',async e=>{
 $('#resetData').onclick=async()=>{if(!confirm('Wirklich alle Artikel, Barcodegruppen, Lagerplätze, Bestellungen, Momentaufnahmen und Buchungen löschen? Der aktuelle Stand wird vorher automatisch gesichert.'))return;try{await createSafetyBackup('Vor Zurücksetzen');state={items:[],transactions:[],orders:[],snapshots:[],categories:DEFAULT_CATEGORIES.map(c=>({...c})),brands:DEFAULT_BRANDS.slice(),materials:DEFAULT_MATERIALS.slice(),locations:[],barcodeGroups:[],settings:{categoryCatalogVersion:CATEGORY_CATALOG_VERSION}};save();toast('Daten zurückgesetzt · Schutzstand bleibt im Sicherungscenter');}catch(error){console.error(error);}};
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('#installApp').hidden=false;});
 $('#installApp').onclick=async()=>{if(deferredInstall){deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;$('#installApp').hidden=true;}};
-$('#updateApp').onclick=async()=>{const button=$('#updateApp'),label=button.textContent;button.disabled=true;button.textContent='Update wird geladen …';try{await createSafetyBackup('Vor App-Update');const probe=await fetch(`./index.html?hp67-update=${Date.now()}`,{cache:'no-store'});if(!probe.ok)throw Error(`Update-Datei ${probe.status}`);if('serviceWorker'in navigator){const scope=new URL('./',location.href).href,registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.filter(registration=>registration.scope===scope).map(registration=>registration.unregister()));}if('caches'in window){const names=await caches.keys();await Promise.all(names.filter(name=>name.startsWith('hp67-inventar-')||/^hp67-v\d+$/.test(name)).map(name=>caches.delete(name)));}location.replace(`./?updated=320&t=${Date.now()}`);}catch(error){console.error(error);button.disabled=false;button.textContent=label;toast('Update konnte nicht geladen werden – bitte Verbindung und Sicherung prüfen');}};
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=320',{updateViaCache:'none'}).then(registration=>registration.update()).catch(console.warn));
+$('#updateApp').onclick=async()=>{const button=$('#updateApp'),label=button.textContent;button.disabled=true;button.textContent='Update wird geladen …';try{await createSafetyBackup('Vor App-Update');const probe=await fetch(`./index.html?hp67-update=${Date.now()}`,{cache:'no-store'});if(!probe.ok)throw Error(`Update-Datei ${probe.status}`);if('serviceWorker'in navigator){const scope=new URL('./',location.href).href,registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.filter(registration=>registration.scope===scope).map(registration=>registration.unregister()));}if('caches'in window){const names=await caches.keys();await Promise.all(names.filter(name=>name.startsWith('hp67-inventar-')||/^hp67-v\d+$/.test(name)).map(name=>caches.delete(name)));}location.replace(`./?updated=321&t=${Date.now()}`);}catch(error){console.error(error);button.disabled=false;button.textContent=label;toast('Update konnte nicht geladen werden – bitte Verbindung und Sicherung prüfen');}};
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=321',{updateViaCache:'none'}).then(registration=>registration.update()).catch(console.warn));
 renderAll();
 refreshBackupSummary();scheduleDailyBackup();
 if(history.state?.hp67Nav)restoreNavigationSnapshot(history.state);else{navigate('dashboard',{}, {fromHistory:true,instant:true});history.replaceState(navigationState(),'');}
