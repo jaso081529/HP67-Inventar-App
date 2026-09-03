@@ -2,6 +2,13 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.25
+
+- Zuverlässigerer Kamera-Scanner mit sofort sichtbarem Treffer, größerem Scanbereich und „Erneut scannen“.
+- Vier Gruppenetikett-Arten: Standard, Scanner, großer Lagername und Variantenübersicht.
+- Mehrere Etiketten lassen sich auch bei kleinen Thermoformaten gesammelt auf A4 als PDF speichern oder drucken.
+- Alle Etiketten-Druckansichten besitzen einen sichtbaren Weg zurück zur App.
+
 ## Neu in Version 3.24
 
 - Beim Speichern wird nur noch die tatsächlich sichtbare App-Seite aktualisiert; versteckte Inventar-, Statistik- und Verlaufsansichten werden nicht mehr unnötig komplett neu aufgebaut.
