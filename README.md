@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.26
+
+- iPhone-Kamera wieder mit der bewährten Safari-kompatiblen `environment`-Auswahl öffnen.
+- Falls diese Auswahl auf einem Gerät scheitert, wird automatisch die erkannte Rückkamera verwendet.
+- Verständliche Hinweise bei verweigertem Kamerazugriff und eigener Regressionstest für den Kamera-Fallback.
+
 ## Neu in Version 3.25
 
 - Zuverlässigerer Kamera-Scanner mit sofort sichtbarem Treffer, größerem Scanbereich und „Erneut scannen“.
