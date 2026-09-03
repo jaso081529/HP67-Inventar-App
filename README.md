@@ -2,6 +2,14 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.24
+
+- Beim Speichern wird nur noch die tatsächlich sichtbare App-Seite aktualisiert; versteckte Inventar-, Statistik- und Verlaufsansichten werden nicht mehr unnötig komplett neu aufgebaut.
+- Wiederkehrende Artikel- und Bestellzuordnungen werden zwischengespeichert, Suchfelder reagieren zeitversetzt und große Auswahllisten werden begrenzt beziehungsweise schrittweise nachgeladen.
+- Die Barcode-Bibliothek lädt zunächst 60 Vorschauen und weitere Blöcke erst auf Wunsch. Dadurch bleiben auch größere Inventare auf iPhone und iPad bedienbar.
+- Etikettenvorschauen und Mehrfachformulare werden pro Bildschirmaktualisierung gebündelt. Zu große hochauflösende PNG-Aufträge werden vor einem Safari-Speicherabbruch abgefangen.
+- Neue Artikelfotos werden stärker, aber weiterhin sauber komprimiert, um lokalen Speicher und Arbeitsspeicher zu schonen.
+
 ## Neu in Version 3.23
 
 - Artikelbarcodes, Gruppenetiketten und vollständige Artikeletiketten verwenden jetzt durchgehend das gewählte Maß; der frühere feste 80-×-32-mm-PNG-Export wurde entfernt.
