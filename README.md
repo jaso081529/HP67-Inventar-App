@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.28
+
+- Gruppenetiketten unterstützen EAN-13 (empfohlen), Code 39 und Code 128; der Gruppencode wird passend zur gewählten Art erzeugt und dauerhaft gespeichert.
+- Der Kamerascanner besitzt einen breiten, responsiven Scanbereich und bestätigt Kameraergebnisse zweimal, bevor ein Artikel oder eine Gruppe geöffnet wird.
+- Neue Gruppen verwenden standardmäßig den robusten EAN-13-Strichcode; bestehende Code-128-Gruppen bleiben kompatibel.
+
 ## Neu in Version 3.27
 
 - Alle scanbaren Kennungen sind nun appweit eindeutig: Artikel-SKU, EAN-Barcode, Lagerplatzcode und Gruppenbarcode können sich nicht mehr gegenseitig überschneiden.
