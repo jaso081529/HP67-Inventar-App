@@ -45,9 +45,9 @@ jobs:
           mkdir public
           cp index.html update.html app.css app.js smart-camera.js icon.svg manifest.webmanifest sw.js public/
           cp -R vendor public/vendor
-          mkdir public/v326
-          cp app.css app.js smart-camera.js public/v326/
-          sed -i 's|app.css?v=326|v326/app.css|g; s|app.js?v=326|v326/app.js|g; s|smart-camera.js?v=326|v326/smart-camera.js|g' public/index.html
+          mkdir public/v327
+          cp app.css app.js smart-camera.js public/v327/
+          sed -i 's|app.css?v=327|v327/app.css|g; s|app.js?v=327|v327/app.js|g; s|smart-camera.js?v=327|v327/smart-camera.js|g' public/index.html
       - name: App hochladen
         uses: actions/upload-pages-artifact@v3
         with:
