@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="app.css?v=327">
+  <link rel="stylesheet" href="app.css?v=328">
 </head>
 <body>
   <header class="topbar">
@@ -180,7 +180,7 @@
         <h2>Zurücksetzen</h2>
         <button id="resetData">Alle Daten löschen <span>›</span></button>
       </div>
-      <p class="version">HP67 Inventar · Version 3.27</p>
+      <p class="version">HP67 Inventar · Version 3.28</p>
     </section>
   </main>
 
@@ -242,7 +242,8 @@
       <p>Ein Gruppenbarcode öffnet beim Scan zuerst eine Auswahl. Danach entscheidest du, welchen enthaltenen Artikel du buchen oder bearbeiten möchtest.</p>
       <input name="id" type="hidden">
       <label>Gruppenname<input name="name" required placeholder="z. B. Hoodie Rot · alle Größen"></label>
-      <label>Gruppencode<input name="code" placeholder="Wird automatisch erzeugt"></label>
+      <div class="form-grid"><label>Barcode-Art<select id="groupBarcodeFormat"><option value="EAN13" selected>EAN-13 · empfohlen und robust</option><option value="CODE39">Code 39 · robust für Text</option><option value="CODE128">Code 128 · kompakt</option></select></label><label>Gruppencode<input name="code" placeholder="Wird passend erzeugt"></label></div>
+      <small>Für kleine Nelko-Etiketten ist EAN-13 am zuverlässigsten. Beim Wechsel der Barcode-Art erzeugt die App bei Bedarf automatisch einen passenden neuen Gruppencode.</small>
       <div class="variant-checklist" id="barcodeGroupItems"></div>
       <div id="barcodeGroupSelectionStatus" class="group-selection-status">Noch keine Varianten ausgewählt.</div>
       <div class="barcode-tools"><button id="generateGroupCode" type="button">Gruppencode erzeugen</button><button id="testGroupBarcode" type="button">Gruppenauswahl testen</button></div>
@@ -469,7 +470,7 @@
   <script src="vendor/jspdf.umd.min.js"></script>
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="vendor/jszip.min.js"></script>
-  <script src="app.js?v=327"></script>
-  <script src="smart-camera.js?v=327"></script>
+  <script src="app.js?v=328"></script>
+  <script src="smart-camera.js?v=328"></script>
 </body>
 </html>
