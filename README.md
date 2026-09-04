@@ -2,6 +2,12 @@
 
 Mobile, installierbare Inventar-App für Textilien. Sie verwaltet Artikel, Mindestbestände, Ein- und Verkäufe, zeigt farbige Bestandswarnungen und kann Rechnungen oder Listen per Foto einlesen.
 
+## Neu in Version 3.29
+
+- Die im Etikettenstudio gewählte Auflösung wird nun auch in normalen und A4-PDFs vollständig verwendet; 600 DPI werden nicht mehr intern auf 300 DPI reduziert.
+- Einzelne Barcodes und Gruppenetiketten werden als scharfkantige 600-DPI-PNGs exportiert; SVG bleibt verlustfrei skalierbar.
+- Nelko-Dateien bleiben absichtlich auf die native Thermodrucker-Auflösung von 203 DPI optimiert.
+
 ## Neu in Version 3.28
 
 - Gruppenetiketten unterstützen EAN-13 (empfohlen), Code 39 und Code 128; der Gruppencode wird passend zur gewählten Art erzeugt und dauerhaft gespeichert.

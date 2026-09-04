@@ -43,7 +43,7 @@ for(const logic of ["const BACKUP_DB_NAME='hp67-inventory-backups'","format:'HP6
 if(!app.includes("rows.length===1?'1 lokaler Sicherungsstand'"))fail('Die Sicherungsanzahl wird bei genau einem Stand nicht korrekt bezeichnet.');
 if(!html.includes('.hp67-backup.json')||!html.includes('Auf meinem iPhone/iPad'))fail('iPhone-Dateien-Ablage oder HP67-Sicherungsformat wird nicht erklärt.');
 const backupFormatSource=extractBetween(app,'function cloneBackupData','function prepareBackupState');
-const backupFormatContext={structuredClone:value=>JSON.parse(JSON.stringify(value)),JSON,Date,BACKUP_SCHEMA_VERSION:1,APP_VERSION:'3.28',safeText:value=>String(value??'').trim()};
+const backupFormatContext={structuredClone:value=>JSON.parse(JSON.stringify(value)),JSON,Date,BACKUP_SCHEMA_VERSION:1,APP_VERSION:'3.29',safeText:value=>String(value??'').trim()};
 vm.runInNewContext(`${backupFormatSource}\nglobalThis.__makeBackupPackage=makeBackupPackage;globalThis.__extractBackupData=extractBackupData;`,backupFormatContext,{filename:'backup-format-test.js'});
 const legacyBackup={items:[{id:'legacy-item'}],transactions:[],orders:[],locations:[],snapshots:[],settings:{}};
 const wrappedBackup=backupFormatContext.__makeBackupPackage(legacyBackup,'iPhone Test','manual');
@@ -58,6 +58,8 @@ for(const logic of ['function barcodeLibraryPreview','function selectedBarcodeLi
 for(const feature of ['bulkAddItems','bulkItemDialog','bulkItemForm','bulkItemRows','addBulkItemRow','bulkItemCount','bulkOpenLabels','saveBulkItems'])if(!idSet.has(feature))fail(`Mehrfachartikel-Assistent fehlt: ${feature}`);
 for(const logic of ['function bulkItemRowTemplate','function addBulkItemRow','function openBulkItemCreator','record.sku=createTextileSku(record)','record.barcode=createInternalEan()','state.items.push(record)','openLabelStudio(ids[0]'])if(!app.includes(logic))fail(`Mehrfachartikel werden nicht vollständig getrennt angelegt: ${logic}`);
 for(const feature of ['exportLabelsPngZip','downloadGroupPdf','exportLabelsA4Pdf','printLabelsA4','restartBarcodeScanner'])if(!idSet.has(feature))fail(`Erweiterter Etikettenexport oder Scanner-Neustart fehlt: ${feature}`);
+for(const quality of ['groupLabelConfig(600)','barcodeLabelConfig(600)','pdfCfg={...cfg,dpi:cfg.dpi}','ctx.imageSmoothingEnabled=false','-600dpi.png','-${cfg.dpi}dpi-'])if(!app.includes(quality))fail(`Hochauflösender, scharfkantiger Export fehlt: ${quality}`);
+if(app.includes('pdfCfg={...cfg,dpi:Math.min(cfg.dpi,300)}'))fail('Die gewählte 600-DPI-Auflösung wird beim PDF-Export weiterhin unbemerkt auf 300 DPI reduziert.');
 for(const feature of ['customBarcodeSize','customBarcodeWidth','customBarcodeHeight','barcodeOutputSize','customGroupLabelSize','customGroupLabelWidth','customGroupLabelHeight','groupOutputSize','labelOutputSize','customLocationLabelSize','customLocationLabelWidth','customLocationLabelHeight','locationOutputSize'])if(!idSet.has(feature))fail(`Frei einstellbare oder sichtbare Ausgabegröße fehlt: ${feature}`);
 for(const logic of ['function barcodeLabelConfig','function buildItemBarcodeLabelSvg','function outputSizeText','function sizeFileToken','sizeFileToken(cfg)','preset:cfg.preset,width:cfg.width,height:cfg.height'])if(!app.includes(logic))fail(`Durchgängige Größensteuerung im Export fehlt: ${logic}`);
 for(const logic of ['function updateLocationOutputSize','state.settings.locationLabelStyle','customLocationLabelWidth','customLocationLabelHeight'])if(!app.includes(logic))fail(`Lagerplatz-Aufklebergröße ist nicht vollständig verbunden: ${logic}`);
@@ -125,7 +127,7 @@ for(const logic of ['function createVisualFingerprint','function visualSimilarit
 if(!smart.includes("needsConfirmation=candidate.source!=='barcode'")||!smart.includes('needsConfirmation&&!confirm('))fail('Foto-/OCR-Treffer dürfen nicht ohne Bestätigung buchen.');
 if(!app.includes('visualSamples:pendingItemVisualSamples.slice(-6)'))fail('Artikeltraining wird nicht lokal gespeichert.');
 if(!app.includes('visualSamples=pendingLocationVisualSamples.slice(-4)'))fail('Lagerplatztraining wird nicht lokal gespeichert.');
-if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=328',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
+if(!idSet.has('updateApp')||!app.includes("register('./sw.js?v=329',{updateViaCache:'none'})")||!app.includes("name.startsWith('hp67-inventar-')")||!app.includes('registration.unregister()')||!app.includes("cache:'no-store'")||!sw.includes("searchParams.has('hp67-update')")||!sw.includes('e.respondWith(fetch(e.request))'))fail('Zuverlässige PWA-Update-/Neuinstallationsfunktion fehlt.');
 if(!css.includes('[hidden]{display:none!important}'))fail('Versteckte Schaltflächen können durch Komponenten-CSS sichtbar werden.');
 if(!css.includes('.item-save-bar{position:sticky'))fail('Artikelspeichern ist in langen iPhone-Formularen nicht dauerhaft erreichbar.');
 if(!app.includes("typeof root==='string'?document.querySelector(root):root"))fail('Dialoglisten mit einer Container-ID können nicht sicher gelesen werden.');
@@ -432,8 +434,8 @@ if(!capturedPdfExport||pdfTable?.body?.length!==1||pdfTable.body[0]?.[0]!=='Akti
 
 if(!sw.includes("CACHE_PREFIX='hp67-inventar-'")||!sw.includes('k.startsWith(CACHE_PREFIX)'))fail('Service Worker löscht Caches nicht app-spezifisch.');
 if(!sw.includes("isShell?'./index.html':e.request"))fail('Fremde Navigationen können weiterhin den Offline-App-Shell überschreiben.');
-if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v328/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
-for(const releaseAsset of ['./v328/app.css','./v328/app.js','./v328/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
+if(!sw.includes("requestUrl.pathname.startsWith(`${scopeUrl.pathname}v329/`)"))fail('Versionsgebundene Kern-Dateien werden nicht network-first geladen.');
+for(const releaseAsset of ['./v329/app.css','./v329/app.js','./v329/smart-camera.js'])if(!sw.includes(`'${releaseAsset}'`))fail(`Versionsgebundene Offline-Datei fehlt im Service Worker: ${releaseAsset}`);
 if(!sw.includes("cached||caches.match(fallbackAsset)"))fail('Versionsgebundene Offline-Dateien haben keinen sicheren Fallback.');
 for(const asset of required.filter(file=>!['serve.mjs','sw.js','update.html'].includes(file))){
   const expected=`./${asset}`;
@@ -462,7 +464,7 @@ const updatePage=read('update.html');
 if(!updatePage.includes("registration.unregister()")||!updatePage.includes("registration.scope===scope")||!updatePage.includes("name.startsWith('hp67-inventar-')")||updatePage.includes('localStorage'))fail('Sichere Rettungsseite für alte PWA-Caches fehlt oder verändert Inventardaten.');
 const pagesWorkflow=read('.github/workflows/pages.yml');
 for(const deployedFile of ['index.html','update.html','app.css','app.js','smart-camera.js','icon.svg','manifest.webmanifest','sw.js'])if(!pagesWorkflow.includes(deployedFile))fail(`GitHub-Pages-Paket enthält ${deployedFile} nicht.`);
-for(const releaseAsset of ['v328/app.css','v328/app.js','v328/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v328'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
-if(!pagesWorkflow.includes("sed -i 's|app.css?v=328|v328/app.css|g; s|app.js?v=328|v328/app.js|g; s|smart-camera.js?v=328|v328/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v328-Kern-Dateien.');
+for(const releaseAsset of ['v329/app.css','v329/app.js','v329/smart-camera.js'])if(!pagesWorkflow.includes(releaseAsset.split('/')[1])||!pagesWorkflow.includes('public/v329'))fail(`Versionsgebundene Pages-Datei fehlt: ${releaseAsset}`);
+if(!pagesWorkflow.includes("sed -i 's|app.css?v=329|v329/app.css|g; s|app.js?v=329|v329/app.js|g; s|smart-camera.js?v=329|v329/smart-camera.js|g'"))fail('GitHub Pages verweist nicht garantiert auf frische v329-Kern-Dateien.');
 
 console.log(`HP67 Smoke-Test bestanden: ${required.length} Dateien, ${ids.length} HTML-IDs, PWA-Manifest und Datenschutzprüfung.`);
